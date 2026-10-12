@@ -18,7 +18,6 @@
         :root {
             --bg-color: #0b0b0c;
             --grid-line: rgba(255, 255, 255, 0.025);
-            /* Transparenteres Glass-Theme */
             --card-bg: rgba(14, 14, 18, 0.45);
             --card-border: rgba(255, 255, 255, 0.12);
             --text-main: #f3f4f6;
@@ -58,6 +57,10 @@
             overflow-x: hidden;
         }
 
+        body.solid-bg-mode {
+            background: radial-gradient(circle at 50% 20%, #150f28 0%, #08080a 100%) !important;
+        }
+
         @media (max-height: 860px), (max-width: 900px) {
             body {
                 overflow-y: auto !important;
@@ -78,7 +81,7 @@
 
         .scanlines {
             position: fixed; inset: 0; z-index: 9997; pointer-events: none;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%);
             background-size: 100% 4px;
             display: none;
         }
@@ -195,6 +198,8 @@
         .avatar { width: 94%; height: 94%; border-radius: 26px; object-fit: cover; background: #161619; padding: 2px; z-index: 2; }
         
         .username { font-size: 1.35rem; font-weight: 800; margin-bottom: 6px; display: inline-flex; justify-content: center; white-space: pre; }
+        
+        /* USERNAME EFFEKTE */
         .effect-wave .wave-char {
             display: inline-block; background: linear-gradient(90deg, #3b82f6, var(--accent), #3b82f6); background-size: 200% auto;
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
@@ -205,6 +210,9 @@
             0% { background-position: 0% 50%; filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.5)); }
             100% { background-position: 100% 50%; filter: drop-shadow(0 0 10px var(--accent-glow)); }
         }
+        .effect-glow { color: #fff; text-shadow: 0 0 10px var(--accent), 0 0 20px var(--accent-glow); }
+        .effect-pulse { animation: pulseGlow 2s infinite alternate; }
+        @keyframes pulseGlow { 0% { text-shadow: 0 0 5px var(--accent); } 100% { text-shadow: 0 0 20px var(--accent), 0 0 35px var(--accent-glow); } }
 
         .bio { color: var(--text-muted); font-size: 0.85rem; line-height: 1.4; margin-bottom: 12px; }
         .tech-stack-container { width: 100%; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-bottom: 14px; }
@@ -249,8 +257,8 @@
         .player-controls { display: flex; flex-direction: column; gap: 8px; }
         .progress-bar-container { width: 100%; }
         .time-info { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
-        .progress-bar { width: 100%; height: 6px; background: rgba(255,255,255,0.15); border-radius: 3px; position: relative; }
-        .progress-fill { position: absolute; top: 0; left: 0; height: 100%; width: 0%; background: var(--text-main); box-shadow: 0 0 8px var(--text-main); border-radius: 3px; }
+        .progress-bar { width: 100%; height: 6px; background: rgba(255,255,255,0.15); border-radius: 3px; position: relative; cursor: pointer !important; }
+        .progress-fill { position: absolute; top: 0; left: 0; height: 100%; width: 0%; background: var(--text-main); box-shadow: 0 0 8px var(--text-main); border-radius: 3px; pointer-events: none; }
         
         .control-buttons { display: flex; align-items: center; justify-content: center; gap: 18px; }
         .volume-container { display: flex; align-items: center; justify-content: center; gap: 10px; color: var(--text-muted); font-size: 0.85rem; }
@@ -543,7 +551,7 @@
     <canvas id="particle-canvas"></canvas>
 
     <!-- HINTERGRUND VIDEO PLAYER -->
-    <div class="video-bg-container">
+    <div class="video-bg-container" id="video-bg-wrap">
         <div id="youtube-player"></div>
     </div>
     
@@ -637,7 +645,7 @@
                         <i class="fas fa-cube mc-icon"></i>
                         <div>
                             <div class="mc-title" id="mc-display-name">Minecraft Dedicated Server</div>
-                            <div style="font-size:0.7rem; color:var(--text-muted);">NeoForge Modded Environment</div>
+                            <div id="mc-display-notes" style="font-size:0.7rem; color:var(--text-muted);">NeoForge Modded Environment</div>
                         </div>
                     </div>
                     <div class="mc-badge" id="mc-status-badge">
@@ -836,12 +844,12 @@
         const SUPABASE_KEY = 'sb_publishable_XfgU_toGSxKo2eM810q59w_qJt_HAO0';
         const sbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        const DEFAULT_DISCORD_USER_ID = '935755290203283546';
-        const DEFAULT_DISCORD_SERVER_ID = '1106609783680802886';
+        let activeDiscordUserId = '935755290203283546';
+        let activeDiscordServerId = '1106609783680802886';
 
-        // MINECRAFT TUNNEL ADRESSE (FÜR DIREKTE STATUS-API-ABFRAGEN)
-        const MC_POLL_TARGET = "cairo-pumping.tun.ply.gg:45750";
-        const MC_DISPLAY_DOMAIN = "vengeanceutilities.de";
+        // MINECRAFT STATE
+        let mcPollTarget = "cairo-pumping.tun.ply.gg:45750";
+        let mcDisplayDomain = "vengeanceutilities.de";
         let latestMcData = null;
 
         let playlist = [];
@@ -908,7 +916,7 @@
         animateCursorTrail();
 
         function applyCursorHoverEffects() {
-            document.querySelectorAll('button, a, .clickable, input, .queue-item, .ctx-item, .mc-address-row').forEach(el => {
+            document.querySelectorAll('button, a, .clickable, input, .queue-item, .ctx-item, .mc-address-row, .progress-bar').forEach(el => {
                 if(el.dataset.cursorBound) return;
                 el.dataset.cursorBound = "true";
 
@@ -1053,12 +1061,14 @@
                 
                 item.addEventListener('click', () => {
                     currentSongIndex = idx;
-                    if (ytPlayer && ytApiReady) {
+                    if (ytPlayer && ytApiReady && typeof ytPlayer.loadVideoById === 'function') {
                         ytPlayer.loadVideoById(playlist[currentSongIndex].id);
-                        updatePlayerUI();
-                        document.querySelector('#play-pause-btn i').className = 'fas fa-pause';
-                        document.getElementById('yt-cover').classList.add('playing');
+                        if (typeof ytPlayer.unMute === 'function') ytPlayer.unMute();
+                        ytPlayer.playVideo();
                     }
+                    updatePlayerUI();
+                    document.querySelector('#play-pause-btn i').className = 'fas fa-pause';
+                    document.getElementById('yt-cover').classList.add('playing');
                 });
                 playlistDrawer.appendChild(item);
             });
@@ -1098,7 +1108,7 @@
         if (discordBox) {
             discordBox.addEventListener('click', (e) => {
                 if (e.target.closest('#discord-guild-invite')) return;
-                navigator.clipboard.writeText(DEFAULT_DISCORD_USER_ID).then(() => {
+                navigator.clipboard.writeText(activeDiscordUserId).then(() => {
                     copyToast.classList.add('show'); setTimeout(() => copyToast.classList.remove('show'), 2000);
                 });
             });
@@ -1109,7 +1119,7 @@
         const mcCopyToast = document.getElementById('mc-copy-toast');
         if (mcAddressRow) {
             mcAddressRow.addEventListener('click', () => {
-                navigator.clipboard.writeText(MC_DISPLAY_DOMAIN).then(() => {
+                navigator.clipboard.writeText(mcDisplayDomain).then(() => {
                     mcCopyToast.classList.add('show');
                     setTimeout(() => mcCopyToast.classList.remove('show'), 2000);
                 });
@@ -1125,7 +1135,7 @@
             const motdText = document.getElementById('mc-motd-text');
 
             try {
-                const res = await fetch(`https://api.mcstatus.io/v2/status/java/${MC_POLL_TARGET}`);
+                const res = await fetch(`https://api.mcstatus.io/v2/status/java/${mcPollTarget}`);
                 const data = await res.json();
                 latestMcData = data;
 
@@ -1150,8 +1160,6 @@
                 motdText.innerText = 'Verbindung zum Statusdienst fehlgeschlagen';
             }
         }
-        fetchMinecraftStatus();
-        setInterval(fetchMinecraftStatus, 45000); // Alle 45 Sekunden aktualisieren
 
         /* CLI COMMANDS */
         if (cliInput) {
@@ -1185,9 +1193,9 @@
                 case 'mc':
                 case 'status':
                     if (latestMcData && latestMcData.online) {
-                        res.innerHTML = `Status: <span style="color:#22c55e;">ONLINE</span> | Spieler: ${latestMcData.players.online}/${latestMcData.players.max} | Host: vengeanceutilities.de`;
+                        res.innerHTML = `Status: <span style="color:#22c55e;">ONLINE</span> | Spieler: ${latestMcData.players.online}/${latestMcData.players.max} | Host: ${mcDisplayDomain}`;
                     } else {
-                        res.innerHTML = `Status: <span style="color:#ef4444;">OFFLINE</span> | Host: vengeanceutilities.de`;
+                        res.innerHTML = `Status: <span style="color:#ef4444;">OFFLINE</span> | Host: ${mcDisplayDomain}`;
                     }
                     break;
                 case 'projects':
@@ -1245,20 +1253,141 @@
         document.getElementById('ctx-cli').addEventListener('click', openCli);
         document.getElementById('ctx-projects').addEventListener('click', () => projectsModal.classList.add('active'));
         document.getElementById('ctx-copy-discord').addEventListener('click', () => {
-            navigator.clipboard.writeText(DEFAULT_DISCORD_USER_ID);
+            navigator.clipboard.writeText(activeDiscordUserId);
             copyToast.classList.add('show'); setTimeout(() => copyToast.classList.remove('show'), 2000);
         });
+
+        /* CONTROLS BINDING */
+        function bindControls() {
+            const playBtn = document.getElementById('play-pause-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const prevBtn = document.getElementById('prev-btn');
+            const shuffleBtn = document.getElementById('shuffle-btn');
+            const loopBtn = document.getElementById('loop-btn');
+            const muteIcon = document.getElementById('mute-icon');
+            const volumeSlider = document.getElementById('volume-slider');
+            const timeline = document.getElementById('progress-timeline');
+
+            if (playBtn) playBtn.addEventListener('click', togglePlayPause);
+            if (nextBtn) nextBtn.addEventListener('click', () => changeSong(1));
+            if (prevBtn) prevBtn.addEventListener('click', () => changeSong(-1));
+
+            if (shuffleBtn) {
+                shuffleBtn.addEventListener('click', () => {
+                    isShuffling = !isShuffling;
+                    shuffleBtn.classList.toggle('active', isShuffling);
+                });
+            }
+
+            if (loopBtn) {
+                loopBtn.addEventListener('click', () => {
+                    isLooping = !isLooping;
+                    loopBtn.classList.toggle('active', isLooping);
+                });
+            }
+
+            if (volumeSlider) {
+                volumeSlider.addEventListener('input', function() {
+                    if (ytPlayer && typeof ytPlayer.setVolume === 'function') {
+                        ytPlayer.setVolume(this.value);
+                    }
+                });
+            }
+
+            if (muteIcon) {
+                muteIcon.addEventListener('click', () => {
+                    if (!ytPlayer || typeof ytPlayer.isMuted !== 'function') return;
+                    if (ytPlayer.isMuted()) {
+                        ytPlayer.unMute();
+                        muteIcon.className = 'fas fa-volume-down';
+                    } else {
+                        ytPlayer.mute();
+                        muteIcon.className = 'fas fa-volume-mute';
+                    }
+                });
+            }
+
+            if (timeline) {
+                timeline.addEventListener('click', function(e) {
+                    if (!ytPlayer || !playlist[currentSongIndex]?.id) return;
+                    const rect = this.getBoundingClientRect(); 
+                    const clickPosition = (e.clientX - rect.left) / rect.width;
+                    const totalDuration = (typeof ytPlayer.getDuration === 'function') ? ytPlayer.getDuration() : 0; 
+                    if (totalDuration > 0 && typeof ytPlayer.seekTo === 'function') {
+                        ytPlayer.seekTo(totalDuration * clickPosition, true);
+                    }
+                });
+            }
+
+            window.addEventListener('keydown', (e) => {
+                if (['input', 'textarea'].includes(document.activeElement.tagName.toLowerCase())) return;
+                if (e.code === 'Space') { e.preventDefault(); togglePlayPause(); }
+                else if (e.code === 'ArrowRight') { e.preventDefault(); changeSong(1); }
+                else if (e.code === 'ArrowLeft') { e.preventDefault(); changeSong(-1); }
+                else if (e.code === 'KeyS' && shuffleBtn) { e.preventDefault(); shuffleBtn.click(); }
+                else if (e.code === 'KeyR' && loopBtn) { e.preventDefault(); loopBtn.click(); }
+                else if (e.code === 'KeyM' && muteIcon) { e.preventDefault(); muteIcon.click(); }
+                else if (e.key === '~' || e.key === '^') { e.preventDefault(); openCli(); }
+                else if (e.code === 'ArrowUp' && volumeSlider) {
+                    e.preventDefault();
+                    let v = Math.min(100, parseInt(volumeSlider.value) + 5);
+                    volumeSlider.value = v;
+                    if (ytPlayer && typeof ytPlayer.setVolume === 'function') ytPlayer.setVolume(v);
+                } else if (e.code === 'ArrowDown' && volumeSlider) {
+                    e.preventDefault();
+                    let v = Math.max(0, parseInt(volumeSlider.value) - 5);
+                    volumeSlider.value = v;
+                    if (ytPlayer && typeof ytPlayer.setVolume === 'function') ytPlayer.setVolume(v);
+                }
+            });
+
+            setInterval(() => {
+                if (ytPlayer && typeof ytPlayer.getCurrentTime === 'function' && ytPlayer.getPlayerState() === YT.PlayerState.PLAYING) {
+                    const current = ytPlayer.getCurrentTime();
+                    const total = ytPlayer.getDuration();
+                    if (total > 0) document.getElementById('yt-progress').style.width = (current / total) * 100 + '%';
+                    const formatTime = (time) => Math.floor(time / 60) + ':' + ('0' + Math.floor(time % 60)).slice(-2);
+                    document.getElementById('yt-current-time').innerText = formatTime(current); 
+                    document.getElementById('yt-duration').innerText = formatTime(total);
+                }
+            }, 1000);
+        }
 
         /* DATA LOADER */
         async function loadWebsiteData() {
             try {
+                // 1. SITE CUSTOMIZATION
+                const { data: customization } = await sbClient.from('site_customization').select('*').limit(1).maybeSingle();
+                if (customization) {
+                    if (customization.font_family) {
+                        document.documentElement.style.setProperty('--global-font', customization.font_family);
+                    }
+                    if (customization.accent_color) {
+                        document.documentElement.style.setProperty('--accent', customization.accent_color);
+                        document.documentElement.style.setProperty('--accent-glow', customization.accent_color + '55');
+                    }
+                    if (customization.crt_scanlines) {
+                        document.getElementById('scanlines-layer').style.display = 'block';
+                    }
+                    if (customization.bg_mode_solid) {
+                        document.body.classList.add('solid-bg-mode');
+                        const bgWrap = document.getElementById('video-bg-wrap');
+                        if (bgWrap) bgWrap.style.display = 'none';
+                    }
+                }
+
+                // 2. PROFILE
                 const { data: profile } = await sbClient.from('profile').select('*').eq('id', 1).maybeSingle();
+                const userEffect = customization?.username_effect || 'wave';
                 if (profile) {
-                    setAnimatedUsername(profile.username || 'UpperEchelon');
+                    setAnimatedUsername(profile.username || 'UpperEchelon', userEffect);
                     document.getElementById('bio').innerText = profile.bio || '';
                     if (profile.avatar_url) document.getElementById('avatar').src = profile.avatar_url;
-                } else setAnimatedUsername('UpperEchelon');
+                } else {
+                    setAnimatedUsername('UpperEchelon', userEffect);
+                }
 
+                // 3. STATS
                 const { data: stats } = await sbClient.from('stats').select('*').eq('id', 1).maybeSingle();
                 if (stats) {
                     document.getElementById('stat-1').innerText = stats.years_coding || '3+';
@@ -1270,6 +1399,43 @@
                     sbClient.from('stats').update({ views: currentViews }).eq('id', 1).then();
                 }
 
+                // 4. MINECRAFT CONFIG AUS SUPABASE
+                const { data: mcConfig } = await sbClient.from('minecraft_config').select('*').limit(1).maybeSingle();
+                if (mcConfig) {
+                    if (mcConfig.domain) {
+                        mcDisplayDomain = mcConfig.domain;
+                        const ipText = document.getElementById('mc-ip-text');
+                        if (ipText) ipText.innerText = mcConfig.domain;
+                    }
+                    if (mcConfig.poll_target) {
+                        mcPollTarget = mcConfig.poll_target;
+                    }
+                    if (mcConfig.server_name) {
+                        const titleEl = document.getElementById('mc-display-name');
+                        if (titleEl) {
+                            if (mcConfig.server_name.startsWith('http')) {
+                                titleEl.innerHTML = `<a href="${mcConfig.server_name}" target="_blank" style="color:var(--text-main); text-decoration:underline;">CurseForge Modpack <i class="fas fa-external-link-alt" style="font-size:0.75rem;"></i></a>`;
+                            } else {
+                                titleEl.innerText = mcConfig.server_name;
+                            }
+                        }
+                    }
+                    if (mcConfig.notes) {
+                        const notesEl = document.getElementById('mc-display-notes');
+                        if (notesEl) notesEl.innerText = mcConfig.notes;
+                    }
+                }
+                fetchMinecraftStatus();
+                setInterval(fetchMinecraftStatus, 45000);
+
+                // 5. DISCORD CONFIG AUS SUPABASE
+                const { data: discordCfg } = await sbClient.from('discord_config').select('*').limit(1).maybeSingle();
+                if (discordCfg) {
+                    if (discordCfg.user_id) activeDiscordUserId = discordCfg.user_id;
+                    if (discordCfg.server_id) activeDiscordServerId = discordCfg.server_id;
+                }
+
+                // 6. PLAYLIST
                 const { data: dbPlaylist } = await sbClient.from('youtube_playlist').select('*').order('position', { ascending: true });
                 if (dbPlaylist && dbPlaylist.length > 0) {
                     playlist = dbPlaylist.map(song => ({ title: song.song_title, artist: song.artist, id: song.youtube_id, cover: song.cover_url }));
@@ -1278,6 +1444,7 @@
                 }
                 renderQueue();
 
+                // 7. LINKS
                 const { data: dbLinks } = await sbClient.from('links').select('*');
                 const linksContainer = document.getElementById('links-container');
                 if (dbLinks && dbLinks.length > 0 && linksContainer) {
@@ -1288,7 +1455,8 @@
                     });
                 }
 
-                fetch(`https://discord.com/api/guilds/${DEFAULT_DISCORD_SERVER_ID}/widget.json`).then(res => res.json()).then(data => {
+                // 8. DISCORD WIDGET STATUS
+                fetch(`https://discord.com/api/guilds/${activeDiscordServerId}/widget.json`).then(res => res.json()).then(data => {
                     if (data && data.name) {
                         document.getElementById('discord-guild-stats').innerText = `${data.name} (${data.presence_count || 'Online'})`;
                         if (data.instant_invite) document.getElementById('discord-guild-invite').href = data.instant_invite;
@@ -1299,19 +1467,25 @@
                 updatePlayerUI();
                 tryInitPlayer();
 
-            } catch (err) { console.error(err); }
+            } catch (err) { console.error('Data Loader Error:', err); }
         }
 
-        function setAnimatedUsername(name) {
+        function setAnimatedUsername(name, effect = 'wave') {
             const container = document.getElementById('username'); 
+            container.className = `username effect-${effect}`;
             container.innerHTML = ''; 
-            [...(name || 'UpperEchelon')].forEach((char, index) => {
-                const span = document.createElement('span'); 
-                span.className = 'wave-char'; 
-                span.innerText = char === ' ' ? '\u00A0' : char;
-                span.style.animationDelay = `${index * 0.12}s`; 
-                container.appendChild(span);
-            });
+
+            if (effect === 'wave') {
+                [...(name || 'UpperEchelon')].forEach((char, index) => {
+                    const span = document.createElement('span'); 
+                    span.className = 'wave-char'; 
+                    span.innerText = char === ' ' ? '\u00A0' : char;
+                    span.style.animationDelay = `${index * 0.12}s`; 
+                    container.appendChild(span);
+                });
+            } else {
+                container.innerText = name || 'UpperEchelon';
+            }
         }
 
         function tryInitPlayer() {
@@ -1319,7 +1493,8 @@
                 ytPlayer = new YT.Player('youtube-player', {
                     videoId: playlist[currentSongIndex]?.id || '',
                     playerVars: { 
-                        'autoplay': 0, 
+                        'autoplay': 1, 
+                        'mute': 1,
                         'controls': 0,
                         'disablekb': 1,
                         'enablejsapi': 1,
@@ -1327,90 +1502,49 @@
                         'iv_load_policy': 3,
                         'modestbranding': 1,
                         'rel': 0,
-                        'showinfo': 0
+                        'showinfo': 0,
+                        'playsinline': 1
                     }, 
-                    events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange }
+                    events: { 
+                        'onReady': onPlayerReady, 
+                        'onStateChange': onPlayerStateChange 
+                    }
                 });
             }
+        }
+
+        function onPlayerReady(event) {
+            const vol = document.getElementById('volume-slider')?.value || 50;
+            if (typeof event.target.setVolume === 'function') event.target.setVolume(vol);
+            if (typeof event.target.playVideo === 'function') event.target.playVideo();
         }
 
         function togglePlayPause() {
             if (!ytPlayer || !playlist[currentSongIndex]?.id) return;
-            const state = ytPlayer.getPlayerState(); 
+
+            if (typeof ytPlayer.isMuted === 'function' && ytPlayer.isMuted()) {
+                ytPlayer.unMute();
+                const muteIcon = document.getElementById('mute-icon');
+                if (muteIcon) muteIcon.className = 'fas fa-volume-down';
+            }
+
+            const state = (typeof ytPlayer.getPlayerState === 'function') ? ytPlayer.getPlayerState() : -1; 
             const icon = document.querySelector('#play-pause-btn i');
             const cover = document.getElementById('yt-cover');
+
             if (state === YT.PlayerState.PLAYING) {
-                ytPlayer.pauseVideo(); icon.className = 'fas fa-play'; cover.classList.remove('playing');
+                if (typeof ytPlayer.pauseVideo === 'function') ytPlayer.pauseVideo();
+                if (icon) icon.className = 'fas fa-play';
+                if (cover) cover.classList.remove('playing');
             } else {
-                ytPlayer.playVideo(); icon.className = 'fas fa-pause'; cover.classList.add('playing');
+                if (typeof ytPlayer.playVideo === 'function') ytPlayer.playVideo();
+                if (icon) icon.className = 'fas fa-pause';
+                if (cover) cover.classList.add('playing');
             }
-        }
-
-        function onPlayerReady() {
-            ytPlayer.setVolume(document.getElementById('volume-slider').value);
-            document.getElementById('play-pause-btn').addEventListener('click', togglePlayPause);
-            document.getElementById('next-btn').addEventListener('click', () => changeSong(1));
-            document.getElementById('prev-btn').addEventListener('click', () => changeSong(-1));
-            
-            const shuffleBtn = document.getElementById('shuffle-btn');
-            if (shuffleBtn) {
-                shuffleBtn.addEventListener('click', () => {
-                    isShuffling = !isShuffling;
-                    shuffleBtn.classList.toggle('active', isShuffling);
-                });
-            }
-
-            const loopBtn = document.getElementById('loop-btn');
-            if (loopBtn) {
-                loopBtn.addEventListener('click', () => {
-                    isLooping = !isLooping;
-                    loopBtn.classList.toggle('active', isLooping);
-                });
-            }
-
-            document.getElementById('progress-timeline').addEventListener('click', function(e) {
-                if (!ytPlayer || !playlist[currentSongIndex]?.id) return;
-                const rect = this.getBoundingClientRect(); 
-                const clickPosition = (e.clientX - rect.left) / rect.width;
-                const totalDuration = ytPlayer.getDuration(); 
-                if (totalDuration > 0) ytPlayer.seekTo(totalDuration * clickPosition, true);
-            });
-
-            const volumeSlider = document.getElementById('volume-slider');
-            volumeSlider.addEventListener('input', function() { if (ytPlayer) ytPlayer.setVolume(this.value); });
-            
-            document.getElementById('mute-icon').addEventListener('click', () => {
-                if (!ytPlayer) return;
-                if (ytPlayer.isMuted()) { ytPlayer.unMute(); document.getElementById('mute-icon').className = 'fas fa-volume-down'; }
-                else { ytPlayer.mute(); document.getElementById('mute-icon').className = 'fas fa-volume-mute'; }
-            });
-            
-            window.addEventListener('keydown', (e) => {
-                if (['input', 'textarea'].includes(document.activeElement.tagName.toLowerCase())) return;
-                if (e.code === 'Space') { e.preventDefault(); togglePlayPause(); }
-                else if (e.code === 'ArrowRight') { e.preventDefault(); changeSong(1); }
-                else if (e.code === 'ArrowLeft') { e.preventDefault(); changeSong(-1); }
-                else if (e.code === 'KeyS') { e.preventDefault(); shuffleBtn.click(); }
-                else if (e.code === 'KeyR') { e.preventDefault(); loopBtn.click(); }
-                else if (e.code === 'KeyM') { e.preventDefault(); document.getElementById('mute-icon').click(); }
-                else if (e.key === '~' || e.key === '^') { e.preventDefault(); openCli(); }
-                else if (e.code === 'ArrowUp') { e.preventDefault(); let v = Math.min(100, parseInt(volumeSlider.value) + 5); volumeSlider.value = v; if (ytPlayer) ytPlayer.setVolume(v); }
-                else if (e.code === 'ArrowDown') { e.preventDefault(); let v = Math.max(0, parseInt(volumeSlider.value) - 5); volumeSlider.value = v; if (ytPlayer) ytPlayer.setVolume(v); }
-            });
-
-            setInterval(() => {
-                if (ytPlayer && typeof ytPlayer.getCurrentTime === 'function' && ytPlayer.getPlayerState() === YT.PlayerState.PLAYING) {
-                    const current = ytPlayer.getCurrentTime(); const total = ytPlayer.getDuration();
-                    if (total > 0) document.getElementById('yt-progress').style.width = (current / total) * 100 + '%';
-                    const formatTime = (time) => Math.floor(time / 60) + ':' + ('0' + Math.floor(time % 60)).slice(-2);
-                    document.getElementById('yt-current-time').innerText = formatTime(current); 
-                    document.getElementById('yt-duration').innerText = formatTime(total);
-                }
-            }, 1000);
         }
 
         function changeSong(direction) {
-            if (playlist.length <= 1 && !playlist[0]?.id) return;
+            if (playlist.length === 0) return;
             if (isShuffling && playlist.length > 1) {
                 let nextIdx = currentSongIndex;
                 while (nextIdx === currentSongIndex) {
@@ -1423,13 +1557,18 @@
                 if (currentSongIndex < 0) currentSongIndex = playlist.length - 1;
             }
 
-            if(ytPlayer && ytApiReady) {
+            if (ytPlayer && ytApiReady && typeof ytPlayer.loadVideoById === 'function') {
                 ytPlayer.loadVideoById(playlist[currentSongIndex].id);
+                if (typeof ytPlayer.unMute === 'function') ytPlayer.unMute();
+                ytPlayer.playVideo();
             }
+
             updatePlayerUI(); 
             renderQueue();
-            document.querySelector('#play-pause-btn i').className = 'fas fa-pause';
-            document.getElementById('yt-cover').classList.add('playing');
+            const icon = document.querySelector('#play-pause-btn i');
+            if (icon) icon.className = 'fas fa-pause';
+            const cover = document.getElementById('yt-cover');
+            if (cover) cover.classList.add('playing');
         }
 
         function updatePlayerUI() {
@@ -1448,22 +1587,27 @@
             const icon = document.querySelector('#play-pause-btn i');
             const cover = document.getElementById('yt-cover');
             if (event.data === YT.PlayerState.PLAYING) { 
-                icon.className = 'fas fa-pause'; cover.classList.add('playing'); 
+                if (icon) icon.className = 'fas fa-pause';
+                if (cover) cover.classList.add('playing'); 
             } else { 
-                icon.className = 'fas fa-play'; cover.classList.remove('playing'); 
+                if (icon) icon.className = 'fas fa-play';
+                if (cover) cover.classList.remove('playing'); 
             }
 
             if (event.data === YT.PlayerState.ENDED) {
                 if (isLooping) {
-                    ytPlayer.seekTo(0);
-                    ytPlayer.playVideo();
+                    if (typeof ytPlayer.seekTo === 'function') ytPlayer.seekTo(0);
+                    if (typeof ytPlayer.playVideo === 'function') ytPlayer.playVideo();
                 } else {
                     changeSong(1);
                 }
             } 
         }
 
-        window.addEventListener('DOMContentLoaded', loadWebsiteData);
+        window.addEventListener('DOMContentLoaded', () => {
+            bindControls();
+            loadWebsiteData();
+        });
     </script>
 </body>
 </html>
