@@ -74,6 +74,7 @@
             <li class="nav-item" data-target="tab-links"><i class="fas fa-link"></i> Link Manager</li>
             <li class="nav-item" data-target="tab-stats"><i class="fas fa-chart-bar"></i> Stats Adjuster</li>
             <li class="nav-item" data-target="tab-youtube"><i class="fab fa-youtube"></i> YouTube Player</li>
+            <li class="nav-item" data-target="tab-minecraft"><i class="fas fa-cube"></i> Minecraft Server</li>
             <li class="nav-item" data-target="tab-discord"><i class="fab fa-discord"></i> Discord Config</li>
         </ul>
     </div>
@@ -197,7 +198,33 @@
             </div>
         </div>
 
-        <!-- TAB 6: DISCORD -->
+        <!-- TAB 6: MINECRAFT CONFIG (NEU) -->
+        <div id="tab-minecraft" class="tab-content">
+            <div class="admin-card" style="max-width: 600px;">
+                <div class="card-title"><i class="fas fa-cube"></i> Minecraft Server Info</div>
+                <form id="mc-form">
+                    <div class="form-group">
+                        <label>Öffentliche Domain / Serveradresse</label>
+                        <input type="text" id="mc-input-domain" value="vengeanceutilities.de" readonly style="opacity:0.8; cursor:not-allowed;">
+                    </div>
+                    <div class="form-group">
+                        <label>Playit Tunnel Adresse (Internes Poll-Target)</label>
+                        <input type="text" id="mc-input-tunnel" value="cairo-pumping.tun.ply.gg:45750" readonly style="opacity:0.8; cursor:not-allowed;">
+                    </div>
+                    <div class="form-group">
+                        <label>Angezeigter Servername</label>
+                        <input type="text" id="mc-input-name" value="Vengeance NeoForge World">
+                    </div>
+                    <div class="form-group">
+                        <label>Modpack / Notizen</label>
+                        <textarea id="mc-input-desc" rows="3" placeholder="Z. B. NeoForge 1.21.1 mit Custom Modpack"></textarea>
+                    </div>
+                    <button type="submit" class="btn-save">Einstellungen sichern</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- TAB 7: DISCORD -->
         <div id="tab-discord" class="tab-content">
             <div class="admin-card" style="max-width: 600px;">
                 <div class="card-title"><i class="fab fa-discord"></i> Discord Integration</div>
@@ -419,7 +446,6 @@
         dbStatus.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Speichere Reihenfolge...';
 
         try {
-            // Alle Updates parallel an Supabase schicken
             const updates = items.map((item, index) => {
                 const id = item.getAttribute('data-id');
                 return sbClient
@@ -475,7 +501,7 @@
         
         const { error } = await sbClient.from('site_customization').upsert({ id: currentCustomizationId, ...payload });
         
-        if(!error) alert('Design-Einstellungen gespeichert! 🎨 \n(Stelle sicher, dass die Tabelle "site_customization" in Supabase existiert)');
+        if(!error) alert('Design-Einstellungen gespeichert! 🎨');
         else alert('Fehler: ' + error.message);
     });
 
@@ -505,7 +531,7 @@
         }
 
         if (videoId.length !== 11) {
-            alert('Ungültige YouTube-URL oder Video-ID! Die ID muss exakt 11 Zeichen lang sein.');
+            alert('Ungültige YouTube-URL oder Video-ID!');
             return;
         }
 
@@ -540,10 +566,15 @@
         }]);
         
         if(!error) { 
-            alert('Song hinzugefügt! Das Cover wurde validiert und gespeichert. 🎧');
+            alert('Song hinzugefügt! 🎧');
             document.getElementById('youtube-form').reset();
             loadPlaylistEntries();
         } else { alert(error.message); }
+    });
+
+    document.getElementById('mc-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        alert('Minecraft-Server-Informationen gemerkt! 🧊');
     });
 
     document.getElementById('discord-form').addEventListener('submit', async (e) => {
