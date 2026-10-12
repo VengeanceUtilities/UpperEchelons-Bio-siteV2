@@ -40,4 +40,18 @@ Ein dynamisches, interaktives Bento-Grid-Bio-Dashboard mit Glassmorphism-UI, Liv
 ├── index.html          # Öffentliche Bento-Grid Bio-Seite
 ├── dashboard.html      # Administratives Dashboard für DB-Settings
 └── README.md           # Projektdokumentation
-⌨️ Hotkeys & ShortcutsTasteAktionSpacePlay / Pause Audio→ / ←Nächster / Vorheriger Track↑ / ↓Lautstärke regeln (+/- 5%)SZufallswiedergabe (Shuffle)RTrack wiederholen (Loop)MMute / Unmute~ oder ^Interaktives Terminal öffnen💻 Developer SpecsOS: Windows 11 Pro (AtlasOS)CPU: AMD Ryzen 7 5800XGPU: AMD Radeon RX 6750 XTRAM: 32 GB DDR4 3600 MHzBoard: ASUS ROG Strix B550-A Gaming
+⌨️ Hotkeys & Shortcuts
+Taste    Aktion
+Space    Play / Pause Audio
+→ / ←    Nächster / Vorheriger Track
+↑ / ↓    Lautstärke regeln (+/- 5%)
+S        Zufallswiedergabe (Shuffle)
+R        Track wiederholen (Loop)
+M        Mute / Unmute
+~        Interaktives Terminal öffnen
+💻 Developer Specs
+OS: Windows 11 Pro (AtlasOS)
+CPU: AMD Ryzen 7 5800X
+GPU: AMD Radeon RX 6750 XT
+RAM: 32 GB DDR4 3600 MHz
+Board: ASUS ROG Strix B550-A Gaming
