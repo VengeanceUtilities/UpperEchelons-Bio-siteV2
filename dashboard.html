@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vengeance OS - Admin Control</title>
     
-    <!-- Tab Icon (Favicon) für das Dashboard: Ein rot/oranger Zahnrad-Control-Key -->
+    <!-- Tab Icon (Favicon) für das Dashboard -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>⚙️</text></svg>">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -198,22 +198,22 @@
             </div>
         </div>
 
-        <!-- TAB 6: MINECRAFT CONFIG (NEU) -->
+        <!-- TAB 6: MINECRAFT CONFIG -->
         <div id="tab-minecraft" class="tab-content">
             <div class="admin-card" style="max-width: 600px;">
                 <div class="card-title"><i class="fas fa-cube"></i> Minecraft Server Info</div>
                 <form id="mc-form">
                     <div class="form-group">
                         <label>Öffentliche Domain / Serveradresse</label>
-                        <input type="text" id="mc-input-domain" value="vengeanceutilities.de" readonly style="opacity:0.8; cursor:not-allowed;">
+                        <input type="text" id="mc-input-domain" value="vengeanceutilities.de">
                     </div>
                     <div class="form-group">
                         <label>Playit Tunnel Adresse (Internes Poll-Target)</label>
-                        <input type="text" id="mc-input-tunnel" value="cairo-pumping.tun.ply.gg:45750" readonly style="opacity:0.8; cursor:not-allowed;">
+                        <input type="text" id="mc-input-tunnel" value="cairo-pumping.tun.ply.gg:45750">
                     </div>
                     <div class="form-group">
-                        <label>Angezeigter Servername</label>
-                        <input type="text" id="mc-input-name" value="Vengeance NeoForge World">
+                        <label>Angezeigter Servername / Modpack Link</label>
+                        <input type="text" id="mc-input-name" placeholder="Name oder Link (z. B. CurseForge)">
                     </div>
                     <div class="form-group">
                         <label>Modpack / Notizen</label>
@@ -229,7 +229,7 @@
             <div class="admin-card" style="max-width: 600px;">
                 <div class="card-title"><i class="fab fa-discord"></i> Discord Integration</div>
                 <form id="discord-form">
-                    <div class="form-group"><label>Personal Discord ID (Lanyard API)</label><input type="text" id="discord-user-id"></div>
+                    <div class="form-group"><label>Personal Discord ID (Lanyard / Profil-Kopieren)</label><input type="text" id="discord-user-id"></div>
                     <div class="form-group"><label>Discord Server ID (Widget API)</label><input type="text" id="discord-server-id"></div>
                     <button type="submit" class="btn-save">Save Discord Settings</button>
                 </form>
@@ -246,6 +246,7 @@
     let currentStatsId = 1;
     let currentDiscordId = 1;
     let currentCustomizationId = 1;
+    let currentMcId = 1;
 
     if(sbClient) {
         const dbStatus = document.getElementById('db-status');
@@ -291,6 +292,15 @@
                 document.getElementById('stat-val-2').value = stats.languages || '';
                 document.getElementById('stat-val-3').value = stats.projects || '';
                 document.getElementById('stat-val-4').value = stats.views || 0;
+            }
+
+            const { data: mc } = await sbClient.from('minecraft_config').select('*').limit(1).maybeSingle();
+            if (mc) {
+                currentMcId = mc.id;
+                document.getElementById('mc-input-domain').value = mc.domain || 'vengeanceutilities.de';
+                document.getElementById('mc-input-tunnel').value = mc.poll_target || 'cairo-pumping.tun.ply.gg:45750';
+                document.getElementById('mc-input-name').value = mc.server_name || '';
+                document.getElementById('mc-input-desc').value = mc.notes || '';
             }
 
             const { data: discord } = await sbClient.from('discord_config').select('*').limit(1).maybeSingle();
@@ -484,7 +494,7 @@
             avatar_url: document.getElementById('input-avatar').value,
             bio: document.getElementById('input-bio').value
         };
-        const { error } = await sbClient.from('profile').update(payload).eq('id', currentProfileId);
+        const { error } = await sbClient.from('profile').upsert({ id: currentProfileId, ...payload });
         if(!error) alert('Profil aktualisiert! 🔥');
         else alert(error.message);
     });
@@ -513,7 +523,7 @@
             projects: document.getElementById('stat-val-3').value,
             views: parseInt(document.getElementById('stat-val-4').value) || 0
         };
-        const { error } = await sbClient.from('stats').update(payload).eq('id', currentStatsId);
+        const { error } = await sbClient.from('stats').upsert({ id: currentStatsId, ...payload });
         if(!error) alert('Statistiken gespeichert! 📊');
         else alert(error.message);
     });
@@ -572,9 +582,18 @@
         } else { alert(error.message); }
     });
 
-    document.getElementById('mc-form').addEventListener('submit', (e) => {
+    document.getElementById('mc-form').addEventListener('submit', async (e) => {
         e.preventDefault();
-        alert('Minecraft-Server-Informationen gemerkt! 🧊');
+        const payload = {
+            domain: document.getElementById('mc-input-domain').value.trim(),
+            poll_target: document.getElementById('mc-input-tunnel').value.trim(),
+            server_name: document.getElementById('mc-input-name').value.trim(),
+            notes: document.getElementById('mc-input-desc').value.trim()
+        };
+
+        const { error } = await sbClient.from('minecraft_config').upsert({ id: currentMcId, ...payload });
+        if(!error) alert('Minecraft-Server-Informationen in Supabase gesichert! 🧊');
+        else alert('Fehler: ' + error.message);
     });
 
     document.getElementById('discord-form').addEventListener('submit', async (e) => {
@@ -583,7 +602,7 @@
             user_id: document.getElementById('discord-user-id').value,
             server_id: document.getElementById('discord-server-id').value
         };
-        const { error } = await sbClient.from('discord_config').update(payload).eq('id', currentDiscordId);
+        const { error } = await sbClient.from('discord_config').upsert({ id: currentDiscordId, ...payload });
         if(!error) alert('Discord-Config gesichert! 💬');
         else alert(error.message);
     });
