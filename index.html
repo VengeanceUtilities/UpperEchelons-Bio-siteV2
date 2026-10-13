@@ -14,6 +14,22 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
+
+    <!-- SOFORTIGER THEME-LOADER (Verhindert jegliches Aufblitzen falscher Farben/Fonts) -->
+    <script>
+        (function() {
+            const savedAccent = localStorage.getItem('v_accent');
+            const savedFont = localStorage.getItem('v_font');
+            if (savedAccent) {
+                document.documentElement.style.setProperty('--accent', savedAccent);
+                document.documentElement.style.setProperty('--accent-glow', savedAccent + '55');
+            }
+            if (savedFont) {
+                document.documentElement.style.setProperty('--global-font', savedFont);
+            }
+        })();
+    </script>
+
     <style>
         :root {
             --bg-color: #0b0b0c;
@@ -23,8 +39,9 @@
             --text-main: #f3f4f6;
             --text-muted: #9ca3af;
             
-            --accent: #7c3aed;
-            --accent-glow: rgba(123, 58, 237, 0.35);
+            /* Standardmäßig direkt auf Pink & deinen Haupt-Font gesetzt statt Lila/Segoe UI */
+            --accent: #ec4899;
+            --accent-glow: rgba(236, 72, 153, 0.35);
             
             --bg-grad-1: #090514;
             --bg-grad-2: #0b0b0c;
@@ -34,7 +51,7 @@
             --stat-yellow: rgba(251, 191, 36, 0.15);
             --stat-blue: rgba(59, 130, 246, 0.15);
             
-            --global-font: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            --global-font: 'Outfit', 'Inter', sans-serif;
         }
 
         * {
@@ -72,11 +89,15 @@
         #boot-screen {
             position: fixed; inset: 0; background: #050505; z-index: 999999;
             display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
-            padding: 40px; color: var(--accent); font-family: 'Roboto Mono', monospace;
+            padding: 40px; color: var(--accent); font-family: var(--global-font);
             font-size: 1.1rem; text-shadow: 0 0 5px var(--accent-glow);
             transition: opacity 0.5s ease-out;
         }
-        .boot-line { margin: 4px 0; opacity: 0; }
+        .boot-line { 
+            margin: 4px 0; 
+            opacity: 0; 
+            font-family: inherit; /* Verhindert Font-Wechsel durch den * Selektor */
+        }
         @keyframes fade { to { opacity: 1; } }
 
         .scanlines {
@@ -363,7 +384,7 @@
         }
         .mc-address-row:hover {
             border-color: var(--accent);
-            background: rgba(124, 58, 237, 0.08);
+            background: rgba(236, 72, 153, 0.08);
         }
         .mc-ip-code {
             font-family: 'Fira Code', 'Roboto Mono', monospace;
@@ -502,10 +523,10 @@
 
         /* TERMINAL MODAL */
         .cli-box {
-            background: rgba(9, 9, 11, 0.9); border: 1px solid rgba(124, 58, 237, 0.4); border-radius: 12px;
-            font-family: 'Fira Code', 'Roboto Mono', monospace; font-size: 0.85rem; color: #a78bfa;
+            background: rgba(9, 9, 11, 0.9); border: 1px solid var(--accent-glow); border-radius: 12px;
+            font-family: 'Fira Code', 'Roboto Mono', monospace; font-size: 0.85rem; color: var(--accent);
             padding: 16px; height: 350px; display: flex; flex-direction: column; overflow: hidden;
-            box-shadow: 0 0 25px rgba(124, 58, 237, 0.2); backdrop-filter: blur(10px);
+            box-shadow: 0 0 25px var(--accent-glow); backdrop-filter: blur(10px);
         }
         .cli-output { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
         .cli-output::-webkit-scrollbar { width: 4px; } .cli-output::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
@@ -530,7 +551,7 @@
             transition: all 0.15s ease;
         }
         .ctx-item i { width: 16px; color: var(--accent); }
-        .ctx-item:hover { background: rgba(124, 58, 237, 0.25); transform: translateX(3px); }
+        .ctx-item:hover { background: var(--accent-glow); transform: translateX(3px); }
         .ctx-separator { height: 1px; background: rgba(255, 255, 255, 0.08); margin: 4px 6px; }
     </style>
 </head>
@@ -828,6 +849,7 @@
 
     <script>
         let ytApiReady = false;
+        let audioUnlocked = false;
 
         window.addEventListener('load', () => {
             setTimeout(() => {
@@ -863,6 +885,29 @@
             ytApiReady = true;
             tryInitPlayer();
         };
+
+        // UNLOCK AUDIO FALLBACK (Schaltet Ton beim ersten Klick/Tastendruck sofort frei, falls Browser Autoplay mit Ton blockiert hat)
+        function unlockAudioOnInteraction(e) {
+            if (audioUnlocked || !ytPlayer || typeof ytPlayer.unMute !== 'function') return;
+            // Nicht doppelt auslösen, wenn direkt auf den Mute-Button geklickt wurde
+            if (e && e.target && e.target.closest('#mute-icon')) return;
+
+            audioUnlocked = true;
+            const vol = document.getElementById('volume-slider')?.value || 50;
+            ytPlayer.unMute();
+            ytPlayer.setVolume(vol);
+            
+            const muteIcon = document.getElementById('mute-icon');
+            if (muteIcon) muteIcon.className = 'fas fa-volume-down';
+
+            const state = (typeof ytPlayer.getPlayerState === 'function') ? ytPlayer.getPlayerState() : -1;
+            if (state !== YT.PlayerState.PLAYING) {
+                ytPlayer.playVideo();
+            }
+        }
+
+        window.addEventListener('click', unlockAudioOnInteraction, { capture: true });
+        window.addEventListener('keydown', unlockAudioOnInteraction, { capture: true });
 
         let audioCtx = null;
         function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
@@ -1064,6 +1109,7 @@
                     if (ytPlayer && ytApiReady && typeof ytPlayer.loadVideoById === 'function') {
                         ytPlayer.loadVideoById(playlist[currentSongIndex].id);
                         if (typeof ytPlayer.unMute === 'function') ytPlayer.unMute();
+                        audioUnlocked = true;
                         ytPlayer.playVideo();
                     }
                     updatePlayerUI();
@@ -1183,12 +1229,12 @@
             switch(cmd) {
                 case 'help':
                     res.innerHTML = `Verfügbare Befehle:<br>
-                    • <span style="color:#a78bfa;">mc / status</span> - Minecraft Server Live-Status abfragen<br>
-                    • <span style="color:#a78bfa;">projects</span> - Zeigt aktuelle Software-Projekte an<br>
-                    • <span style="color:#a78bfa;">specs</span> - Listet PC-Hardware auf<br>
-                    • <span style="color:#a78bfa;">skills</span> - Übersicht deiner Programmiersprachen<br>
-                    • <span style="color:#a78bfa;">play / pause / next / prev</span> - Steuert den Music-Player<br>
-                    • <span style="color:#a78bfa;">clear / cls</span> - Leert das Terminal`;
+                    • <span style="color:var(--accent);">mc / status</span> - Minecraft Server Live-Status abfragen<br>
+                    • <span style="color:var(--accent);">projects</span> - Zeigt aktuelle Software-Projekte an<br>
+                    • <span style="color:var(--accent);">specs</span> - Listet PC-Hardware auf<br>
+                    • <span style="color:var(--accent);">skills</span> - Übersicht deiner Programmiersprachen<br>
+                    • <span style="color:var(--accent);">play / pause / next / prev</span> - Steuert den Music-Player<br>
+                    • <span style="color:var(--accent);">clear / cls</span> - Leert das Terminal`;
                     break;
                 case 'mc':
                 case 'status':
@@ -1289,7 +1335,10 @@
             if (volumeSlider) {
                 volumeSlider.addEventListener('input', function() {
                     if (ytPlayer && typeof ytPlayer.setVolume === 'function') {
+                        ytPlayer.unMute();
                         ytPlayer.setVolume(this.value);
+                        audioUnlocked = true;
+                        if (muteIcon) muteIcon.className = 'fas fa-volume-down';
                     }
                 });
             }
@@ -1297,6 +1346,7 @@
             if (muteIcon) {
                 muteIcon.addEventListener('click', () => {
                     if (!ytPlayer || typeof ytPlayer.isMuted !== 'function') return;
+                    audioUnlocked = true;
                     if (ytPlayer.isMuted()) {
                         ytPlayer.unMute();
                         muteIcon.className = 'fas fa-volume-down';
@@ -1361,10 +1411,12 @@
                 if (customization) {
                     if (customization.font_family) {
                         document.documentElement.style.setProperty('--global-font', customization.font_family);
+                        localStorage.setItem('v_font', customization.font_family);
                     }
                     if (customization.accent_color) {
                         document.documentElement.style.setProperty('--accent', customization.accent_color);
                         document.documentElement.style.setProperty('--accent-glow', customization.accent_color + '55');
+                        localStorage.setItem('v_accent', customization.accent_color);
                     }
                     if (customization.crt_scanlines) {
                         document.getElementById('scanlines-layer').style.display = 'block';
@@ -1494,7 +1546,7 @@
                     videoId: playlist[currentSongIndex]?.id || '',
                     playerVars: { 
                         'autoplay': 1, 
-                        'mute': 1,
+                        'mute': 0, /* Versucht direkt mit Ton zu starten */
                         'controls': 0,
                         'disablekb': 1,
                         'enablejsapi': 1,
@@ -1516,21 +1568,45 @@
         function onPlayerReady(event) {
             const vol = document.getElementById('volume-slider')?.value || 50;
             if (typeof event.target.setVolume === 'function') event.target.setVolume(vol);
+            if (typeof event.target.unMute === 'function') event.target.unMute();
             if (typeof event.target.playVideo === 'function') event.target.playVideo();
+
+            // Prüfen, ob der Browser Autoplay mit Sound nach 400ms blockiert hat.
+            // Falls ja: Kurz stumm starten, damit das Video schon mal läuft (der erste Klick auf der Seite schaltet den Ton dann sofort ein)
+            setTimeout(() => {
+                if (ytPlayer && typeof ytPlayer.getPlayerState === 'function') {
+                    const state = ytPlayer.getPlayerState();
+                    if (state !== YT.PlayerState.PLAYING && state !== YT.PlayerState.BUFFERING) {
+                        ytPlayer.mute();
+                        ytPlayer.playVideo();
+                        const muteIcon = document.getElementById('mute-icon');
+                        if (muteIcon) muteIcon.className = 'fas fa-volume-mute';
+                    } else {
+                        audioUnlocked = true;
+                    }
+                }
+            }, 400);
         }
 
         function togglePlayPause() {
             if (!ytPlayer || !playlist[currentSongIndex]?.id) return;
 
-            if (typeof ytPlayer.isMuted === 'function' && ytPlayer.isMuted()) {
-                ytPlayer.unMute();
-                const muteIcon = document.getElementById('mute-icon');
-                if (muteIcon) muteIcon.className = 'fas fa-volume-down';
-            }
-
             const state = (typeof ytPlayer.getPlayerState === 'function') ? ytPlayer.getPlayerState() : -1; 
             const icon = document.querySelector('#play-pause-btn i');
             const cover = document.getElementById('yt-cover');
+
+            // Wenn das Video bereits läuft, aber noch gemutet war -> nur Ton anmachen, NICHT pausieren!
+            if (typeof ytPlayer.isMuted === 'function' && ytPlayer.isMuted()) {
+                ytPlayer.unMute();
+                audioUnlocked = true;
+                const muteIcon = document.getElementById('mute-icon');
+                if (muteIcon) muteIcon.className = 'fas fa-volume-down';
+                if (state === YT.PlayerState.PLAYING) {
+                    if (icon) icon.className = 'fas fa-pause';
+                    if (cover) cover.classList.add('playing');
+                    return; 
+                }
+            }
 
             if (state === YT.PlayerState.PLAYING) {
                 if (typeof ytPlayer.pauseVideo === 'function') ytPlayer.pauseVideo();
@@ -1560,6 +1636,7 @@
             if (ytPlayer && ytApiReady && typeof ytPlayer.loadVideoById === 'function') {
                 ytPlayer.loadVideoById(playlist[currentSongIndex].id);
                 if (typeof ytPlayer.unMute === 'function') ytPlayer.unMute();
+                audioUnlocked = true;
                 ytPlayer.playVideo();
             }
 
