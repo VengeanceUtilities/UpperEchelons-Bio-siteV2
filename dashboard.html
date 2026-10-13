@@ -3,120 +3,431 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vengeance OS - Admin Control</title>
+    <title>Vengeance OS - Admin Control Center</title>
     
-    <!-- Tab Icon (Favicon) für das Dashboard -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>⚙️</text></svg>">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Outfit:wght@400;600;800&family=Roboto+Mono:wght@400;600;700&family=Fira+Code:wght@400;600;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
-            --bg-dark: #0f0f11; 
-            --panel-bg: #161619; 
-            --border-color: rgba(255,255,255,0.06);
-            --input-bg: #1e1e22; 
-            --text-light: #f3f4f6; 
-            --text-gray: #9ca3af; 
-            --accent: #7c3aed;
+            --bg-dark: #09090c; 
+            --panel-bg: rgba(18, 18, 24, 0.55); 
+            --border-color: rgba(255, 255, 255, 0.12);
+            --edge-highlight: rgba(255, 255, 255, 0.22);
+            --input-bg: rgba(10, 10, 14, 0.65); 
+            --text-light: #f8fafc; 
+            --text-gray: #94a3b8; 
+            --accent: #ec4899;
+            --accent-glow: rgba(236, 72, 153, 0.35);
             --danger: #ef4444;
+            --success: #22c55e;
+            --warning: #f59e0b;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
-        body { background-color: var(--bg-dark); color: var(--text-light); display: flex; min-height: 100vh; }
-        
-        .sidebar { width: 260px; background-color: var(--panel-bg); border-right: 1px solid var(--border-color); padding: 24px; display: flex; flex-direction: column; gap: 30px; }
-        .logo { font-size: 1.2rem; font-weight: bold; color: var(--text-light); display: flex; align-items: center; gap: 10px; }
-        .nav-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-        .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: var(--text-gray); cursor: pointer; border-radius: 8px; transition: all 0.2s; }
-        .nav-item.active, .nav-item:hover { color: var(--text-light); background: rgba(255,255,255,0.04); }
-        
-        .main-workspace { flex-grow: 1; padding: 40px; overflow-y: auto; }
-        .header { margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
-        .admin-card { background: var(--panel-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; margin-bottom: 25px; }
-        .card-title { font-size: 1.1rem; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
-        
-        .form-group { margin-bottom: 18px; }
-        label { display: block; font-size: 0.85rem; color: var(--text-gray); margin-bottom: 6px; }
-        input[type="text"], input[type="color"], select, textarea { width: 100%; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 6px; padding: 10px 14px; color: var(--text-light); font-size: 0.9rem; outline: none; }
-        input[type="color"] { padding: 4px 8px; height: 42px; cursor: pointer; }
-        input:focus, select:focus, textarea:focus { border-color: var(--accent); }
-        .btn-save { background: var(--accent); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; }
-        
-        .list-item { 
-            display: flex; justify-content: space-between; align-items: center; padding: 12px; 
-            background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; 
-            margin-bottom: 10px; user-select: none; transition: background 0.15s, border-color 0.15s; 
-        }
-        .list-item.dragging { opacity: 0.4; border-color: var(--accent); background: rgba(124, 58, 237, 0.1); }
-        .list-info { display: flex; align-items: center; gap: 12px; }
-        .list-thumb { width: 45px; height: 45px; border-radius: 6px; object-fit: cover; border: 1px solid rgba(255,255,255,0.05); }
-        .btn-delete { background: none; border: none; color: var(--text-gray); cursor: pointer; font-size: 1rem; transition: color 0.2s; }
-        .btn-delete:hover { color: var(--danger); }
 
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', 'Inter', sans-serif; }
         
+        body { 
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 15% 15%, var(--accent-glow) 0%, transparent 35%),
+                radial-gradient(circle at 85% 85%, rgba(59, 130, 246, 0.12) 0%, transparent 40%),
+                linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+            background-attachment: fixed;
+            color: var(--text-light); 
+            display: flex; 
+            min-height: 100vh; 
+            overflow-x: hidden;
+        }
+        
+        /* SIDEBAR */
+        .sidebar { 
+            width: 270px; 
+            background: rgba(12, 12, 16, 0.65);
+            backdrop-filter: blur(14px) saturate(180%);
+            border-right: 1px solid var(--border-color); 
+            padding: 24px 18px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 24px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            flex-shrink: 0;
+        }
+        .logo { 
+            font-size: 1.25rem; font-weight: 800; color: var(--text-light); 
+            display: flex; align-items: center; gap: 10px; padding: 0 8px;
+            letter-spacing: 0.5px;
+        }
+        .logo-badge {
+            font-size: 0.65rem; background: var(--accent-glow); color: var(--accent);
+            border: 1px solid var(--accent); padding: 2px 6px; border-radius: 6px;
+        }
+        .nav-list { list-style: none; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+        .nav-item { 
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 11px 14px; color: var(--text-gray); cursor: pointer; 
+            border-radius: 10px; transition: all 0.2s; font-weight: 600; font-size: 0.92rem;
+            border: 1px solid transparent;
+        }
+        .nav-item-left { display: flex; align-items: center; gap: 12px; }
+        .nav-item i { width: 18px; text-align: center; transition: color 0.2s; }
+        .nav-item:hover { color: var(--text-light); background: rgba(255,255,255,0.04); }
+        .nav-item.active { 
+            color: #fff; 
+            background: linear-gradient(90deg, var(--accent-glow), rgba(255,255,255,0.02)); 
+            border-color: var(--accent);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .nav-item.active i { color: var(--accent); }
+        .nav-counter {
+            font-size: 0.7rem; background: rgba(255,255,255,0.08); color: var(--text-light);
+            padding: 2px 7px; border-radius: 10px; font-family: 'Fira Code', monospace;
+        }
+
+        .sidebar-footer {
+            border-top: 1px solid var(--border-color);
+            padding-top: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .btn-sidebar-action {
+            width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color);
+            color: var(--text-light); padding: 9px 12px; border-radius: 8px; cursor: pointer;
+            font-size: 0.82rem; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px;
+            text-decoration: none; transition: all 0.2s;
+        }
+        .btn-sidebar-action:hover { border-color: var(--accent); background: var(--accent-glow); }
+
+        /* MAIN WORKSPACE */
+        .main-workspace { flex-grow: 1; padding: 32px 40px; overflow-y: auto; max-width: 1400px; margin: 0 auto; }
+        .header { 
+            margin-bottom: 26px; display: flex; justify-content: space-between; align-items: center; 
+            flex-wrap: wrap; gap: 15px;
+        }
+        .header-right { display: flex; align-items: center; gap: 12px; }
+        .status-pill {
+            background: rgba(18, 18, 24, 0.7); border: 1px solid var(--border-color);
+            padding: 7px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;
+            display: inline-flex; align-items: center; gap: 8px; backdrop-filter: blur(8px);
+        }
+
+        /* QUICK KPI BAR */
+        .kpi-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 14px; margin-bottom: 28px;
+        }
+        .kpi-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(16,16,22,0.45));
+            border: 1px solid var(--border-color); border-top-color: var(--edge-highlight);
+            backdrop-filter: blur(8px) saturate(160%); border-radius: 14px; padding: 14px 18px;
+            display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+        }
+        .kpi-title { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-gray); font-weight: 700; }
+        .kpi-val { font-size: 1.3rem; font-weight: 800; margin-top: 2px; }
+        .kpi-icon { width: 38px; height: 38px; border-radius: 10px; background: var(--accent-glow); color: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+
+        /* CRYSTAL ADMIN CARDS & LAYOUT GRIDS */
+        .tab-grid-layout {
+            display: grid; grid-template-columns: 1fr; gap: 24px; align-items: start;
+        }
+        @media (min-width: 1050px) {
+            .tab-grid-layout.two-col { grid-template-columns: 1.15fr 0.85fr; }
+        }
+
+        .admin-card { 
+            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, var(--panel-bg) 100%);
+            border: 1px solid var(--border-color); 
+            border-top-color: var(--edge-highlight);
+            backdrop-filter: blur(10px) saturate(170%);
+            border-radius: 16px; 
+            padding: 24px; 
+            margin-bottom: 24px;
+            box-shadow: 0 12px 32px rgba(0,0,0,0.45), inset 0 1px 1px rgba(255,255,255,0.12);
+        }
+        .card-title { 
+            font-size: 1.05rem; font-weight: 800; margin-bottom: 20px; 
+            display: flex; align-items: center; justify-content: space-between; 
+            border-bottom: 1px solid var(--border-color); padding-bottom: 12px; 
+        }
+        .card-title-left { display: flex; align-items: center; gap: 10px; }
+        .card-title-left i { color: var(--accent); }
+        
+        /* FORMS & INPUTS */
+        .form-group { margin-bottom: 16px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        label { display: flex; justify-content: space-between; font-size: 0.82rem; color: var(--text-gray); margin-bottom: 6px; font-weight: 600; }
+        input[type="text"], input[type="number"], input[type="color"], select, textarea { 
+            width: 100%; background: var(--input-bg); border: 1px solid var(--border-color); 
+            border-radius: 8px; padding: 10px 14px; color: var(--text-light); font-size: 0.9rem; 
+            outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        input[type="color"] { padding: 4px 8px; height: 42px; cursor: pointer; }
+        input:focus, select:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 12px var(--accent-glow); }
+        
+        .input-with-btn { display: flex; gap: 8px; }
+        
+        /* BUTTONS */
+        .btn-save { 
+            background: var(--accent); color: white; border: none; padding: 10px 20px; 
+            border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.9rem;
+            display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s;
+            box-shadow: 0 4px 15px var(--accent-glow);
+        }
+        .btn-save:hover { filter: brightness(1.12); transform: translateY(-1px); box-shadow: 0 6px 20px var(--accent-glow); }
+        
+        .btn-secondary {
+            background: rgba(255,255,255,0.07); color: var(--text-light); border: 1px solid var(--border-color);
+            padding: 10px 14px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.84rem;
+            display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s; white-space: nowrap;
+        }
+        .btn-secondary:hover { border-color: var(--accent); color: var(--accent); background: rgba(255,255,255,0.1); }
+
+        /* SWATCHES & ICON PRESETS */
+        .preset-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+        .preset-pill {
+            background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: var(--text-gray);
+            padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.15s;
+        }
+        .preset-pill:hover { color: #fff; border-color: var(--accent); background: var(--accent-glow); }
+        .color-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+
+        /* LIST ITEMS (PLAYLIST & LINKS) */
+        .list-item { 
+            display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; 
+            background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 10px; 
+            margin-bottom: 10px; user-select: none; transition: all 0.15s; gap: 12px;
+        }
+        .list-item:hover { border-color: rgba(255,255,255,0.25); background: rgba(255,255,255,0.04); }
+        .list-item.dragging { opacity: 0.4; border-color: var(--accent); background: var(--accent-glow); }
+        .list-info { display: flex; align-items: center; gap: 12px; flex: 1; overflow: hidden; }
+        .list-thumb { width: 48px; height: 48px; border-radius: 8px; object-fit: cover; border: 1px solid rgba(255,255,255,0.12); flex-shrink: 0; }
+        .item-actions { display: flex; align-items: center; gap: 6px; }
+        .btn-icon { 
+            background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: var(--text-gray); 
+            width: 32px; height: 32px; border-radius: 7px; cursor: pointer; font-size: 0.85rem; 
+            display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s; 
+        }
+        .btn-icon:hover { color: #fff; border-color: var(--accent); background: var(--accent-glow); }
+        .btn-icon.delete:hover { color: #fff; border-color: var(--danger); background: rgba(239, 68, 68, 0.25); }
+
+        /* LIVE PREVIEW CARD (PROFILE) */
+        .live-preview-box {
+            display: flex; flex-direction: column; align-items: center; text-align: center;
+            padding: 24px; border-radius: 16px; background: rgba(10, 10, 14, 0.55);
+            border: 1px dashed rgba(255,255,255,0.18);
+        }
+        .prev-avatar-wrap { position: relative; width: 88px; height: 88px; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; }
+        .prev-avatar-wrap::before {
+            content: ''; position: absolute; width: 106%; height: 106%; border-radius: 26px;
+            background: linear-gradient(90deg, var(--accent), transparent, var(--accent)); animation: spin 4s linear infinite;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        .prev-avatar { width: 94%; height: 94%; border-radius: 24px; object-fit: cover; z-index: 2; background: #161619; }
+        .prev-username { font-size: 1.3rem; font-weight: 800; margin-bottom: 6px; color: var(--accent); text-shadow: 0 0 12px var(--accent-glow); }
+        .prev-bio { font-size: 0.85rem; color: var(--text-gray); line-height: 1.4; max-width: 280px; }
+
+        .tab-content { display: none; animation: fadeIn 0.2s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* TOGGLE SWITCH */
         .toggle-switch { position: relative; display: inline-block; width: 50px; height: 24px; }
         .toggle-switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--input-bg); border: 1px solid var(--border-color); transition: .4s; border-radius: 24px; }
-        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 3px; background-color: var(--text-gray); transition: .4s; border-radius: 50%; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--input-bg); border: 1px solid var(--border-color); transition: .3s; border-radius: 24px; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 3px; background-color: var(--text-gray); transition: .3s; border-radius: 50%; }
         input:checked + .slider { background-color: var(--accent); border-color: var(--accent); }
         input:checked + .slider:before { transform: translateX(24px); background-color: white; }
+
+        /* TOAST NOTIFICATION CONTAINER */
+        #toast-container {
+            position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+            display: flex; flex-direction: column; gap: 10px;
+        }
+        .toast-msg {
+            background: rgba(16, 16, 22, 0.9); border: 1px solid var(--accent);
+            backdrop-filter: blur(12px); color: #fff; padding: 12px 18px; border-radius: 10px;
+            font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 0 15px var(--accent-glow);
+            animation: slideIn 0.25s ease forwards;
+        }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+
+        /* MINI YOUTUBE TEST PLAYER MODAL */
+        #yt-preview-box {
+            display: none; margin-top: 14px; padding: 12px; border-radius: 10px;
+            background: rgba(0,0,0,0.4); border: 1px solid var(--border-color);
+            align-items: center; gap: 12px;
+        }
+        #yt-preview-box.show { display: flex; }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
-        <div class="logo"><i class="fas fa-terminal" style="color: var(--accent);"></i> Vengeance OS</div>
+        <div class="logo">
+            <i class="fas fa-terminal" style="color: var(--accent);"></i> 
+            <span>Vengeance OS</span>
+            <span class="logo-badge">v2.5</span>
+        </div>
+
         <ul class="nav-list">
-            <li class="nav-item active" data-target="tab-profile"><i class="fas fa-user-cog"></i> Profile Settings</li>
-            <li class="nav-item" data-target="tab-customization"><i class="fas fa-paint-brush"></i> Site Customization</li>
-            <li class="nav-item" data-target="tab-links"><i class="fas fa-link"></i> Link Manager</li>
-            <li class="nav-item" data-target="tab-stats"><i class="fas fa-chart-bar"></i> Stats Adjuster</li>
-            <li class="nav-item" data-target="tab-youtube"><i class="fab fa-youtube"></i> YouTube Player</li>
-            <li class="nav-item" data-target="tab-minecraft"><i class="fas fa-cube"></i> Minecraft Server</li>
-            <li class="nav-item" data-target="tab-discord"><i class="fab fa-discord"></i> Discord Config</li>
+            <li class="nav-item active" data-target="tab-profile">
+                <div class="nav-item-left"><i class="fas fa-user-cog"></i> Profile Settings</div>
+            </li>
+            <li class="nav-item" data-target="tab-customization">
+                <div class="nav-item-left"><i class="fas fa-paint-brush"></i> Site Customization</div>
+            </li>
+            <li class="nav-item" data-target="tab-links">
+                <div class="nav-item-left"><i class="fas fa-link"></i> Link Manager</div>
+                <span class="nav-counter" id="nav-count-links">0</span>
+            </li>
+            <li class="nav-item" data-target="tab-stats">
+                <div class="nav-item-left"><i class="fas fa-chart-bar"></i> Stats Adjuster</div>
+            </li>
+            <li class="nav-item" data-target="tab-youtube">
+                <div class="nav-item-left"><i class="fab fa-youtube"></i> YouTube Player</div>
+                <span class="nav-counter" id="nav-count-tracks">0</span>
+            </li>
+            <li class="nav-item" data-target="tab-minecraft">
+                <div class="nav-item-left"><i class="fas fa-cube"></i> Minecraft Server</div>
+            </li>
+            <li class="nav-item" data-target="tab-discord">
+                <div class="nav-item-left"><i class="fab fa-discord"></i> Discord Config</div>
+            </li>
         </ul>
+
+        <div class="sidebar-footer">
+            <a href="index.html" target="_blank" class="btn-sidebar-action">
+                <i class="fas fa-external-link-alt"></i> Live-Website öffnen
+            </a>
+            <button class="btn-sidebar-action" id="btn-export-db" title="Komplettes Supabase-Backup als JSON herunterladen">
+                <i class="fas fa-download"></i> DB Backup (.json)
+            </button>
+        </div>
     </div>
 
     <div class="main-workspace">
         <div class="header">
-            <h2>Dashboard Control Center</h2>
-            <div id="db-status" style="font-size: 0.85rem; color: #e11d48;"><i class="fas fa-database"></i> Connecting...</div>
+            <div>
+                <h2 style="font-weight: 800; letter-spacing: 0.3px;">Dashboard Control Center</h2>
+                <div style="font-size: 0.8rem; color: var(--text-gray); margin-top: 2px;">Tipp: Drücke <code style="color:var(--accent);">Strg + S</code> um das aktuelle Formular sofort zu speichern.</div>
+            </div>
+            <div class="header-right">
+                <button class="btn-secondary" onclick="loadDashboardData()"><i class="fas fa-sync-alt"></i> Reload DB</button>
+                <div id="db-status" class="status-pill" style="color: #e11d48;"><i class="fas fa-database"></i> Connecting...</div>
+            </div>
+        </div>
+
+        <!-- QUICK OVERVIEW KPI BAR -->
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div>
+                    <div class="kpi-title">Website Views</div>
+                    <div class="kpi-val" id="kpi-views">--</div>
+                </div>
+                <div class="kpi-icon"><i class="fas fa-eye"></i></div>
+            </div>
+            <div class="kpi-card">
+                <div>
+                    <div class="kpi-title">Playlist Tracks</div>
+                    <div class="kpi-val" id="kpi-tracks">0</div>
+                </div>
+                <div class="kpi-icon"><i class="fas fa-music"></i></div>
+            </div>
+            <div class="kpi-card">
+                <div>
+                    <div class="kpi-title">Social Links</div>
+                    <div class="kpi-val" id="kpi-links">0</div>
+                </div>
+                <div class="kpi-icon"><i class="fas fa-share-nodes"></i></div>
+            </div>
+            <div class="kpi-card">
+                <div>
+                    <div class="kpi-title">Minecraft Tunnel</div>
+                    <div class="kpi-val" id="kpi-mc" style="font-size: 1rem;">Prüfe...</div>
+                </div>
+                <div class="kpi-icon"><i class="fas fa-server"></i></div>
+            </div>
         </div>
 
         <!-- TAB 1: PROFILE -->
         <div id="tab-profile" class="tab-content active">
-            <div class="admin-card" style="max-width: 600px;">
-                <div class="card-title"><i class="fas fa-id-card"></i> Main Profile Details</div>
-                <form id="profile-form">
-                    <div class="form-group"><label>Username</label><input type="text" id="input-username"></div>
-                    <div class="form-group"><label>Avatar URL</label><input type="text" id="input-avatar"></div>
-                    <div class="form-group"><label>Bio</label><textarea id="input-bio" rows="4"></textarea></div>
-                    <button type="submit" class="btn-save">Update Profile</button>
-                </form>
+            <div class="tab-grid-layout two-col">
+                <div class="admin-card">
+                    <div class="card-title">
+                        <div class="card-title-left"><i class="fas fa-id-card"></i> Main Profile Details</div>
+                    </div>
+                    <form id="profile-form">
+                        <div class="form-group">
+                            <label>Username</label>
+                            <input type="text" id="input-username" placeholder="UpperEchelon">
+                        </div>
+                        <div class="form-group">
+                            <label>Avatar URL</label>
+                            <input type="text" id="input-avatar" placeholder="https://...">
+                        </div>
+                        <div class="form-group">
+                            <label><span>Bio</span><span id="bio-char-count">0 Zeichen</span></label>
+                            <textarea id="input-bio" rows="4"></textarea>
+                        </div>
+                        <button type="submit" class="btn-save"><i class="fas fa-check"></i> Update Profile</button>
+                    </form>
+                </div>
+
+                <!-- LIVE PROFILE PREVIEW -->
+                <div class="admin-card">
+                    <div class="card-title">
+                        <div class="card-title-left"><i class="fas fa-eye"></i> Echtzeit-Vorschau</div>
+                    </div>
+                    <div class="live-preview-box">
+                        <div class="prev-avatar-wrap">
+                            <img id="prev-avatar-img" src="https://via.placeholder.com/150" alt="Avatar" class="prev-avatar">
+                        </div>
+                        <div id="prev-username-text" class="prev-username">UpperEchelon</div>
+                        <p id="prev-bio-text" class="prev-bio">Deine Bio erscheint hier live...</p>
+                    </div>
+                </div>
             </div>
         </div>
 
         <!-- TAB 2: SITE CUSTOMIZATION -->
         <div id="tab-customization" class="tab-content">
-            <div class="admin-card" style="max-width: 600px;">
-                <div class="card-title"><i class="fas fa-paint-roller"></i> Visual Styles & Effects</div>
+            <div class="admin-card" style="max-width: 680px;">
+                <div class="card-title">
+                    <div class="card-title-left"><i class="fas fa-paint-roller"></i> Visual Styles & Effects</div>
+                </div>
                 <form id="customization-form">
                     <div class="form-group">
                         <label>Global Custom Font</label>
                         <select id="input-font">
-                            <option value="'Segoe UI', sans-serif">Standard (Segoe UI)</option>
+                            <option value="'Outfit', sans-serif">Outfit (Bold & Techy - Empfohlen)</option>
                             <option value="'Inter', sans-serif">Inter (Clean & Modern)</option>
+                            <option value="'Segoe UI', sans-serif">Standard (Segoe UI)</option>
                             <option value="'Roboto Mono', monospace">Roboto Mono (Hacker Vibe)</option>
                             <option value="'Fira Code', monospace">Fira Code (Dev Style)</option>
-                            <option value="'Outfit', sans-serif">Outfit (Bold & Techy)</option>
                         </select>
                     </div>
                     
                     <div class="form-group">
-                        <label>Global Accent Color (Hex)</label>
-                        <input type="color" id="input-accent-color" value="#7c3aed">
+                        <label><span>Global Accent Color (Hex)</span><span id="hex-code-label">#ec4899</span></label>
+                        <input type="color" id="input-accent-color" value="#ec4899">
+                        <div class="preset-pills">
+                            <span class="preset-pill" data-color="#ec4899"><span class="color-dot" style="background:#ec4899;"></span> Cyber Pink</span>
+                            <span class="preset-pill" data-color="#7c3aed"><span class="color-dot" style="background:#7c3aed;"></span> Vengeance Purple</span>
+                            <span class="preset-pill" data-color="#10b981"><span class="color-dot" style="background:#10b981;"></span> Matrix Emerald</span>
+                            <span class="preset-pill" data-color="#f43f5e"><span class="color-dot" style="background:#f43f5e;"></span> Crimson Red</span>
+                            <span class="preset-pill" data-color="#06b6d4"><span class="color-dot" style="background:#06b6d4;"></span> Ice Cyan</span>
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -129,7 +440,7 @@
                         </select>
                     </div>
 
-                    <div class="form-group" style="display: flex; justify-content: space-between; align-items: center;">
+                    <div class="form-group" style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0;">
                         <label style="margin-bottom: 0;">Enable CRT Scanlines</label>
                         <label class="toggle-switch">
                             <input type="checkbox" id="input-crt-scanlines">
@@ -137,477 +448,930 @@
                         </label>
                     </div>
 
-                    <div class="form-group" style="display: flex; justify-content: space-between; align-items: center;">
-                        <label style="margin-bottom: 0;">Background Mode (Off = YouTube, On = Dark Gradient)</label>
+                    <div class="form-group" style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0;">
+                        <label style="margin-bottom: 0;">Background Mode (Off = YouTube Video, On = Dark Gradient)</label>
                         <label class="toggle-switch">
                             <input type="checkbox" id="input-bg-mode">
                             <span class="slider"></span>
                         </label>
                     </div>
 
-                    <button type="submit" class="btn-save" style="margin-top: 15px;">Save Styles</button>
+                    <button type="submit" class="btn-save" style="margin-top: 12px;"><i class="fas fa-save"></i> Save Styles</button>
                 </form>
             </div>
         </div>
 
         <!-- TAB 3: LINKS -->
         <div id="tab-links" class="tab-content">
-            <div class="admin-card" style="max-width: 600px;">
-                <div class="card-title"><i class="fas fa-plus-circle"></i> Add New Social Link</div>
-                <form id="link-form">
-                    <div class="form-group"><label>Link Name</label><input type="text" id="link-name" required></div>
-                    <div class="form-group"><label>URL</label><input type="text" id="link-url" required></div>
-                    <div class="form-group"><label>FontAwesome Icon Class (z.B. fab fa-github)</label><input type="text" id="link-icon" value="fas fa-link"></div>
-                    <button type="submit" class="btn-save"><i class="fas fa-plus"></i> Add Link</button>
-                </form>
-            </div>
-            <div class="admin-card" style="max-width: 600px;">
-                <div class="card-title"><i class="fas fa-list"></i> Current Links</div>
-                <div id="dashboard-links-list"></div>
+            <div class="tab-grid-layout two-col">
+                <div class="admin-card">
+                    <div class="card-title">
+                        <div class="card-title-left"><i class="fas fa-plus-circle"></i> <span id="link-form-heading">Add New Social Link</span></div>
+                        <button type="button" class="btn-secondary" id="cancel-link-edit" style="display:none;">Abbrechen</button>
+                    </div>
+                    <form id="link-form">
+                        <input type="hidden" id="link-edit-id" value="">
+                        <div class="form-group">
+                            <label>Link Name</label>
+                            <input type="text" id="link-name" placeholder="z.B. GitHub Account" required>
+                        </div>
+                        <div class="form-group">
+                            <label>URL</label>
+                            <input type="text" id="link-url" placeholder="https://github.com/..." required>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <span>FontAwesome Icon Class</span>
+                                <span>Vorschau: <i id="icon-live-prev" class="fas fa-link" style="color:var(--accent); font-size:1rem; margin-left:4px;"></i></span>
+                            </label>
+                            <input type="text" id="link-icon" value="fas fa-link">
+                            <div class="preset-pills">
+                                <span class="preset-pill icon-preset" data-icon="fab fa-github"><i class="fab fa-github"></i> GitHub</span>
+                                <span class="preset-pill icon-preset" data-icon="fab fa-discord"><i class="fab fa-discord"></i> Discord</span>
+                                <span class="preset-pill icon-preset" data-icon="fab fa-instagram"><i class="fab fa-instagram"></i> Instagram</span>
+                                <span class="preset-pill icon-preset" data-icon="fab fa-steam"><i class="fab fa-steam"></i> Steam</span>
+                                <span class="preset-pill icon-preset" data-icon="fab fa-youtube"><i class="fab fa-youtube"></i> YouTube</span>
+                                <span class="preset-pill icon-preset" data-icon="fab fa-tiktok"><i class="fab fa-tiktok"></i> TikTok</span>
+                                <span class="preset-pill icon-preset" data-icon="fas fa-globe"><i class="fas fa-globe"></i> Website</span>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-save" id="link-submit-btn"><i class="fas fa-plus"></i> Add Link</button>
+                    </form>
+                </div>
+
+                <div class="admin-card">
+                    <div class="card-title">
+                        <div class="card-title-left"><i class="fas fa-list"></i> Current Links</div>
+                    </div>
+                    <div id="dashboard-links-list"></div>
+                </div>
             </div>
         </div>
 
         <!-- TAB 4: STATS -->
         <div id="tab-stats" class="tab-content">
             <div class="admin-card" style="max-width: 600px;">
-                <div class="card-title"><i class="fas fa-sort-numeric-up-alt"></i> Grid Statistics</div>
+                <div class="card-title">
+                    <div class="card-title-left"><i class="fas fa-sort-numeric-up-alt"></i> Grid Statistics</div>
+                </div>
                 <form id="stats-form">
-                    <div class="form-group"><label>Years Coding</label><input type="text" id="stat-val-1"></div>
-                    <div class="form-group"><label>Languages</label><input type="text" id="stat-val-2"></div>
-                    <div class="form-group"><label>Projects Built</label><input type="text" id="stat-val-3"></div>
-                    <div class="form-group"><label>Profile Views</label><input type="text" id="stat-val-4"></div>
-                    <button type="submit" class="btn-save">Save Stats</button>
+                    <div class="form-row">
+                        <div class="form-group"><label>Years Coding</label><input type="text" id="stat-val-1"></div>
+                        <div class="form-group"><label>Languages</label><input type="text" id="stat-val-2"></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Projects Built</label><input type="text" id="stat-val-3"></div>
+                        <div class="form-group">
+                            <label>Profile Views</label>
+                            <input type="number" id="stat-val-4">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-save"><i class="fas fa-save"></i> Save Stats</button>
                 </form>
             </div>
         </div>
 
         <!-- TAB 5: YOUTUBE -->
         <div id="tab-youtube" class="tab-content">
-            <div class="admin-card" style="max-width: 600px;">
-                <div class="card-title"><i class="fab fa-youtube"></i> Manage YouTube Playlist</div>
-                <form id="youtube-form">
-                    <div class="form-group"><label>Song Title</label><input type="text" id="yt-input-title" required></div>
-                    <div class="form-group"><label>Artist</label><input type="text" id="yt-input-artist" required></div>
-                    <div class="form-group"><label>YouTube URL oder Video ID</label><input type="text" id="yt-input-id" placeholder="ID oder vollständigen Link reinkopieren" required></div>
-                    <button type="submit" class="btn-save">Add Song to DB</button>
-                </form>
-            </div>
-            <div class="admin-card" style="max-width: 600px;">
-                <div class="card-title"><i class="fas fa-music"></i> Current Playlist Entries (Ziehen zum Sortieren)</div>
-                <div id="dashboard-playlist-list"></div>
+            <div class="tab-grid-layout two-col">
+                <div class="admin-card">
+                    <div class="card-title">
+                        <div class="card-title-left"><i class="fab fa-youtube"></i> <span id="yt-form-heading">Add Song to Playlist</span></div>
+                        <button type="button" class="btn-secondary" id="cancel-yt-edit" style="display:none;">Abbrechen</button>
+                    </div>
+                    <form id="youtube-form">
+                        <input type="hidden" id="yt-edit-id" value="">
+                        <div class="form-group">
+                            <label><span>YouTube URL oder Video ID</span><span style="color:var(--accent);">Auto-Fetch aktiv ⚡</span></label>
+                            <div class="input-with-btn">
+                                <input type="text" id="yt-input-id" placeholder="Link reinkopieren -> Titel & Artist füllen sich automatisch!" required>
+                                <button type="button" class="btn-secondary" id="btn-yt-autofill" title="Metadaten von YouTube abrufen"><i class="fas fa-wand-magic-sparkles"></i> Auto-Fill</button>
+                            </div>
+                        </div>
+
+                        <!-- LIVE THUMBNAIL PREVIEW -->
+                        <div id="yt-preview-box">
+                            <img id="yt-prev-img" src="" class="list-thumb" style="width:68px; height:48px;">
+                            <div style="font-size:0.8rem;">
+                                <div style="color:#4ade80; font-weight:700;"><i class="fas fa-check-circle"></i> Video erkannt</div>
+                                <div id="yt-prev-meta" style="color:var(--text-gray);">Thumbnail geladen</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-top: 14px;">
+                            <label>Song Title</label>
+                            <input type="text" id="yt-input-title" placeholder="Wird automatisch ausgefüllt oder manuell tippen..." required>
+                        </div>
+                        <div class="form-group">
+                            <label>Artist</label>
+                            <input type="text" id="yt-input-artist" placeholder="Artist / Channel Name" required>
+                        </div>
+                        <button type="submit" class="btn-save" id="yt-submit-btn"><i class="fas fa-plus"></i> Add Song to DB</button>
+                    </form>
+
+                    <!-- MINI TEST PLAYER -->
+                    <div id="yt-mini-tester" style="display:none; margin-top:20px; padding-top:16px; border-top:1px solid var(--border-color);">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; font-size:0.8rem; color:var(--text-gray);">
+                            <span><i class="fas fa-headphones" style="color:var(--accent);"></i> Direkt-Vorschau Tester</span>
+                            <button type="button" class="btn-secondary" style="padding:3px 8px; font-size:0.72rem;" onclick="closeMiniTester()">Schließen</button>
+                        </div>
+                        <iframe id="yt-test-iframe" width="100%" height="170" style="border-radius:10px; border:1px solid var(--border-color);" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                    </div>
+                </div>
+
+                <div class="admin-card">
+                    <div class="card-title">
+                        <div class="card-title-left"><i class="fas fa-music"></i> Playlist (Drag & Drop zum Sortieren)</div>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 12px;">
+                        <input type="text" id="playlist-search" placeholder="🔍 Playlist nach Song oder Artist durchsuchen...">
+                    </div>
+                    <div id="dashboard-playlist-list" style="max-height: 540px; overflow-y: auto; padding-right: 4px;"></div>
+                </div>
             </div>
         </div>
 
         <!-- TAB 6: MINECRAFT CONFIG -->
         <div id="tab-minecraft" class="tab-content">
-            <div class="admin-card" style="max-width: 600px;">
-                <div class="card-title"><i class="fas fa-cube"></i> Minecraft Server Info</div>
-                <form id="mc-form">
-                    <div class="form-group">
-                        <label>Öffentliche Domain / Serveradresse</label>
-                        <input type="text" id="mc-input-domain" value="vengeanceutilities.de">
+            <div class="tab-grid-layout two-col">
+                <div class="admin-card">
+                    <div class="card-title">
+                        <div class="card-title-left"><i class="fas fa-cube"></i> Minecraft Server Info</div>
                     </div>
-                    <div class="form-group">
-                        <label>Playit Tunnel Adresse (Internes Poll-Target)</label>
-                        <input type="text" id="mc-input-tunnel" value="cairo-pumping.tun.ply.gg:45750">
+                    <form id="mc-form">
+                        <div class="form-group">
+                            <label>Öffentliche Domain / Serveradresse</label>
+                            <input type="text" id="mc-input-domain" value="vengeanceutilities.de">
+                        </div>
+                        <div class="form-group">
+                            <label>Playit Tunnel Adresse (Internes Poll-Target)</label>
+                            <div class="input-with-btn">
+                                <input type="text" id="mc-input-tunnel" value="cairo-pumping.tun.ply.gg:45750">
+                                <button type="button" class="btn-secondary" id="btn-test-mc"><i class="fas fa-satellite-dish"></i> Tunnel testen</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Angezeigter Servername / Modpack Link</label>
+                            <input type="text" id="mc-input-name" placeholder="Name oder Link (z. B. CurseForge URL)">
+                        </div>
+                        <div class="form-group">
+                            <label>Modpack / Notizen</label>
+                            <textarea id="mc-input-desc" rows="3" placeholder="Z. B. NeoForge 1.21.1 mit Custom Modpack"></textarea>
+                        </div>
+                        <button type="submit" class="btn-save"><i class="fas fa-save"></i> Einstellungen sichern</button>
+                    </form>
+                </div>
+
+                <div class="admin-card">
+                    <div class="card-title">
+                        <div class="card-title-left"><i class="fas fa-network-wired"></i> Live Tunnel-Diagnose</div>
                     </div>
-                    <div class="form-group">
-                        <label>Angezeigter Servername / Modpack Link</label>
-                        <input type="text" id="mc-input-name" placeholder="Name oder Link (z. B. CurseForge)">
+                    <div id="mc-test-result" style="font-size:0.88rem; color:var(--text-gray); line-height:1.6;">
+                        Klicke auf <strong>„Tunnel testen“</strong>, um live über <code>api.mcstatus.io</code> zu prüfen, ob dein lokaler NeoForge-Server über Playit.gg erreichbar ist.
                     </div>
-                    <div class="form-group">
-                        <label>Modpack / Notizen</label>
-                        <textarea id="mc-input-desc" rows="3" placeholder="Z. B. NeoForge 1.21.1 mit Custom Modpack"></textarea>
-                    </div>
-                    <button type="submit" class="btn-save">Einstellungen sichern</button>
-                </form>
+                </div>
             </div>
         </div>
 
         <!-- TAB 7: DISCORD -->
         <div id="tab-discord" class="tab-content">
-            <div class="admin-card" style="max-width: 600px;">
-                <div class="card-title"><i class="fab fa-discord"></i> Discord Integration</div>
+            <div class="admin-card" style="max-width: 650px;">
+                <div class="card-title">
+                    <div class="card-title-left"><i class="fab fa-discord"></i> Discord Integration</div>
+                    <button type="button" class="btn-secondary" id="btn-test-discord"><i class="fas fa-vial"></i> Widget API testen</button>
+                </div>
                 <form id="discord-form">
-                    <div class="form-group"><label>Personal Discord ID (Lanyard / Profil-Kopieren)</label><input type="text" id="discord-user-id"></div>
+                    <div class="form-group"><label>Personal Discord ID (Profil-Kopieren)</label><input type="text" id="discord-user-id"></div>
                     <div class="form-group"><label>Discord Server ID (Widget API)</label><input type="text" id="discord-server-id"></div>
-                    <button type="submit" class="btn-save">Save Discord Settings</button>
+                    <div id="discord-test-output" style="margin-bottom:14px; font-size:0.82rem; display:none;"></div>
+                    <button type="submit" class="btn-save"><i class="fas fa-save"></i> Save Discord Settings</button>
                 </form>
             </div>
         </div>
     </div>
 
-   <script>
-    const SUPABASE_URL = 'https://pdyrfnbjegsyjmcmbqck.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_XfgU_toGSxKo2eM810q59w_qJt_HAO0';
-    const sbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    <!-- TOAST CONTAINER -->
+    <div id="toast-container"></div>
 
-    let currentProfileId = 1;
-    let currentStatsId = 1;
-    let currentDiscordId = 1;
-    let currentCustomizationId = 1;
-    let currentMcId = 1;
+    <script>
+        const SUPABASE_URL = 'https://pdyrfnbjegsyjmcmbqck.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_XfgU_toGSxKo2eM810q59w_qJt_HAO0';
+        const sbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    if(sbClient) {
-        const dbStatus = document.getElementById('db-status');
-        dbStatus.style.color = '#22c55e';
-        dbStatus.innerHTML = '<i class="fas fa-database"></i> Connected to Supabase';
-    }
+        let currentProfileId = 1;
+        let currentStatsId = 1;
+        let currentDiscordId = 1;
+        let currentCustomizationId = 1;
+        let currentMcId = 1;
+        let cachedTracks = [];
+        let cachedLinks = [];
 
-    const navItems = document.querySelectorAll('.nav-item');
-    const tabContents = document.querySelectorAll('.tab-content');
-    navItems.forEach(item => {
-        item.addEventListener('click', () => {
-            navItems.forEach(nav => nav.classList.remove('active'));
-            tabContents.forEach(tab => tab.classList.remove('active'));
-            item.classList.add('active');
-            document.getElementById(item.getAttribute('data-target')).classList.add('active');
-        });
-    });
-
-    async function loadDashboardData() {
-        try {
-            const { data: profile } = await sbClient.from('profile').select('*').limit(1).maybeSingle();
-            if (profile) {
-                currentProfileId = profile.id;
-                document.getElementById('input-username').value = profile.username || '';
-                document.getElementById('input-avatar').value = profile.avatar_url || '';
-                document.getElementById('input-bio').value = profile.bio || '';
-            }
-
-            const { data: customization } = await sbClient.from('site_customization').select('*').limit(1).maybeSingle();
-            if (customization) {
-                 currentCustomizationId = customization.id;
-                 document.getElementById('input-font').value = customization.font_family || "'Segoe UI', sans-serif";
-                 document.getElementById('input-accent-color').value = customization.accent_color || "#7c3aed";
-                 document.getElementById('input-username-effect').value = customization.username_effect || "wave";
-                 document.getElementById('input-crt-scanlines').checked = customization.crt_scanlines || false;
-                 document.getElementById('input-bg-mode').checked = customization.bg_mode_solid || false;
-            }
-
-            const { data: stats } = await sbClient.from('stats').select('*').limit(1).maybeSingle();
-            if (stats) {
-                currentStatsId = stats.id;
-                document.getElementById('stat-val-1').value = stats.years_coding || '';
-                document.getElementById('stat-val-2').value = stats.languages || '';
-                document.getElementById('stat-val-3').value = stats.projects || '';
-                document.getElementById('stat-val-4').value = stats.views || 0;
-            }
-
-            const { data: mc } = await sbClient.from('minecraft_config').select('*').limit(1).maybeSingle();
-            if (mc) {
-                currentMcId = mc.id;
-                document.getElementById('mc-input-domain').value = mc.domain || 'vengeanceutilities.de';
-                document.getElementById('mc-input-tunnel').value = mc.poll_target || 'cairo-pumping.tun.ply.gg:45750';
-                document.getElementById('mc-input-name').value = mc.server_name || '';
-                document.getElementById('mc-input-desc').value = mc.notes || '';
-            }
-
-            const { data: discord } = await sbClient.from('discord_config').select('*').limit(1).maybeSingle();
-            if (discord) {
-                currentDiscordId = discord.id;
-                document.getElementById('discord-user-id').value = discord.user_id || '';
-                document.getElementById('discord-server-id').value = discord.server_id || '';
-            }
-
-            await loadLinksList();
-            await loadPlaylistEntries();
-        } catch (err) { 
-            console.error('Fehler beim Laden der Dashboard-Daten:', err); 
-        }
-    }
-
-    async function loadLinksList() {
-        const container = document.getElementById('dashboard-links-list');
-        container.innerHTML = 'Loading...';
-        const { data: links, error } = await sbClient.from('links').select('*');
-        
-        if (error) {
-            console.error('Links Error:', error);
-            container.innerHTML = '<p style="color:var(--danger); font-size:0.9rem;">Fehler beim Laden der Links.</p>';
-            return;
+        /* TOAST NOTIFICATION HELPER */
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast-msg';
+            const icon = type === 'error' ? 'fa-triangle-exclamation' : 'fa-circle-check';
+            const color = type === 'error' ? '#ef4444' : 'var(--accent)';
+            toast.style.borderColor = color;
+            toast.innerHTML = `<i class="fas ${icon}" style="color:${color}; font-size:1.05rem;"></i> <span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(30px)';
+                toast.style.transition = 'all 0.25s ease';
+                setTimeout(() => toast.remove(), 250);
+            }, 3000);
         }
 
-        if(!links || links.length === 0) {
-            container.innerHTML = '<p style="color:var(--text-gray); font-size:0.9rem;">Keine Links vorhanden.</p>'; 
-            return;
+        if(sbClient) {
+            const dbStatus = document.getElementById('db-status');
+            dbStatus.style.color = '#4ade80';
+            dbStatus.innerHTML = '<i class="fas fa-database"></i> Connected to Supabase';
         }
 
-        container.innerHTML = '';
-        links.forEach(link => {
-            const div = document.createElement('div');
-            div.className = 'list-item';
-            div.innerHTML = `
-                <div class="link-info"><i class="${link.icon}"></i><div><strong>${link.name}</strong><div style="font-size:0.75rem;color:var(--text-gray);">${link.url}</div></div></div>
-                <button class="btn-delete" onclick="deleteLink(${link.id})"><i class="fas fa-trash"></i></button>`;
-            container.appendChild(div);
-        });
-    }
-
-    document.getElementById('link-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        await sbClient.from('links').insert([{
-            name: document.getElementById('link-name').value,
-            url: document.getElementById('link-url').value,
-            icon: document.getElementById('link-icon').value
-        }]);
-        document.getElementById('link-form').reset(); 
-        document.getElementById('link-icon').value = 'fas fa-link';
-        loadLinksList();
-    });
-
-    window.deleteLink = async (id) => {
-        if(confirm('Link löschen?')) { 
-            await sbClient.from('links').delete().eq('id', id); 
-            loadLinksList(); 
-        }
-    };
-
-    let isSavingOrder = false;
-
-    async function loadPlaylistEntries() {
-        const container = document.getElementById('dashboard-playlist-list');
-        container.innerHTML = 'Loading...';
-        
-        const { data: tracks, error } = await sbClient
-            .from('youtube_playlist')
-            .select('*')
-            .order('position', { ascending: true });
-
-        if(error) { 
-            console.error('Playlist Error:', error);
-            container.innerHTML = '<p style="color:var(--danger); font-size:0.9rem;">Fehler beim Laden der Playlist.</p>'; 
-            return; 
-        }
-
-        if(!tracks || tracks.length === 0) {
-            container.innerHTML = '<p style="color:var(--text-gray); font-size:0.9rem;">Die Playlist ist aktuell leer.</p>'; 
-            return;
-        }
-
-        container.innerHTML = '';
-        
-        tracks.forEach(track => {
-            const div = document.createElement('div');
-            div.className = 'list-item';
-            div.setAttribute('draggable', 'true');
-            div.setAttribute('data-id', track.id);
-            
-            div.addEventListener('dragstart', () => {
-                div.classList.add('dragging');
+        /* TAB NAVIGATION */
+        const navItems = document.querySelectorAll('.nav-item');
+        const tabContents = document.querySelectorAll('.tab-content');
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                navItems.forEach(nav => nav.classList.remove('active'));
+                tabContents.forEach(tab => tab.classList.remove('active'));
+                item.classList.add('active');
+                document.getElementById(item.getAttribute('data-target')).classList.add('active');
             });
+        });
 
-            div.addEventListener('dragend', async () => {
-                div.classList.remove('dragging');
-                await saveNewOrder();
+        /* CTRL + S SHORTCUT ZUM SPEICHERN DES AKTIVEN TABS */
+        window.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+                e.preventDefault();
+                const activeTab = document.querySelector('.tab-content.active');
+                const form = activeTab ? activeTab.querySelector('form') : null;
+                if (form) form.requestSubmit();
+            }
+        });
+
+        /* LIVE PROFILE PREVIEW */
+        function updateProfilePreview() {
+            const name = document.getElementById('input-username').value || 'UpperEchelon';
+            const avatar = document.getElementById('input-avatar').value || 'https://via.placeholder.com/150';
+            const bio = document.getElementById('input-bio').value || '';
+            document.getElementById('prev-username-text').innerText = name;
+            document.getElementById('prev-avatar-img').src = avatar;
+            document.getElementById('prev-bio-text').innerText = bio;
+            document.getElementById('bio-char-count').innerText = `${bio.length} Zeichen`;
+        }
+        ['input-username', 'input-avatar', 'input-bio'].forEach(id => {
+            document.getElementById(id)?.addEventListener('input', updateProfilePreview);
+        });
+
+        /* COLOR & ICON PRESETS */
+        const colorInput = document.getElementById('input-accent-color');
+        const hexLabel = document.getElementById('hex-code-label');
+        colorInput.addEventListener('input', (e) => {
+            hexLabel.innerText = e.target.value;
+            document.documentElement.style.setProperty('--accent', e.target.value);
+            document.documentElement.style.setProperty('--accent-glow', e.target.value + '55');
+        });
+        document.querySelectorAll('.preset-pill[data-color]').forEach(pill => {
+            pill.addEventListener('click', () => {
+                const c = pill.dataset.color;
+                colorInput.value = c;
+                hexLabel.innerText = c;
+                document.documentElement.style.setProperty('--accent', c);
+                document.documentElement.style.setProperty('--accent-glow', c + '55');
             });
+        });
 
-            const thumbUrl = track.cover_url || `https://img.youtube.com/vi/${track.youtube_id}/hqdefault.jpg`;
+        const linkIconInput = document.getElementById('link-icon');
+        const iconLivePrev = document.getElementById('icon-live-prev');
+        linkIconInput.addEventListener('input', () => {
+            iconLivePrev.className = linkIconInput.value.trim() || 'fas fa-link';
+        });
+        document.querySelectorAll('.icon-preset').forEach(preset => {
+            preset.addEventListener('click', () => {
+                linkIconInput.value = preset.dataset.icon;
+                iconLivePrev.className = preset.dataset.icon;
+            });
+        });
+
+        /* YOUTUBE URL EXTRACTOR & AUTO-FETCH */
+        function extractYouTubeId(raw) {
+            const trimmed = raw.trim();
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/|live\/)([^#\&\?]*).*/;
+            const match = trimmed.match(regExp);
+            if (match && match[2].length === 11) return match[2];
+            const clean = trimmed.split('?')[0].split('&')[0];
+            return clean.length === 11 ? clean : null;
+        }
+
+        async function autoFetchYouTubeMeta() {
+            const rawVal = document.getElementById('yt-input-id').value;
+            const videoId = extractYouTubeId(rawVal);
+            if (!videoId) {
+                showToast('Bitte gültige YouTube-URL oder 11-stellige ID eingeben', 'error');
+                return;
+            }
+
+            const prevBox = document.getElementById('yt-preview-box');
+            const prevImg = document.getElementById('yt-prev-img');
+            const prevMeta = document.getElementById('yt-prev-meta');
+            prevImg.src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+            prevBox.classList.add('show');
+            prevMeta.innerText = `Lade Titel von YouTube (ID: ${videoId})...`;
+
+            try {
+                const res = await fetch(`https://noembed.com/embed?url=https://www.youtube.com/watch?v=${videoId}`);
+                const data = await res.json();
+                if (data && data.title) {
+                    let songTitle = data.title;
+                    let artistName = (data.author_name || '').replace(' - Topic', '').trim();
+
+                    // Falls im Titel "Artist - Songname" steht, sauber splitten
+                    if (songTitle.includes(' - ')) {
+                        const parts = songTitle.split(' - ');
+                        artistName = parts[0].trim();
+                        songTitle = parts.slice(1).join(' - ').replace(/\(Official.*?\)|\[Official.*?\]/gi, '').trim();
+                    }
+
+                    document.getElementById('yt-input-title').value = songTitle;
+                    document.getElementById('yt-input-artist').value = artistName || 'Unknown Artist';
+                    prevMeta.innerText = `${songTitle} • ${artistName}`;
+                    showToast('Song-Titel & Artist automatisch erkannt! ⚡');
+                } else {
+                    prevMeta.innerText = `Video-ID: ${videoId} (Manuelle Eingabe erforderlich)`;
+                }
+            } catch (e) {
+                prevMeta.innerText = `Video-ID: ${videoId}`;
+            }
+        }
+
+        document.getElementById('btn-yt-autofill').addEventListener('click', autoFetchYouTubeMeta);
+        document.getElementById('yt-input-id').addEventListener('paste', () => {
+            setTimeout(autoFetchYouTubeMeta, 120);
+        });
+
+        /* MAIN DATA LOADER */
+        async function loadDashboardData() {
+            try {
+                const { data: profile } = await sbClient.from('profile').select('*').limit(1).maybeSingle();
+                if (profile) {
+                    currentProfileId = profile.id;
+                    document.getElementById('input-username').value = profile.username || '';
+                    document.getElementById('input-avatar').value = profile.avatar_url || '';
+                    document.getElementById('input-bio').value = profile.bio || '';
+                    updateProfilePreview();
+                }
+
+                const { data: customization } = await sbClient.from('site_customization').select('*').limit(1).maybeSingle();
+                if (customization) {
+                    currentCustomizationId = customization.id;
+                    document.getElementById('input-font').value = customization.font_family || "'Outfit', sans-serif";
+                    const acc = customization.accent_color || "#ec4899";
+                    document.getElementById('input-accent-color').value = acc;
+                    document.getElementById('hex-code-label').innerText = acc;
+                    document.documentElement.style.setProperty('--accent', acc);
+                    document.documentElement.style.setProperty('--accent-glow', acc + '55');
+                    document.getElementById('input-username-effect').value = customization.username_effect || "wave";
+                    document.getElementById('input-crt-scanlines').checked = customization.crt_scanlines || false;
+                    document.getElementById('input-bg-mode').checked = customization.bg_mode_solid || false;
+                }
+
+                const { data: stats } = await sbClient.from('stats').select('*').limit(1).maybeSingle();
+                if (stats) {
+                    currentStatsId = stats.id;
+                    document.getElementById('stat-val-1').value = stats.years_coding || '';
+                    document.getElementById('stat-val-2').value = stats.languages || '';
+                    document.getElementById('stat-val-3').value = stats.projects || '';
+                    document.getElementById('stat-val-4').value = stats.views || 0;
+                    document.getElementById('kpi-views').innerText = (stats.views || 0).toLocaleString();
+                }
+
+                const { data: mc } = await sbClient.from('minecraft_config').select('*').limit(1).maybeSingle();
+                if (mc) {
+                    currentMcId = mc.id;
+                    document.getElementById('mc-input-domain').value = mc.domain || 'vengeanceutilities.de';
+                    document.getElementById('mc-input-tunnel').value = mc.poll_target || 'cairo-pumping.tun.ply.gg:45750';
+                    document.getElementById('mc-input-name').value = mc.server_name || '';
+                    document.getElementById('mc-input-desc').value = mc.notes || '';
+                    checkMcKpiStatus(mc.poll_target || 'cairo-pumping.tun.ply.gg:45750');
+                }
+
+                const { data: discord } = await sbClient.from('discord_config').select('*').limit(1).maybeSingle();
+                if (discord) {
+                    currentDiscordId = discord.id;
+                    document.getElementById('discord-user-id').value = discord.user_id || '';
+                    document.getElementById('discord-server-id').value = discord.server_id || '';
+                }
+
+                await loadLinksList();
+                await loadPlaylistEntries();
+            } catch (err) { 
+                console.error('Fehler beim Laden der Dashboard-Daten:', err);
+                showToast('Fehler beim Laden der DB', 'error');
+            }
+        }
+
+        async function checkMcKpiStatus(target) {
+            const kpiMc = document.getElementById('kpi-mc');
+            try {
+                const res = await fetch(`https://api.mcstatus.io/v2/status/java/${target}`);
+                const data = await res.json();
+                if (data && data.online) {
+                    kpiMc.innerHTML = `<span style="color:#4ade80;">Online (${data.players.online}/${data.players.max})</span>`;
+                } else {
+                    kpiMc.innerHTML = `<span style="color:#f87171;">Offline</span>`;
+                }
+            } catch (e) {
+                kpiMc.innerText = 'Offline';
+            }
+        }
+
+        /* LINKS MANAGER (MIT INLINE EDIT) */
+        async function loadLinksList() {
+            const container = document.getElementById('dashboard-links-list');
+            container.innerHTML = 'Loading...';
+            const { data: links, error } = await sbClient.from('links').select('*');
             
-            div.innerHTML = `
-                <div class="list-info" style="flex-grow: 1; display: flex; align-items: center;">
-                    <i class="fas fa-grip-lines" style="color: var(--text-gray); cursor: grab; margin-right: 15px; font-size: 1.1rem;"></i>
-                    <img class="list-thumb" src="${thumbUrl}" alt="Cover">
-                    <div>
-                        <strong>${track.song_title}</strong>
-                        <div style="font-size:0.75rem;color:var(--text-gray);">${track.artist} &bull; ID: ${track.youtube_id}</div>
+            if (error) {
+                container.innerHTML = '<p style="color:var(--danger); font-size:0.9rem;">Fehler beim Laden der Links.</p>';
+                return;
+            }
+
+            cachedLinks = links || [];
+            document.getElementById('kpi-links').innerText = cachedLinks.length;
+            document.getElementById('nav-count-links').innerText = cachedLinks.length;
+
+            if (cachedLinks.length === 0) {
+                container.innerHTML = '<p style="color:var(--text-gray); font-size:0.9rem;">Keine Links vorhanden.</p>'; 
+                return;
+            }
+
+            container.innerHTML = '';
+            cachedLinks.forEach(link => {
+                const div = document.createElement('div');
+                div.className = 'list-item';
+                div.innerHTML = `
+                    <div class="list-info">
+                        <div style="width:36px; height:36px; border-radius:8px; background:rgba(255,255,255,0.05); display:flex; align-items:center; justify-content:center; color:var(--accent);">
+                            <i class="${link.icon}"></i>
+                        </div>
+                        <div style="overflow:hidden;">
+                            <strong>${link.name}</strong>
+                            <div style="font-size:0.75rem;color:var(--text-gray); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${link.url}</div>
+                        </div>
                     </div>
-                </div>
-                <button class="btn-delete" onclick="deleteTrack(${track.id})"><i class="fas fa-trash"></i></button>`;
-            
-            container.appendChild(div);
+                    <div class="item-actions">
+                        <button class="btn-icon" title="Link bearbeiten" onclick="editLink(${link.id})"><i class="fas fa-pen"></i></button>
+                        <button class="btn-icon delete" title="Löschen" onclick="deleteLink(${link.id})"><i class="fas fa-trash"></i></button>
+                    </div>`;
+                container.appendChild(div);
+            });
+        }
+
+        window.editLink = (id) => {
+            const link = cachedLinks.find(l => l.id === id);
+            if (!link) return;
+            document.getElementById('link-edit-id').value = link.id;
+            document.getElementById('link-name').value = link.name;
+            document.getElementById('link-url').value = link.url;
+            document.getElementById('link-icon').value = link.icon;
+            document.getElementById('icon-live-prev').className = link.icon;
+            document.getElementById('link-form-heading').innerText = 'Link bearbeiten';
+            document.getElementById('link-submit-btn').innerHTML = '<i class="fas fa-save"></i> Änderungen speichern';
+            document.getElementById('cancel-link-edit').style.display = 'inline-flex';
+        };
+
+        function resetLinkForm() {
+            document.getElementById('link-form').reset();
+            document.getElementById('link-edit-id').value = '';
+            document.getElementById('link-icon').value = 'fas fa-link';
+            document.getElementById('icon-live-prev').className = 'fas fa-link';
+            document.getElementById('link-form-heading').innerText = 'Add New Social Link';
+            document.getElementById('link-submit-btn').innerHTML = '<i class="fas fa-plus"></i> Add Link';
+            document.getElementById('cancel-link-edit').style.display = 'none';
+        }
+        document.getElementById('cancel-link-edit').addEventListener('click', resetLinkForm);
+
+        document.getElementById('link-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const editId = document.getElementById('link-edit-id').value;
+            const payload = {
+                name: document.getElementById('link-name').value.trim(),
+                url: document.getElementById('link-url').value.trim(),
+                icon: document.getElementById('link-icon').value.trim()
+            };
+
+            if (editId) {
+                await sbClient.from('links').update(payload).eq('id', editId);
+                showToast('Link aktualisiert! 🔗');
+            } else {
+                await sbClient.from('links').insert([payload]);
+                showToast('Neuer Link hinzugefügt! 🔗');
+            }
+            resetLinkForm();
+            loadLinksList();
         });
 
-        container.addEventListener('dragover', e => {
+        window.deleteLink = async (id) => {
+            if(confirm('Link wirklich löschen?')) { 
+                await sbClient.from('links').delete().eq('id', id); 
+                showToast('Link gelöscht');
+                loadLinksList(); 
+            }
+        };
+
+        /* PLAYLIST MANAGER (MIT SUCHE, EDIT, MINI-TESTER & DRAG-FIX) */
+        let isSavingOrder = false;
+        const playlistContainer = document.getElementById('dashboard-playlist-list');
+
+        // Einmaliger Dragover-Listener (verhindert doppelte Event-Listener beim Nachladen!)
+        playlistContainer.addEventListener('dragover', e => {
             e.preventDefault();
-            const draggingEl = container.querySelector('.dragging');
+            const draggingEl = playlistContainer.querySelector('.dragging');
             if (!draggingEl) return;
             
-            const afterElement = getDragAfterElement(container, e.clientY);
+            const afterElement = getDragAfterElement(playlistContainer, e.clientY);
             if (afterElement == null) {
-                container.appendChild(draggingEl);
+                playlistContainer.appendChild(draggingEl);
             } else {
-                container.insertBefore(draggingEl, afterElement);
+                playlistContainer.insertBefore(draggingEl, afterElement);
             }
         });
-    }
 
-    function getDragAfterElement(container, y) {
-        const draggableElements = [...container.querySelectorAll('.list-item:not(.dragging)')];
-        return draggableElements.reduce((closest, child) => {
-            const box = child.getBoundingClientRect();
-            const offset = y - box.top - box.height / 2;
-            if (offset < 0 && offset > closest.offset) {
-                return { offset: offset, element: child };
-            } else {
-                return closest;
+        async function loadPlaylistEntries() {
+            playlistContainer.innerHTML = 'Loading...';
+            
+            const { data: tracks, error } = await sbClient
+                .from('youtube_playlist')
+                .select('*')
+                .order('position', { ascending: true });
+
+            if(error) { 
+                playlistContainer.innerHTML = '<p style="color:var(--danger); font-size:0.9rem;">Fehler beim Laden der Playlist.</p>'; 
+                return; 
             }
-        }, { offset: Number.NEGATIVE_INFINITY }).element;
-    }
 
-    async function saveNewOrder() {
-        if (isSavingOrder) return;
-        isSavingOrder = true;
+            cachedTracks = tracks || [];
+            document.getElementById('kpi-tracks').innerText = cachedTracks.length;
+            document.getElementById('nav-count-tracks').innerText = cachedTracks.length;
 
-        const container = document.getElementById('dashboard-playlist-list');
-        const items = [...container.querySelectorAll('.list-item')];
-        
-        const dbStatus = document.getElementById('db-status');
-        dbStatus.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Speichere Reihenfolge...';
+            renderPlaylistItems(cachedTracks);
+        }
 
-        try {
-            const updates = items.map((item, index) => {
-                const id = item.getAttribute('data-id');
-                return sbClient
-                    .from('youtube_playlist')
-                    .update({ position: index })
-                    .eq('id', id);
+        function renderPlaylistItems(tracksToRender) {
+            if(!tracksToRender || tracksToRender.length === 0) {
+                playlistContainer.innerHTML = '<p style="color:var(--text-gray); font-size:0.9rem;">Keine Songs gefunden.</p>'; 
+                return;
+            }
+
+            playlistContainer.innerHTML = '';
+            
+            tracksToRender.forEach(track => {
+                const div = document.createElement('div');
+                div.className = 'list-item';
+                div.setAttribute('draggable', 'true');
+                div.setAttribute('data-id', track.id);
+                
+                div.addEventListener('dragstart', () => div.classList.add('dragging'));
+                div.addEventListener('dragend', async () => {
+                    div.classList.remove('dragging');
+                    await saveNewOrder();
+                });
+
+                const thumbUrl = track.cover_url || `https://img.youtube.com/vi/${track.youtube_id}/hqdefault.jpg`;
+                
+                div.innerHTML = `
+                    <div class="list-info">
+                        <i class="fas fa-grip-lines" style="color: var(--text-gray); cursor: grab; font-size: 1rem;"></i>
+                        <img class="list-thumb" src="${thumbUrl}" alt="Cover">
+                        <div style="overflow:hidden;">
+                            <strong style="display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${track.song_title}</strong>
+                            <div style="font-size:0.75rem;color:var(--text-gray);">${track.artist} &bull; <code style="color:var(--accent);">${track.youtube_id}</code></div>
+                        </div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn-icon" title="Song im Dashboard probehören" onclick="testTrack('${track.youtube_id}')"><i class="fas fa-play"></i></button>
+                        <button class="btn-icon" title="Song bearbeiten" onclick="editTrack(${track.id})"><i class="fas fa-pen"></i></button>
+                        <button class="btn-icon delete" title="Song löschen" onclick="deleteTrack(${track.id})"><i class="fas fa-trash"></i></button>
+                    </div>`;
+                
+                playlistContainer.appendChild(div);
             });
-
-            await Promise.all(updates);
-            dbStatus.style.color = '#22c55e';
-            dbStatus.innerHTML = '<i class="fas fa-check"></i> Reihenfolge synchronisiert!';
-            setTimeout(() => {
-                dbStatus.innerHTML = '<i class="fas fa-database"></i> Connected to Supabase';
-            }, 2000);
-        } catch (err) {
-            console.error('Fehler beim Speichern der Reihenfolge:', err);
-            dbStatus.style.color = '#ef4444';
-            dbStatus.innerHTML = '<i class="fas fa-times"></i> Fehler beim Speichern';
-        } finally {
-            isSavingOrder = false;
         }
-    }
 
-    window.deleteTrack = async (id) => {
-        if(confirm('Song wirklich aus der Playlist löschen?')) {
-            const { error } = await sbClient.from('youtube_playlist').delete().eq('id', id);
-            if(error) alert('Fehler: ' + error.message);
-            loadPlaylistEntries();
-        }
-    };
+        document.getElementById('playlist-search').addEventListener('input', (e) => {
+            const q = e.target.value.toLowerCase();
+            const filtered = cachedTracks.filter(t => 
+                (t.song_title || '').toLowerCase().includes(q) || 
+                (t.artist || '').toLowerCase().includes(q) ||
+                (t.youtube_id || '').toLowerCase().includes(q)
+            );
+            renderPlaylistItems(filtered);
+        });
 
-    document.getElementById('profile-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const payload = {
-            username: document.getElementById('input-username').value,
-            avatar_url: document.getElementById('input-avatar').value,
-            bio: document.getElementById('input-bio').value
+        window.testTrack = (ytId) => {
+            const box = document.getElementById('yt-mini-tester');
+            const iframe = document.getElementById('yt-test-iframe');
+            box.style.display = 'block';
+            iframe.src = `https://www.youtube.com/embed/${ytId}?autoplay=1`;
         };
-        const { error } = await sbClient.from('profile').upsert({ id: currentProfileId, ...payload });
-        if(!error) alert('Profil aktualisiert! 🔥');
-        else alert(error.message);
-    });
-
-    document.getElementById('customization-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const payload = {
-            font_family: document.getElementById('input-font').value,
-            accent_color: document.getElementById('input-accent-color').value,
-            username_effect: document.getElementById('input-username-effect').value,
-            crt_scanlines: document.getElementById('input-crt-scanlines').checked,
-            bg_mode_solid: document.getElementById('input-bg-mode').checked
+        window.closeMiniTester = () => {
+            document.getElementById('yt-mini-tester').style.display = 'none';
+            document.getElementById('yt-test-iframe').src = '';
         };
-        
-        const { error } = await sbClient.from('site_customization').upsert({ id: currentCustomizationId, ...payload });
-        
-        if(!error) alert('Design-Einstellungen gespeichert! 🎨');
-        else alert('Fehler: ' + error.message);
-    });
 
-    document.getElementById('stats-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const payload = {
-            years_coding: document.getElementById('stat-val-1').value,
-            languages: document.getElementById('stat-val-2').value,
-            projects: document.getElementById('stat-val-3').value,
-            views: parseInt(document.getElementById('stat-val-4').value) || 0
+        window.editTrack = (id) => {
+            const track = cachedTracks.find(t => t.id === id);
+            if (!track) return;
+            document.getElementById('yt-edit-id').value = track.id;
+            document.getElementById('yt-input-title').value = track.song_title;
+            document.getElementById('yt-input-artist').value = track.artist;
+            document.getElementById('yt-input-id').value = track.youtube_id;
+            document.getElementById('yt-form-heading').innerText = 'Song bearbeiten';
+            document.getElementById('yt-submit-btn').innerHTML = '<i class="fas fa-save"></i> Song-Änderungen speichern';
+            document.getElementById('cancel-yt-edit').style.display = 'inline-flex';
         };
-        const { error } = await sbClient.from('stats').upsert({ id: currentStatsId, ...payload });
-        if(!error) alert('Statistiken gespeichert! 📊');
-        else alert(error.message);
-    });
 
-    document.getElementById('youtube-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        let rawIdInput = document.getElementById('yt-input-id').value.trim();
-        let videoId = rawIdInput;
-        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/|live\/)([^#\&\?]*).*/;
-        const match = rawIdInput.match(regExp);
-        if (match && match[2].length === 11) {
-            videoId = match[2];
-        } else {
-            videoId = videoId.split('?')[0].split('&')[0];
+        function resetYtForm() {
+            document.getElementById('youtube-form').reset();
+            document.getElementById('yt-edit-id').value = '';
+            document.getElementById('yt-preview-box').classList.remove('show');
+            document.getElementById('yt-form-heading').innerText = 'Add Song to Playlist';
+            document.getElementById('yt-submit-btn').innerHTML = '<i class="fas fa-plus"></i> Add Song to DB';
+            document.getElementById('cancel-yt-edit').style.display = 'none';
+        }
+        document.getElementById('cancel-yt-edit').addEventListener('click', resetYtForm);
+
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('.list-item:not(.dragging)')];
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
         }
 
-        if (videoId.length !== 11) {
-            alert('Ungültige YouTube-URL oder Video-ID!');
-            return;
+        async function saveNewOrder() {
+            if (isSavingOrder) return;
+            isSavingOrder = true;
+
+            const items = [...playlistContainer.querySelectorAll('.list-item')];
+            const dbStatus = document.getElementById('db-status');
+            dbStatus.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Speichere Reihenfolge...';
+
+            try {
+                const updates = items.map((item, index) => {
+                    const id = item.getAttribute('data-id');
+                    return sbClient.from('youtube_playlist').update({ position: index }).eq('id', id);
+                });
+
+                await Promise.all(updates);
+                dbStatus.style.color = '#4ade80';
+                dbStatus.innerHTML = '<i class="fas fa-check"></i> Reihenfolge synchronisiert!';
+                showToast('Playlist-Reihenfolge gespeichert! 🎵');
+                setTimeout(() => {
+                    dbStatus.innerHTML = '<i class="fas fa-database"></i> Connected to Supabase';
+                }, 2000);
+            } catch (err) {
+                dbStatus.style.color = '#ef4444';
+                dbStatus.innerHTML = '<i class="fas fa-times"></i> Fehler beim Speichern';
+                showToast('Fehler beim Sortieren', 'error');
+            } finally {
+                isSavingOrder = false;
+            }
         }
 
-        const maxResUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
-        const hqResUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+        window.deleteTrack = async (id) => {
+            if(confirm('Song wirklich aus der Playlist löschen?')) {
+                const { error } = await sbClient.from('youtube_playlist').delete().eq('id', id);
+                if(error) showToast('Fehler: ' + error.message, 'error');
+                else showToast('Song aus Playlist entfernt');
+                loadPlaylistEntries();
+            }
+        };
 
-        const checkImageExists = (url) => {
-            return new Promise((resolve) => {
+        /* FORM SUBMITS */
+        document.getElementById('profile-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const payload = {
+                username: document.getElementById('input-username').value,
+                avatar_url: document.getElementById('input-avatar').value,
+                bio: document.getElementById('input-bio').value
+            };
+            const { error } = await sbClient.from('profile').upsert({ id: currentProfileId, ...payload });
+            if(!error) showToast('Profil erfolgreich aktualisiert! 🔥');
+            else showToast(error.message, 'error');
+        });
+
+        document.getElementById('customization-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const payload = {
+                font_family: document.getElementById('input-font').value,
+                accent_color: document.getElementById('input-accent-color').value,
+                username_effect: document.getElementById('input-username-effect').value,
+                crt_scanlines: document.getElementById('input-crt-scanlines').checked,
+                bg_mode_solid: document.getElementById('input-bg-mode').checked
+            };
+            // Synchronisiere auch den lokalen Browser-Cache für sofortiges Feedback
+            localStorage.setItem('v_accent', payload.accent_color);
+            localStorage.setItem('v_font', payload.font_family);
+
+            const { error } = await sbClient.from('site_customization').upsert({ id: currentCustomizationId, ...payload });
+            if(!error) showToast('Design-Einstellungen gespeichert! 🎨');
+            else showToast('Fehler: ' + error.message, 'error');
+        });
+
+        document.getElementById('stats-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const viewsVal = parseInt(document.getElementById('stat-val-4').value) || 0;
+            const payload = {
+                years_coding: document.getElementById('stat-val-1').value,
+                languages: document.getElementById('stat-val-2').value,
+                projects: document.getElementById('stat-val-3').value,
+                views: viewsVal
+            };
+            const { error } = await sbClient.from('stats').upsert({ id: currentStatsId, ...payload });
+            if(!error) {
+                document.getElementById('kpi-views').innerText = viewsVal.toLocaleString();
+                showToast('Statistiken gespeichert! 📊');
+            } else showToast(error.message, 'error');
+        });
+
+        document.getElementById('youtube-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const editId = document.getElementById('yt-edit-id').value;
+            const rawIdInput = document.getElementById('yt-input-id').value;
+            const videoId = extractYouTubeId(rawIdInput);
+
+            if (!videoId) {
+                showToast('Ungültige YouTube-URL oder Video-ID!', 'error');
+                return;
+            }
+
+            const maxResUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+            const hqResUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+
+            const checkImageExists = (url) => new Promise((resolve) => {
                 const img = new Image();
-                img.onload = () => {
-                    if (img.naturalWidth === 120) resolve(false);
-                    else resolve(true);
-                };
+                img.onload = () => resolve(img.naturalWidth !== 120);
                 img.onerror = () => resolve(false);
                 img.src = url;
             });
-        };
 
-        const hasMaxRes = await checkImageExists(maxResUrl);
-        const finalCoverUrl = hasMaxRes ? maxResUrl : hqResUrl;
+            const hasMaxRes = await checkImageExists(maxResUrl);
+            const finalCoverUrl = hasMaxRes ? maxResUrl : hqResUrl;
 
-        const { count } = await sbClient
-            .from('youtube_playlist')
-            .select('*', { count: 'exact', head: true });
+            if (editId) {
+                const { error } = await sbClient.from('youtube_playlist').update({
+                    song_title: document.getElementById('yt-input-title').value.trim(),
+                    artist: document.getElementById('yt-input-artist').value.trim(),
+                    youtube_id: videoId,
+                    cover_url: finalCoverUrl
+                }).eq('id', editId);
 
-        const { error } = await sbClient.from('youtube_playlist').insert([{
-            song_title: document.getElementById('yt-input-title').value,
-            artist: document.getElementById('yt-input-artist').value,
-            youtube_id: videoId,
-            cover_url: finalCoverUrl,
-            position: count || 0
-        }]);
-        
-        if(!error) { 
-            alert('Song hinzugefügt! 🎧');
-            document.getElementById('youtube-form').reset();
-            loadPlaylistEntries();
-        } else { alert(error.message); }
-    });
+                if (!error) {
+                    showToast('Song aktualisiert! 🎧');
+                    resetYtForm();
+                    loadPlaylistEntries();
+                } else showToast(error.message, 'error');
+            } else {
+                const { count } = await sbClient.from('youtube_playlist').select('*', { count: 'exact', head: true });
+                const { error } = await sbClient.from('youtube_playlist').insert([{
+                    song_title: document.getElementById('yt-input-title').value.trim(),
+                    artist: document.getElementById('yt-input-artist').value.trim(),
+                    youtube_id: videoId,
+                    cover_url: finalCoverUrl,
+                    position: count || 0
+                }]);
+                
+                if(!error) { 
+                    showToast('Song zur Playlist hinzugefügt! 🎧');
+                    resetYtForm();
+                    loadPlaylistEntries();
+                } else showToast(error.message, 'error');
+            }
+        });
 
-    document.getElementById('mc-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const payload = {
-            domain: document.getElementById('mc-input-domain').value.trim(),
-            poll_target: document.getElementById('mc-input-tunnel').value.trim(),
-            server_name: document.getElementById('mc-input-name').value.trim(),
-            notes: document.getElementById('mc-input-desc').value.trim()
-        };
+        /* MINECRAFT SAVE & LIVE TUNNEL TESTER */
+        document.getElementById('mc-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const payload = {
+                domain: document.getElementById('mc-input-domain').value.trim(),
+                poll_target: document.getElementById('mc-input-tunnel').value.trim(),
+                server_name: document.getElementById('mc-input-name').value.trim(),
+                notes: document.getElementById('mc-input-desc').value.trim()
+            };
 
-        const { error } = await sbClient.from('minecraft_config').upsert({ id: currentMcId, ...payload });
-        if(!error) alert('Minecraft-Server-Informationen in Supabase gesichert! 🧊');
-        else alert('Fehler: ' + error.message);
-    });
+            const { error } = await sbClient.from('minecraft_config').upsert({ id: currentMcId, ...payload });
+            if(!error) {
+                showToast('Minecraft-Server-Config gesichert! 🧊');
+                checkMcKpiStatus(payload.poll_target);
+            } else showToast('Fehler: ' + error.message, 'error');
+        });
 
-    document.getElementById('discord-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const payload = {
-            user_id: document.getElementById('discord-user-id').value,
-            server_id: document.getElementById('discord-server-id').value
-        };
-        const { error } = await sbClient.from('discord_config').upsert({ id: currentDiscordId, ...payload });
-        if(!error) alert('Discord-Config gesichert! 💬');
-        else alert(error.message);
-    });
+        document.getElementById('btn-test-mc').addEventListener('click', async () => {
+            const target = document.getElementById('mc-input-tunnel').value.trim();
+            const out = document.getElementById('mc-test-result');
+            out.innerHTML = `<i class="fas fa-spinner fa-spin" style="color:var(--accent);"></i> Pinge Playit-Tunnel <code>${target}</code>...`;
+            try {
+                const res = await fetch(`https://api.mcstatus.io/v2/status/java/${target}`);
+                const data = await res.json();
+                if (data && data.online) {
+                    out.innerHTML = `
+                        <div style="color:#4ade80; font-weight:800; font-size:1rem; margin-bottom:8px;"><i class="fas fa-check-circle"></i> TUNNEL ONLINE & ERREICHBAR</div>
+                        <div><strong>Spieler:</strong> ${data.players.online} / ${data.players.max}</div>
+                        <div><strong>Version:</strong> ${data.version?.name_clean || 'Unbekannt'}</div>
+                        <div><strong>MOTD:</strong> <code>${data.motd?.clean || '-'}</code></div>
+                    `;
+                    showToast('Minecraft Tunnel ist ONLINE! 🟢');
+                } else {
+                    out.innerHTML = `
+                        <div style="color:#f87171; font-weight:800; font-size:1rem; margin-bottom:8px;"><i class="fas fa-times-circle"></i> SERVER AKTUELL OFFLINE</div>
+                        <div>Die API konnte <code>${target}</code> erreichen, aber der Minecraft-Server antwortet aktuell nicht.</div>
+                    `;
+                    showToast('Tunnel antwortet, Server ist aktuell offline', 'error');
+                }
+            } catch (e) {
+                out.innerHTML = `<span style="color:var(--danger);">Verbindungsfehler zur Status-API.</span>`;
+            }
+        });
 
-    loadDashboardData();
-</script>
+        /* DISCORD SAVE & WIDGET TESTER */
+        document.getElementById('discord-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const payload = {
+                user_id: document.getElementById('discord-user-id').value.trim(),
+                server_id: document.getElementById('discord-server-id').value.trim()
+            };
+            const { error } = await sbClient.from('discord_config').upsert({ id: currentDiscordId, ...payload });
+            if(!error) showToast('Discord-Config gesichert! 💬');
+            else showToast(error.message, 'error');
+        });
+
+        document.getElementById('btn-test-discord').addEventListener('click', async () => {
+            const srvId = document.getElementById('discord-server-id').value.trim();
+            const out = document.getElementById('discord-test-output');
+            out.style.display = 'block';
+            out.innerHTML = 'Prüfe Discord Widget API...';
+            try {
+                const res = await fetch(`https://discord.com/api/guilds/${srvId}/widget.json`);
+                const data = await res.json();
+                if (data && data.name) {
+                    out.innerHTML = `<span style="color:#4ade80;"><i class="fas fa-check"></i> Verbunden mit <strong>${data.name}</strong> (${data.presence_count || 0} Member online)</span>`;
+                    showToast(`Discord Server "${data.name}" gefunden!`);
+                } else {
+                    out.innerHTML = `<span style="color:#f87171;">Widget nicht aktiv oder Server-ID falsch (In Discord unter Servereinstellungen -> Widget -> Server-Widget aktivieren).</span>`;
+                }
+            } catch (e) {
+                out.innerHTML = `<span style="color:#f87171;">Abfrage fehlgeschlagen.</span>`;
+            }
+        });
+
+        /* FULL JSON DATABASE BACKUP EXPORT */
+        document.getElementById('btn-export-db').addEventListener('click', async () => {
+            showToast('Erstelle komplettes DB-Backup...');
+            try {
+                const [prof, cust, st, mc, dc, lnk, yt] = await Promise.all([
+                    sbClient.from('profile').select('*'),
+                    sbClient.from('site_customization').select('*'),
+                    sbClient.from('stats').select('*'),
+                    sbClient.from('minecraft_config').select('*'),
+                    sbClient.from('discord_config').select('*'),
+                    sbClient.from('links').select('*'),
+                    sbClient.from('youtube_playlist').select('*')
+                ]);
+
+                const backup = {
+                    exported_at: new Date().toISOString(),
+                    profile: prof.data,
+                    site_customization: cust.data,
+                    stats: st.data,
+                    minecraft_config: mc.data,
+                    discord_config: dc.data,
+                    links: lnk.data,
+                    youtube_playlist: yt.data
+                };
+
+                const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `vengeance_supabase_backup_${new Date().toISOString().slice(0,10)}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+                showToast('Backup erfolgreich heruntergeladen! 💾');
+            } catch (e) {
+                showToast('Backup fehlgeschlagen', 'error');
+            }
+        });
+
+        loadDashboardData();
+    </script>
 </body>
 </html>
