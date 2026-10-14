@@ -51,11 +51,46 @@
             --stat-yellow: rgba(245, 158, 11, 0.16);
             --stat-blue: rgba(59, 130, 246, 0.16);
             --global-font: 'Outfit', 'Inter', sans-serif;
+            --video-filter: brightness(0.84) saturate(1.45) contrast(1.05);
         }
 
         * {
             box-sizing: border-box; margin: 0; padding: 0;
             font-family: var(--global-font); cursor: none !important; user-select: none;
+            /* FIREFOX CUSTOM GLASS SCROLLBAR */
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent) rgba(12, 12, 16, 0.35);
+        }
+
+        /* CHROME / EDGE / BRAVE / SAFARI ULTRA-CLEAN GLASS SCROLLBARS (ÜBERALL & OHNE PFEILE) */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-button {
+            display: none !important;
+            width: 0 !important;
+            height: 0 !important;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(10, 10, 14, 0.35);
+            border-radius: 10px;
+            margin: 4px 0;
+            box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--accent), rgba(255, 255, 255, 0.25));
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            box-shadow: 0 0 10px var(--accent-glow);
+            transition: all 0.2s ease;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
+            box-shadow: 0 0 16px var(--accent);
+        }
+        ::-webkit-scrollbar-corner {
+            background: transparent;
         }
 
         body {
@@ -119,7 +154,7 @@
         #youtube-player {
             position: absolute; top: 50%; left: 50%; width: 100vw; height: 56.25vw;
             min-height: 100vh; min-width: 177.77vh; transform: translate(-50%, -50%) scale(1.32);
-            filter: brightness(0.84) saturate(1.45) contrast(1.05); pointer-events: none; transition: filter 0.4s ease;
+            filter: var(--video-filter); pointer-events: none; transition: filter 0.4s ease;
         }
 
         .bg-grid-overlay {
@@ -140,17 +175,24 @@
 
         /* TUNER POPOVER */
         .tuner-popover {
-            position: fixed; top: 68px; right: 20px; width: 250px; z-index: 150;
-            background: rgba(12, 12, 16, 0.65); border: 1px solid var(--card-border);
-            backdrop-filter: blur(12px) saturate(190%); -webkit-backdrop-filter: blur(12px) saturate(190%);
+            position: fixed; top: 68px; right: 20px; width: 265px; z-index: 150;
+            background: rgba(12, 12, 16, 0.72); border: 1px solid var(--card-border);
+            backdrop-filter: blur(14px) saturate(190%); -webkit-backdrop-filter: blur(14px) saturate(190%);
             border-radius: 14px; padding: 14px; box-shadow: 0 15px 35px rgba(0,0,0,0.7), inset 0 1px 1px var(--card-edge-highlight);
             display: none; flex-direction: column; gap: 12px;
         }
         .tuner-popover.open { display: flex; animation: fade 0.2s ease forwards; }
         .tuner-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 700; display: flex; justify-content: space-between; }
-        .color-swatches { display: flex; gap: 8px; justify-content: space-between; }
+        .color-swatches { display: flex; gap: 6px; justify-content: space-between; }
         .swatch { width: 32px; height: 24px; border-radius: 6px; border: 2px solid rgba(255,255,255,0.2); transition: transform 0.2s, border-color 0.2s; }
         .swatch:hover { transform: scale(1.12); border-color: #fff; }
+        .filter-chips { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+        .filter-chip {
+            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14);
+            color: var(--text-main); font-size: 0.7rem; font-weight: 700; padding: 5px 8px;
+            border-radius: 7px; transition: all 0.2s; text-align: center;
+        }
+        .filter-chip:hover, .filter-chip.active { border-color: var(--accent); background: var(--accent-glow); }
 
         /* BENTO CONTAINER */
         .bento-container {
@@ -240,7 +282,7 @@
         .social-link:hover { background: rgba(255, 255, 255, 0.12); border-color: var(--accent); transform: translateX(5px); box-shadow: 0 0 12px var(--accent-glow); }
         .social-link:hover i { color: var(--accent); }
 
-        /* DISCORD WIDGET BOX (Wiederhergestellt & veredelt) */
+        /* DISCORD WIDGET BOX */
         .discord-guild-box {
             width: 100%; margin-top: auto; padding-top: 10px;
             display: flex; align-items: center; justify-content: space-between;
@@ -265,9 +307,13 @@
         
         .track-details { flex-grow: 1; overflow: hidden; }
         .track-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2px; }
-        .track-title { font-size: 1.15rem; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 260px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
-        .queue-toggle-btn { background: none; border: none; color: var(--text-muted); font-size: 0.9rem; transition: color 0.2s; padding: 4px; }
-        .queue-toggle-btn:hover { color: var(--accent); }
+        .track-title { font-size: 1.15rem; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 240px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+        .queue-toggle-btn {
+            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+            color: var(--text-main); font-size: 0.76rem; font-weight: 700; transition: all 0.2s;
+            padding: 4px 9px; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .queue-toggle-btn:hover { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 10px var(--accent-glow); }
         .visualizer-strip { display: flex; align-items: flex-end; gap: 4px; height: 26px; width: 100%; padding: 4px 0; overflow: hidden; }
         .viz-bar { flex: 1; background: linear-gradient(180deg, var(--accent), rgba(255,255,255,0.25)); border-radius: 2px 2px 0 0; height: 4px; transition: height 0.1s ease; box-shadow: 0 0 6px var(--accent-glow); }
         .track-artist { color: var(--text-muted); font-size: 0.85rem; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
@@ -297,11 +343,41 @@
         .btn-play { width: 38px; height: 38px; background: var(--text-main); color: var(--bg-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem; transition: all 0.2s ease; }
         .btn-play:hover { background: var(--accent); color: #fff; box-shadow: 0 0 15px var(--accent-glow); transform: scale(1.08); }
 
-        .playlist-drawer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease, margin 0.3s ease; background: rgba(0,0,0,0.35); backdrop-filter: blur(8px); border-radius: 10px; display: flex; flex-direction: column; gap: 4px; }
-        .playlist-drawer.open { max-height: 160px; overflow-y: auto; margin-top: 10px; padding: 8px; border: 1px solid rgba(255,255,255,0.12); }
-        .queue-item { display: flex; align-items: center; gap: 10px; padding: 6px 10px; border-radius: 6px; font-size: 0.8rem; transition: background 0.15s; }
-        .queue-item:hover { background: rgba(255,255,255,0.1); } .queue-item.active { background: var(--accent-glow); border-left: 3px solid var(--accent); }
-        .queue-title { color: var(--text-main); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        /* PLAYLIST DRAWER MIT SUCHLEISTE & CRYSTAL SCROLLBAR */
+        .playlist-drawer {
+            max-height: 0; overflow: hidden; transition: max-height 0.35s ease, margin 0.35s ease, padding 0.35s ease;
+            background: rgba(8, 8, 12, 0.45); backdrop-filter: blur(12px);
+            border-radius: 12px; display: flex; flex-direction: column; gap: 6px;
+        }
+        .playlist-drawer.open {
+            max-height: 210px; margin-top: 10px; padding: 10px;
+            border: 1px solid rgba(255,255,255,0.14);
+        }
+        .queue-search-wrap {
+            display: flex; align-items: center; gap: 8px;
+            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 8px; padding: 5px 10px; flex-shrink: 0;
+        }
+        .queue-search-wrap:focus-within { border-color: var(--accent); box-shadow: 0 0 10px var(--accent-glow); }
+        .queue-search-input {
+            background: transparent; border: none; outline: none; color: #fff;
+            font-size: 0.76rem; width: 100%;
+        }
+        .queue-items-scroll {
+            overflow-y: auto; display: flex; flex-direction: column; gap: 4px;
+            padding-right: 6px; max-height: 150px;
+        }
+        .queue-item {
+            display: flex; align-items: center; justify-content: space-between; gap: 10px;
+            padding: 7px 10px; border-radius: 8px; font-size: 0.8rem;
+            background: rgba(255,255,255,0.02); border: 1px solid transparent; transition: all 0.15s;
+        }
+        .queue-item:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.14); transform: translateX(2px); }
+        .queue-item.active {
+            background: linear-gradient(90deg, var(--accent-glow), rgba(255,255,255,0.03));
+            border-left: 3px solid var(--accent); border-color: rgba(255,255,255,0.15);
+        }
+        .queue-title { color: var(--text-main); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
         /* MINECRAFT SERVER CARD 2.0 */
         .mc-server-card { display: flex; flex-direction: column; gap: 13px; border: 1px solid rgba(34, 197, 94, 0.3); position: relative; }
@@ -440,7 +516,7 @@
         .modal-title { font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; gap: 10px; }
         .modal-close { background: none; border: none; color: var(--text-muted); font-size: 1.2rem; transition: color 0.2s; } .modal-close:hover { color: var(--text-main); }
         
-        .project-grid { display: grid; grid-template-columns: 1fr; gap: 12px; max-height: 420px; overflow-y: auto; padding-right: 4px; }
+        .project-grid { display: grid; grid-template-columns: 1fr; gap: 12px; max-height: 420px; overflow-y: auto; padding-right: 6px; }
         .project-item { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 8px; transition: all 0.2s ease; color: inherit; }
         .project-item:hover { background: rgba(255, 255, 255, 0.09); border-color: var(--accent); }
         .project-head { display: flex; justify-content: space-between; align-items: center; } .project-name { font-weight: 800; font-size: 0.98rem; }
@@ -453,7 +529,7 @@
         /* COMMAND PALETTE (CTRL+K) */
         .cmdk-input-wrap { display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.45); border: 1px solid var(--accent); border-radius: 12px; padding: 12px 16px; margin-bottom: 12px; box-shadow: 0 0 15px var(--accent-glow); }
         .cmdk-input { background: transparent; border: none; outline: none; color: #fff; font-size: 0.95rem; width: 100%; }
-        .cmdk-list { display: flex; flex-direction: column; gap: 6px; max-height: 280px; overflow-y: auto; }
+        .cmdk-list { display: flex; flex-direction: column; gap: 6px; max-height: 280px; overflow-y: auto; padding-right: 6px; }
         .cmdk-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-radius: 10px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); font-size: 0.85rem; transition: all 0.15s; }
         .cmdk-item:hover { background: var(--accent-glow); border-color: var(--accent); transform: translateX(4px); }
 
@@ -464,7 +540,7 @@
             padding: 16px; height: 370px; display: flex; flex-direction: column; overflow: hidden;
             box-shadow: 0 0 25px var(--accent-glow);
         }
-        .cli-output { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; user-select: text; }
+        .cli-output { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; user-select: text; padding-right: 6px; }
         .cli-input-line { display: flex; align-items: center; gap: 8px; margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 8px; }
         .cli-prompt { color: #22c55e; font-weight: bold; }
         .cli-input { background: transparent; border: none; outline: none; color: #fff; font-family: inherit; font-size: 0.85rem; flex: 1; }
@@ -486,8 +562,8 @@
 <body>
 
     <div id="boot-screen">
-        <div class="boot-line" style="animation: fade 0.1s forwards 0.1s">> initializing Vengeance OS [v3.0 Crystal Kernel]...</div>
-        <div class="boot-line" style="animation: fade 0.1s forwards 0.25s">> loading modules: [SUPABASE, LANYARD_WS, 3D_TILT, MC_POLLER, CMD_PALETTE]</div>
+        <div class="boot-line" style="animation: fade 0.1s forwards 0.1s">> initializing Vengeance OS [v3.5 Crystal Kernel]...</div>
+        <div class="boot-line" style="animation: fade 0.1s forwards 0.25s">> injecting custom glass scrollbars & particle physics... OK</div>
         <div class="boot-line" style="animation: fade 0.1s forwards 0.45s">> syncing hardware telemetry (Ryzen 7 5800X / RX 6750 XT)... OK</div>
         <div class="boot-line" style="animation: fade 0.1s forwards 0.65s; color: #fff;">> Welcome back, UpperEchelon</div>
     </div>
@@ -511,13 +587,13 @@
         <button class="action-btn" id="cmdk-btn" title="Spotlight Command Palette (Ctrl+K)"><i class="fas fa-search"></i></button>
         <button class="action-btn" id="zen-btn" title="Cinema / Zen Mode (H)"><i class="fas fa-eye"></i></button>
         <button class="action-btn active" id="tilt-btn" title="Toggle 3D Card Tilt"><i class="fas fa-cube"></i></button>
-        <button class="action-btn" id="tuner-btn" title="Glass & Theme Tuner"><i class="fas fa-sliders"></i></button>
+        <button class="action-btn" id="tuner-btn" title="Glass, Theme & Video Tuner"><i class="fas fa-sliders"></i></button>
         <button class="action-btn" id="cli-btn" title="Open Interactive CLI (~ / ^)"><i class="fas fa-terminal"></i></button>
         <button class="action-btn" id="sfx-btn" title="Toggle Sound FX"><i class="fas fa-volume-high"></i></button>
         <button class="action-btn" id="help-btn" title="Keyboard Shortcuts"><i class="fas fa-keyboard"></i></button>
     </div>
 
-    <!-- LIVE GLASS & THEME TUNER POPOVER -->
+    <!-- LIVE GLASS, THEME & VIDEO FILTER TUNER POPOVER -->
     <div class="tuner-popover" id="tuner-popover">
         <div class="tuner-label"><span>Crystal Blur</span><span id="blur-val-label">5px</span></div>
         <input type="range" id="blur-slider" min="0" max="20" value="5" class="volume-slider" style="width:100%;">
@@ -529,6 +605,14 @@
             <button class="swatch" style="background:#10b981;" data-color="#10b981" title="Matrix Emerald"></button>
             <button class="swatch" style="background:#f43f5e;" data-color="#f43f5e" title="Crimson Red"></button>
             <button class="swatch" style="background:#06b6d4;" data-color="#06b6d4" title="Ice Cyan"></button>
+        </div>
+
+        <div class="tuner-label" style="margin-top:4px;"><span>Video Ambience Filter</span></div>
+        <div class="filter-chips">
+            <button class="filter-chip active" data-filter="brightness(0.84) saturate(1.45) contrast(1.05)">Standard</button>
+            <button class="filter-chip" data-filter="grayscale(1) contrast(1.28) brightness(0.75)">Cyber Noir</button>
+            <button class="filter-chip" data-filter="brightness(0.45) contrast(1.15) saturate(1.2)">Night Dim</button>
+            <button class="filter-chip" data-filter="saturate(2.2) contrast(1.15) brightness(0.85)">Hyper Neon</button>
         </div>
     </div>
 
@@ -562,7 +646,7 @@
 
             <div id="links-container" class="links-list"></div>
 
-            <!-- REPARIERTE DISCORD COMMUNITY & ID COPY BOX -->
+            <!-- DISCORD COMMUNITY & ID COPY BOX -->
             <div class="discord-guild-box clickable" id="discord-copy-box" title="Klicken um Discord User-ID zu kopieren">
                 <div class="copy-toast" id="copy-toast">Discord ID kopiert! ✓</div>
                 <div class="discord-guild-info">
@@ -587,7 +671,9 @@
                     <div class="track-details">
                         <div class="track-header">
                             <div id="yt-title" class="track-title">Loading...</div>
-                            <button class="queue-toggle-btn" id="queue-btn" title="Playlist Warteschlange"><i class="fas fa-list-ul"></i></button>
+                            <button class="queue-toggle-btn" id="queue-btn" title="Playlist Warteschlange öffnen">
+                                <i class="fas fa-list-ul"></i> <span id="queue-count-badge">0</span>
+                            </button>
                         </div>
                         <div id="yt-artist" class="track-artist">Silence</div>
                         <div class="visualizer-strip" id="visualizer-strip"></div>
@@ -620,7 +706,14 @@
                     </div>
                 </div>
 
-                <div class="playlist-drawer" id="playlist-drawer"></div>
+                <!-- PLAYLIST DRAWER MIT LIVE-FILTER & GLASS-SCROLLBAR -->
+                <div class="playlist-drawer" id="playlist-drawer">
+                    <div class="queue-search-wrap">
+                        <i class="fas fa-search" style="font-size:0.72rem; color:var(--accent);"></i>
+                        <input type="text" id="queue-search-input" class="queue-search-input" placeholder="Track in Playlist filtern..." autocomplete="off">
+                    </div>
+                    <div class="queue-items-scroll" id="queue-items-list"></div>
+                </div>
             </div>
 
             <!-- MINECRAFT LIVE-STATUS CARD 2.0 -->
@@ -745,7 +838,7 @@
             </div>
         </div>
 
-        <!-- STATUS BANNER (MIT LANYARD LIVE-SUPPORT) -->
+        <!-- STATUS BANNER -->
         <div class="card status-banner">
             <div class="status-content-left">
                 <div class="status-dot" id="banner-status-dot"></div>
@@ -761,7 +854,7 @@
             </div>
         </div>
 
-        <div class="footer-text">Website Coded by &bull; UpperEchelon / Vengeance Utilities [OS v3.0]</div>
+        <div class="footer-text">Website Coded by &bull; UpperEchelon / Vengeance Utilities [OS v3.5]</div>
     </div>
 
     <!-- CUSTOM CONTEXT MENU -->
@@ -826,7 +919,7 @@
                 <div class="project-item">
                     <div class="project-head">
                         <span class="project-name">Vengeance Game Launcher & Utilities</span>
-                        <span class="project-tag">C++ / CLI • v3.0</span>
+                        <span class="project-tag">C++ / CLI • v3.5</span>
                     </div>
                     <p class="project-desc">Custom Desktop Game-Launcher inkl. automatischem RAM-/JVM-Tuner für NeoForge & Dedicated Server.</p>
                     <div class="project-actions">
@@ -842,13 +935,13 @@
     <div class="modal-overlay" id="cli-modal">
         <div class="modal-box" style="max-width: 680px;">
             <div class="modal-header">
-                <div class="modal-title"><i class="fas fa-terminal" style="color:var(--accent);"></i> Vengeance Interactive CLI [v3.0]</div>
+                <div class="modal-title"><i class="fas fa-terminal" style="color:var(--accent);"></i> Vengeance Interactive CLI [v3.5]</div>
                 <button class="modal-close" id="close-cli">&times;</button>
             </div>
             <div class="cli-box">
                 <div class="cli-output" id="cli-output">
-                    <div>Vengeance OS [Version 3.0.26 - Crystal Kernel]</div>
-                    <div>Tippe <span style="color:#fff;">'help'</span>, <span style="color:#fff;">'neofetch'</span> oder <span style="color:#fff;">'overclock'</span> ein. (<span style="color:var(--text-muted);">Tab = Autocomplete</span>)</div>
+                    <div>Vengeance OS [Version 3.5.26 - Crystal Kernel]</div>
+                    <div>Tippe <span style="color:#fff;">'help'</span>, <span style="color:#fff;">'sysinfo'</span>, <span style="color:#fff;">'overclock'</span> oder <span style="color:#fff;">'party'</span> ein. (<span style="color:var(--text-muted);">Tab = Autocomplete</span>)</div>
                     <div style="height: 6px;"></div>
                 </div>
                 <div class="cli-input-line">
@@ -883,6 +976,8 @@
         let tiltEnabled = true;
         let matrixMode = false;
         let overclockMode = false;
+        let rgbPartyInterval = null;
+        let currentFps = 60;
         const sessionStartTime = Date.now();
 
         window.addEventListener('load', () => {
@@ -914,6 +1009,33 @@
         let sfxEnabled = true;
         let isLooping = false;
         let isShuffling = false;
+
+        /* FPS COUNTER FÜR SYSINFO */
+        let frameCount = 0, lastFpsTime = performance.now();
+        function trackFps(now) {
+            frameCount++;
+            if (now - lastFpsTime >= 1000) {
+                currentFps = frameCount;
+                frameCount = 0;
+                lastFpsTime = now;
+            }
+            requestAnimationFrame(trackFps);
+        }
+        requestAnimationFrame(trackFps);
+
+        /* DYNAMISCHER BROWSER-TAB MARQUEE */
+        let tabTickerPos = 0;
+        setInterval(() => {
+            const isPlaying = ytPlayer && typeof ytPlayer.getPlayerState === 'function' && ytPlayer.getPlayerState() === YT.PlayerState.PLAYING;
+            if (isPlaying && playlist[currentSongIndex]) {
+                const s = playlist[currentSongIndex];
+                const fullText = `▶ ${s.title} — ${s.artist}   •   Vengeance OS   •   `;
+                document.title = fullText.substring(tabTickerPos) + fullText.substring(0, tabTickerPos);
+                tabTickerPos = (tabTickerPos + 1) % fullText.length;
+            } else {
+                document.title = 'Vengeance Utilities - UpperEchelon';
+            }
+        }, 380);
 
         window.onYouTubeIframeAPIReady = function() {
             ytApiReady = true;
@@ -980,7 +1102,7 @@
             });
         }
 
-        /* OVERCLOCK MODE */
+        /* OVERCLOCK & RGB PARTY MODE */
         function toggleOverclock() {
             overclockMode = !overclockMode;
             document.body.classList.toggle('overclock-active', overclockMode);
@@ -988,6 +1110,37 @@
             if (pboEl) pboEl.innerText = overclockMode ? 'PBO MAX (4.85 GHz OC)' : 'PBO2 + Curve Opt.';
             playSfx('powerup');
         }
+
+        function toggleRgbParty() {
+            if (rgbPartyInterval) {
+                clearInterval(rgbPartyInterval);
+                rgbPartyInterval = null;
+                applyAccentColor(localStorage.getItem('v_accent') || '#ec4899');
+            } else {
+                let hue = 0;
+                playSfx('powerup');
+                rgbPartyInterval = setInterval(() => {
+                    hue = (hue + 4) % 360;
+                    const hex = `hsl(${hue}, 90%, 60%)`;
+                    document.documentElement.style.setProperty('--accent', hex);
+                    document.documentElement.style.setProperty('--accent-glow', `hsla(${hue}, 90%, 60%, 0.38)`);
+                }, 50);
+            }
+        }
+
+        /* KONAMI CODE EASTER EGG (Up Up Down Down Left Right Left Right B A) */
+        const konamiSeq = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','KeyB','KeyA'];
+        let konamiIdx = 0;
+        window.addEventListener('keydown', (e) => {
+            if (e.code === konamiSeq[konamiIdx]) {
+                konamiIdx++;
+                if (konamiIdx === konamiSeq.length) {
+                    toggleOverclock();
+                    toggleRgbParty();
+                    konamiIdx = 0;
+                }
+            } else { konamiIdx = 0; }
+        });
 
         /* ZEN / CINEMA MODE */
         const zenBtn = document.getElementById('zen-btn');
@@ -999,7 +1152,7 @@
         if (zenBtn) zenBtn.addEventListener('click', toggleZenMode);
         document.getElementById('ctx-zen')?.addEventListener('click', toggleZenMode);
 
-        /* GLASS & THEME TUNER POPOVER */
+        /* GLASS, THEME & VIDEO FILTER TUNER POPOVER */
         const tunerBtn = document.getElementById('tuner-btn');
         const tunerPopover = document.getElementById('tuner-popover');
         const blurSlider = document.getElementById('blur-slider');
@@ -1036,6 +1189,14 @@
 
         document.querySelectorAll('.swatch').forEach(sw => {
             sw.addEventListener('click', () => applyAccentColor(sw.dataset.color));
+        });
+
+        document.querySelectorAll('.filter-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+                document.documentElement.style.setProperty('--video-filter', chip.dataset.filter);
+            });
         });
 
         /* 3D INTERACTIVE TILT & SPOTLIGHT */
@@ -1127,10 +1288,12 @@
             updateVisualizer(isPlaying);
         }, 75);
 
-        /* PARTICLES & MATRIX CANVAS */
+        /* PARTICLES, CLICK-BURST SPARKS & MATRIX CANVAS */
         const canvas = document.getElementById('particle-canvas');
         const ctx = canvas.getContext('2d');
-        let particles = []; let mouse = { x: null, y: null, radius: 130 };
+        let particles = [];
+        let burstSparks = [];
+        let mouse = { x: null, y: null, radius: 130 };
         let matrixDrops = [];
 
         function resizeCanvas() { 
@@ -1141,6 +1304,19 @@
         window.addEventListener('resize', resizeCanvas); resizeCanvas();
         window.addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
         window.addEventListener('mouseleave', () => { mouse.x = null; mouse.y = null; });
+
+        /* CLICK BURST FX */
+        window.addEventListener('mousedown', (e) => {
+            for (let i = 0; i < 10; i++) {
+                const angle = (Math.PI * 2 / 10) * i + (Math.random() - 0.5) * 0.4;
+                const speed = Math.random() * 3.5 + 1.5;
+                burstSparks.push({
+                    x: e.clientX, y: e.clientY,
+                    vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
+                    alpha: 1, size: Math.random() * 2.5 + 1.2
+                });
+            }
+        });
 
         class Particle {
             constructor() {
@@ -1170,10 +1346,11 @@
         for (let i = 0; i < (window.innerWidth > 900 ? 55 : 25); i++) particles.push(new Particle());
 
         function animateParticles() {
+            const accentCol = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#ec4899';
             if (matrixMode) {
                 ctx.fillStyle = 'rgba(11, 11, 12, 0.08)';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#ec4899';
+                ctx.fillStyle = accentCol;
                 ctx.font = '14px monospace';
                 for (let i = 0; i < matrixDrops.length; i++) {
                     const text = String.fromCharCode(0x30A0 + Math.random() * 96);
@@ -1195,6 +1372,22 @@
                     }
                 }
             }
+
+            /* RENDER CLICK BURST SPARKS */
+            for (let i = burstSparks.length - 1; i >= 0; i--) {
+                const sp = burstSparks[i];
+                sp.x += sp.vx; sp.y += sp.vy;
+                sp.alpha -= 0.035;
+                if (sp.alpha <= 0) { burstSparks.splice(i, 1); continue; }
+                ctx.save();
+                ctx.globalAlpha = sp.alpha;
+                ctx.fillStyle = accentCol;
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = accentCol;
+                ctx.beginPath(); ctx.arc(sp.x, sp.y, sp.size, 0, Math.PI * 2); ctx.fill();
+                ctx.restore();
+            }
+
             requestAnimationFrame(animateParticles);
         }
         animateParticles();
@@ -1268,11 +1461,23 @@
             });
         }
 
-        /* PLAYLIST DRAWER */
+        /* PLAYLIST DRAWER MIT FILTER-SUCHE */
         const queueBtn = document.getElementById('queue-btn'); 
         const playlistDrawer = document.getElementById('playlist-drawer');
+        const queueItemsList = document.getElementById('queue-items-list');
+        const queueSearchInput = document.getElementById('queue-search-input');
+
         if (queueBtn && playlistDrawer) {
-            queueBtn.addEventListener('click', () => playlistDrawer.classList.toggle('open'));
+            queueBtn.addEventListener('click', () => {
+                playlistDrawer.classList.toggle('open');
+                if (playlistDrawer.classList.contains('open')) {
+                    setTimeout(() => queueSearchInput?.focus(), 150);
+                }
+            });
+        }
+
+        if (queueSearchInput) {
+            queueSearchInput.addEventListener('input', (e) => renderQueue(e.target.value));
         }
 
         function selectSong(idx) {
@@ -1284,20 +1489,34 @@
                 ytPlayer.playVideo();
             }
             updatePlayerUI();
-            renderQueue();
+            renderQueue(queueSearchInput ? queueSearchInput.value : '');
             document.querySelector('#play-pause-btn i').className = 'fas fa-pause';
             document.getElementById('yt-cover').classList.add('playing');
         }
 
-        function renderQueue() {
-            if (!playlistDrawer) return;
-            playlistDrawer.innerHTML = '';
+        function renderQueue(filterText = '') {
+            if (!queueItemsList) return;
+            const q = filterText.toLowerCase();
+            queueItemsList.innerHTML = '';
+            const countBadge = document.getElementById('queue-count-badge');
+            if (countBadge) countBadge.innerText = playlist.length;
+
             playlist.forEach((song, idx) => {
+                if (q && !song.title.toLowerCase().includes(q) && !song.artist.toLowerCase().includes(q)) return;
                 const item = document.createElement('div');
-                item.className = `queue-item ${idx === currentSongIndex ? 'active' : ''}`;
-                item.innerHTML = `<i class="fas fa-play" style="font-size:0.7rem; color:var(--text-muted);"></i><div style="overflow:hidden;"><div class="queue-title">${song.title}</div><div class="queue-artist" style="font-size:0.72rem; color:var(--text-muted);">${song.artist}</div></div>`;
+                item.className = `queue-item clickable ${idx === currentSongIndex ? 'active' : ''}`;
+                item.innerHTML = `
+                    <div style="display:flex; align-items:center; gap:10px; overflow:hidden;">
+                        <i class="fas ${idx === currentSongIndex ? 'fa-volume-high' : 'fa-play'}" style="font-size:0.72rem; color:${idx === currentSongIndex ? 'var(--accent)' : 'var(--text-muted)'};"></i>
+                        <div style="overflow:hidden;">
+                            <div class="queue-title">${song.title}</div>
+                            <div class="queue-artist" style="font-size:0.7rem; color:var(--text-muted);">${song.artist}</div>
+                        </div>
+                    </div>
+                    <span style="font-size:0.65rem; color:var(--text-muted); font-family:monospace;">#${idx + 1}</span>
+                `;
                 item.addEventListener('click', () => selectSong(idx));
-                playlistDrawer.appendChild(item);
+                queueItemsList.appendChild(item);
             });
             applyCursorHoverEffects(); 
         }
@@ -1345,6 +1564,7 @@
             const q = filter.toLowerCase();
             const actions = [
                 { icon: 'fa-bolt', label: 'Toggle Overclock Mode (4.85 GHz Boost)', tag: 'System', run: () => toggleOverclock() },
+                { icon: 'fa-rainbow', label: 'Toggle RGB Cyber Party Mode', tag: 'FX', run: () => toggleRgbParty() },
                 { icon: 'fa-eye', label: 'Toggle Cinema / Zen Mode', tag: 'View', run: () => toggleZenMode() },
                 { icon: 'fa-code', label: 'Matrix Code Rain ein-/ausschalten', tag: 'FX', run: () => { matrixMode = !matrixMode; } },
                 { icon: 'fa-layer-group', label: 'Vengeance Release & APK Hub öffnen', tag: 'Modal', run: () => projectsModal.classList.add('active') },
@@ -1398,7 +1618,7 @@
             });
         }
 
-        /* MINECRAFT STATUS POLLER 2.0 (INKL. AVATAR HEADS & SPARKLINE) */
+        /* MINECRAFT STATUS POLLER 2.0 */
         const mcAddressRow = document.getElementById('mc-address-row');
         const mcCopyToast = document.getElementById('mc-copy-toast');
         if (mcAddressRow) {
@@ -1506,8 +1726,8 @@
             } catch (e) {}
         }
 
-        /* CLI COMMANDS + OVERCLOCK */
-        const cliCommandsList = ['help', 'neofetch', 'overclock', 'mc', 'status', 'projects', 'specs', 'skills', 'matrix', 'zen', 'glass', 'theme', 'play', 'pause', 'next', 'prev', 'clear', 'cls'];
+        /* CLI COMMANDS + SYSINFO + PARTY + OVERCLOCK */
+        const cliCommandsList = ['help', 'neofetch', 'sysinfo', 'overclock', 'party', 'mc', 'status', 'projects', 'specs', 'skills', 'matrix', 'zen', 'glass', 'theme', 'play', 'pause', 'next', 'prev', 'clear', 'cls'];
         let cliHistory = [];
         let cliHistoryIdx = -1;
 
@@ -1551,24 +1771,37 @@
                 case 'help':
                     res.innerHTML = `Verfügbare Befehle:<br>
                     • <span style="color:var(--accent);">neofetch</span> - System & Hardware ASCII-Übersicht<br>
+                    • <span style="color:var(--accent);">sysinfo</span> - Live Client-Diagnose (FPS, Threads, Display)<br>
                     • <span style="color:var(--accent);">overclock</span> - PBO Max-Boost & Neon-Overdrive einschalten<br>
+                    • <span style="color:var(--accent);">party</span> - RGB Cyber-Drive Farbwechsel starten/stoppen<br>
                     • <span style="color:var(--accent);">mc / status</span> - Minecraft Server Live-Status<br>
                     • <span style="color:var(--accent);">glass &lt;0-20&gt;</span> - Glas-Blur in Echtzeit ändern<br>
                     • <span style="color:var(--accent);">theme &lt;#hex&gt;</span> - Akzentfarbe setzen<br>
                     • <span style="color:var(--accent);">matrix / zen</span> - Matrix-Rain oder Cinema-Mode<br>
-                    • <span style="color:var(--accent);">projects / specs / skills</span> - Portfolio-Infos<br>
                     • <span style="color:var(--accent);">play / pause / next / prev</span> - Music-Player steuern<br>
                     • <span style="color:var(--accent);">clear / cls</span> - Terminal leeren`;
+                    break;
+                case 'sysinfo':
+                    const cores = navigator.hardwareConcurrency || '16';
+                    const mem = navigator.deviceMemory ? `${navigator.deviceMemory}+ GB` : '32 GB';
+                    res.innerHTML = `[CLIENT HARDWARE & RENDER TELEMETRY]<br>
+                    • <span style="color:#fff;">Render Engine:</span> ${currentFps} FPS (Crystal Glass Compositor)<br>
+                    • <span style="color:#fff;">Viewport / Res:</span> ${window.innerWidth}x${window.innerHeight} (DPR: ${window.devicePixelRatio}x)<br>
+                    • <span style="color:#fff;">Logical CPU Threads:</span> ${cores} Cores detected | RAM Class: ${mem}`;
                     break;
                 case 'overclock':
                     toggleOverclock();
                     res.innerHTML = `PBO Curve Optimizer Overclock: <span style="color:#4ade80; font-weight:bold;">${overclockMode ? 'ACTIVE (4.85 GHz)' : 'STANDARD (4.65 GHz)'}</span>`;
                     break;
+                case 'party':
+                    toggleRgbParty();
+                    res.innerHTML = `RGB Cyber Party Mode: <span style="color:#4ade80; font-weight:bold;">${rgbPartyInterval ? 'ACTIVE' : 'OFF'}</span>`;
+                    break;
                 case 'neofetch':
                     res.innerHTML = `<pre style="color:var(--accent); font-size:0.75rem; line-height:1.25; margin:4px 0;">
    /\\   /\\     <span style="color:#fff; font-weight:bold;">upperechelon@vengeance</span>
   /  \\ /  \\    ----------------------
- |    V    |   <span style="color:var(--accent);">OS:</span> Windows 11 Pro (AtlasOS) / Vengeance v3.0
+ |    V    |   <span style="color:var(--accent);">OS:</span> Windows 11 Pro (AtlasOS) / Vengeance v3.5
   \\       /    <span style="color:var(--accent);">CPU:</span> AMD Ryzen 7 5800X (8C/16T @ ${overclockMode ? '4.85' : '4.65'} GHz)
    \\     /     <span style="color:var(--accent);">GPU:</span> AMD Radeon RX 6750 XT Elite OC
     \\   /      <span style="color:var(--accent);">Board:</span> ASUS ROG Strix B550-A Gaming
