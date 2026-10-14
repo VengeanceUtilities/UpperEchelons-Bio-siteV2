@@ -38,80 +38,60 @@
         :root {
             --bg-color: #0b0b0c;
             --grid-line: rgba(255, 255, 255, 0.02);
-            
-            /* CRYSTAL GLASS SETTINGS (Viel klarer, weniger milchig, echte Lichtkante) */
             --glass-blur: 5px;
             --card-bg: rgba(12, 12, 16, 0.24);
             --card-border: rgba(255, 255, 255, 0.16);
             --card-edge-highlight: rgba(255, 255, 255, 0.28);
-            
             --text-main: #ffffff;
             --text-muted: #cbd5e1;
-            
             --accent: #ec4899;
             --accent-glow: rgba(236, 72, 153, 0.38);
-            
-            --bg-grad-1: #090514;
-            --bg-grad-2: #0b0b0c;
-
-            /* Klarere Stat-Tints mit höherer Lesbarkeit */
             --stat-green: rgba(16, 185, 129, 0.16);
             --stat-pink: rgba(244, 63, 94, 0.16);
             --stat-yellow: rgba(245, 158, 11, 0.16);
             --stat-blue: rgba(59, 130, 246, 0.16);
-            
             --global-font: 'Outfit', 'Inter', sans-serif;
         }
 
         * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: var(--global-font);
-            cursor: none !important;
-            user-select: none;
+            box-sizing: border-box; margin: 0; padding: 0;
+            font-family: var(--global-font); cursor: none !important; user-select: none;
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            width: 100vw;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            overflow-x: hidden;
+            background-color: var(--bg-color); color: var(--text-main);
+            width: 100vw; min-height: 100vh; display: flex;
+            justify-content: center; align-items: center;
+            position: relative; overflow-x: hidden;
         }
 
         body.solid-bg-mode {
             background: radial-gradient(circle at 50% 20%, #150f28 0%, #08080a 100%) !important;
         }
 
+        body.overclock-active .card {
+            border-color: var(--accent) !important;
+            box-shadow: 0 0 28px var(--accent-glow), inset 0 0 15px var(--accent-glow) !important;
+        }
+
         @media (max-height: 860px), (max-width: 900px) {
-            body {
-                overflow-y: auto !important;
-                align-items: flex-start;
-                padding: 40px 0;
-            }
+            body { overflow-y: auto !important; align-items: flex-start; padding: 40px 0; }
         }
 
         /* BOOT SCREEN */
         #boot-screen {
             position: fixed; inset: 0; background: #050505; z-index: 999999;
             display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
-            padding: 40px; color: var(--accent); font-family: var(--global-font);
-            font-size: 1.1rem; text-shadow: 0 0 5px var(--accent-glow);
-            transition: opacity 0.5s ease-out;
+            padding: 40px; color: var(--accent); font-size: 1.1rem;
+            text-shadow: 0 0 5px var(--accent-glow); transition: opacity 0.5s ease-out;
         }
-        .boot-line { margin: 4px 0; opacity: 0; font-family: inherit; }
+        .boot-line { margin: 4px 0; opacity: 0; font-family: 'Fira Code', monospace; }
         @keyframes fade { to { opacity: 1; } }
 
         .scanlines {
             position: fixed; inset: 0; z-index: 9997; pointer-events: none;
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%);
-            background-size: 100% 4px;
-            display: none;
+            background-size: 100% 4px; display: none;
         }
 
         /* CURSOR */
@@ -131,30 +111,15 @@
 
         #particle-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 1; }
         
-        /* YT VIDEO HINTERGRUND (Ohne Zwangs-Blur für gestochen scharfen Look hinter dem Glas) */
         .video-bg-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;
-            z-index: 0;
-            pointer-events: none;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            overflow: hidden; z-index: 0; pointer-events: none;
         }
 
         #youtube-player {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 100vw;
-            height: 56.25vw;
-            min-height: 100vh;
-            min-width: 177.77vh;
-            transform: translate(-50%, -50%) scale(1.32);
-            filter: brightness(0.84) saturate(1.45) contrast(1.05);
-            pointer-events: none;
-            transition: filter 0.4s ease;
+            position: absolute; top: 50%; left: 50%; width: 100vw; height: 56.25vw;
+            min-height: 100vh; min-width: 177.77vh; transform: translate(-50%, -50%) scale(1.32);
+            filter: brightness(0.84) saturate(1.45) contrast(1.05); pointer-events: none; transition: filter 0.4s ease;
         }
 
         .bg-grid-overlay {
@@ -163,7 +128,7 @@
             background-size: 40px 40px; z-index: 1; pointer-events: none;
         }
 
-        /* HEADER ACTIONS & GLASS TUNER POPUP */
+        /* HEADER ACTIONS */
         .header-actions { position: fixed; top: 20px; right: 20px; z-index: 100; display: flex; align-items: center; gap: 8px; }
         .action-btn {
             background: rgba(14, 14, 18, 0.35); border: 1px solid var(--card-border); color: var(--text-main); padding: 10px 13px;
@@ -173,7 +138,7 @@
         }
         .action-btn:hover, .action-btn.active { border-color: var(--accent); box-shadow: 0 0 14px var(--accent-glow), inset 0 1px 1px var(--card-edge-highlight); color: var(--accent); }
 
-        /* QUICK THEME & GLASS TUNER PANEL */
+        /* TUNER POPOVER */
         .tuner-popover {
             position: fixed; top: 68px; right: 20px; width: 250px; z-index: 150;
             background: rgba(12, 12, 16, 0.65); border: 1px solid var(--card-border);
@@ -189,55 +154,29 @@
 
         /* BENTO CONTAINER */
         .bento-container {
-            max-width: 1200px;
-            width: 94vw;
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 16px;
-            position: relative;
-            z-index: 2;
-            opacity: 0;
-            transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-            margin: auto;
+            max-width: 1200px; width: 94vw; display: grid; grid-template-columns: 1fr;
+            gap: 16px; position: relative; z-index: 2; opacity: 0;
+            transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); margin: auto;
         }
-        body.zen-mode .bento-container {
-            opacity: 0 !important;
-            transform: scale(0.96) translateY(20px);
-            pointer-events: none;
-        }
-        @media (min-width: 900px) {
-            .bento-container {
-                grid-template-columns: 310px 1.4fr 310px;
-            }
-        }
+        body.zen-mode .bento-container { opacity: 0 !important; transform: scale(0.96) translateY(20px); pointer-events: none; }
+        @media (min-width: 900px) { .bento-container { grid-template-columns: 315px 1.4fr 315px; } }
 
-        /* TRUE CRYSTAL GLASSMORPHISM CARD */
+        /* CRYSTAL GLASS CARD */
         .card {
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(12, 12, 16, 0.22) 100%);
-            border: 1px solid var(--card-border);
-            border-top-color: var(--card-edge-highlight);
-            border-left-color: rgba(255, 255, 255, 0.22);
+            border: 1px solid var(--card-border); border-top-color: var(--card-edge-highlight); border-left-color: rgba(255, 255, 255, 0.22);
             backdrop-filter: blur(var(--glass-blur)) saturate(175%) contrast(104%);
             -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(175%) contrast(104%);
-            border-radius: 18px;
-            padding: 20px;
-            box-shadow: 
-                0 10px 30px -5px rgba(0, 0, 0, 0.45),
-                inset 0 1px 1px 0 rgba(255, 255, 255, 0.22),
-                inset 0 0 18px 0 rgba(255, 255, 255, 0.02);
-            position: relative;
-            overflow: hidden;
-            transform-style: preserve-3d;
-            will-change: transform;
+            border-radius: 18px; padding: 20px;
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.45), inset 0 1px 1px 0 rgba(255, 255, 255, 0.22), inset 0 0 18px 0 rgba(255, 255, 255, 0.02);
+            position: relative; overflow: hidden; transform-style: preserve-3d; will-change: transform;
             transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.18s ease-out;
         }
-        /* Dynamischer Maus-Lichtkegel auf dem Glas */
         .card::before {
             content: ''; position: absolute; inset: 0;
             background: radial-gradient(380px circle at var(--mouse-x, -999px) var(--mouse-y, -999px), rgba(255, 255, 255, 0.15), transparent 55%);
             border-radius: inherit; pointer-events: none; z-index: 0; opacity: 0; transition: opacity 0.3s ease;
         }
-        /* Glänzende Diagonale Glas-Spiegelung */
         .card::after {
             content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
             background: linear-gradient(45deg, transparent 45%, rgba(255, 255, 255, 0.035) 50%, transparent 55%);
@@ -245,20 +184,13 @@
         }
         .card:hover::before { opacity: 1; }
         .card:hover { 
-            border-color: rgba(255, 255, 255, 0.32);
-            border-top-color: rgba(255, 255, 255, 0.45);
+            border-color: rgba(255, 255, 255, 0.32); border-top-color: rgba(255, 255, 255, 0.45);
             box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55), 0 0 22px var(--accent-glow), inset 0 1px 2px rgba(255, 255, 255, 0.3);
         }
         .card > * { position: relative; z-index: 1; }
 
-        /* PROFIL */
-        .profile-card { 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            text-align: center;
-            height: 100%;
-        }
+        /* PROFIL & LIVE DISCORD BADGE */
+        .profile-card { display: flex; flex-direction: column; align-items: center; text-align: center; height: 100%; }
         .avatar-wrapper { position: relative; width: 95px; height: 95px; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .avatar-wrapper::before {
             content: ''; position: absolute; width: 106%; height: 106%; border-radius: 28px;
@@ -266,10 +198,13 @@
         }
         @keyframes rotateBorder { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .avatar { width: 94%; height: 94%; border-radius: 26px; object-fit: cover; background: #161619; padding: 2px; z-index: 2; }
-        
+        .discord-status-badge {
+            position: absolute; bottom: 2px; right: 2px; width: 18px; height: 18px;
+            border-radius: 50%; background: #22c55e; border: 3px solid #121216;
+            z-index: 4; box-shadow: 0 0 10px rgba(34, 197, 94, 0.8); transition: background 0.3s;
+        }
+
         .username { font-size: 1.35rem; font-weight: 800; margin-bottom: 6px; display: inline-flex; justify-content: center; white-space: pre; }
-        
-        /* USERNAME EFFEKTE */
         .effect-wave .wave-char {
             display: inline-block; background: linear-gradient(90deg, #3b82f6, var(--accent), #3b82f6); background-size: 200% auto;
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
@@ -285,31 +220,39 @@
         @keyframes pulseGlow { 0% { text-shadow: 0 0 5px var(--accent); } 100% { text-shadow: 0 0 20px var(--accent), 0 0 35px var(--accent-glow); } }
 
         .bio { color: var(--text-muted); font-size: 0.85rem; line-height: 1.4; margin-bottom: 12px; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
-        .tech-stack-container { width: 100%; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-bottom: 14px; }
+        .tech-stack-container { width: 100%; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-bottom: 12px; }
         .tech-pill {
             background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(255, 255, 255, 0.14);
             padding: 4px 8px; border-radius: 6px; font-size: 0.72rem; color: var(--text-main);
-            display: inline-flex; align-items: center; gap: 5px; transition: all 0.2s ease; position: relative;
+            display: inline-flex; align-items: center; gap: 5px; transition: all 0.2s ease;
             text-shadow: 0 1px 2px rgba(0,0,0,0.6);
         }
         .tech-pill:hover { border-color: var(--accent); background: rgba(255, 255, 255, 0.15); transform: translateY(-2px); box-shadow: 0 0 10px var(--accent-glow); }
         
-        .links-list { 
-            width: 100%; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 8px; 
-            margin-top: 4px;
-        }
+        .links-list { width: 100%; display: flex; flex-direction: column; gap: 8px; margin-top: 2px; }
         .social-link { 
-            display: flex; align-items: center; padding: 10px 14px; 
+            display: flex; align-items: center; padding: 9px 14px; 
             background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); 
-            border-radius: 11px; color: var(--text-main); text-decoration: none; font-size: 0.9rem; font-weight: 600;
+            border-radius: 11px; color: var(--text-main); text-decoration: none; font-size: 0.88rem; font-weight: 600;
             transition: all 0.2s ease; text-shadow: 0 1px 3px rgba(0,0,0,0.7);
         }
         .social-link i { width: 20px; font-size: 1rem; margin-right: 10px; color: var(--text-muted); transition: color 0.2s; }
         .social-link:hover { background: rgba(255, 255, 255, 0.12); border-color: var(--accent); transform: translateX(5px); box-shadow: 0 0 12px var(--accent-glow); }
         .social-link:hover i { color: var(--accent); }
+
+        /* DISCORD WIDGET BOX (Wiederhergestellt & veredelt) */
+        .discord-guild-box {
+            width: 100%; margin-top: auto; padding-top: 10px;
+            display: flex; align-items: center; justify-content: space-between;
+            background: rgba(88, 101, 242, 0.14); border: 1px solid rgba(88, 101, 242, 0.35);
+            padding: 10px 12px; border-radius: 12px; transition: all 0.2s ease; position: relative;
+        }
+        .discord-guild-box:hover { background: rgba(88, 101, 242, 0.24); border-color: rgba(88, 101, 242, 0.65); }
+        .discord-guild-info { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 0.78rem; text-align: left; }
+        .btn-discord-join { background: #5865F2; color: white; padding: 6px 11px; border-radius: 8px; text-decoration: none; font-size: 0.75rem; font-weight: 700; display: inline-flex; align-items: center; gap: 5px; transition: all 0.2s ease; flex-shrink: 0; }
+        .btn-discord-join:hover { background: #4752c4; box-shadow: 0 0 15px rgba(88, 101, 242, 0.5); transform: translateY(-1px); } 
+        .copy-toast { position: absolute; top: -28px; right: 12px; background: #22c55e; color: #0b0b0c; font-size: 0.72rem; font-weight: 800; padding: 3px 8px; border-radius: 5px; opacity: 0; pointer-events: none; transition: opacity 0.2s, transform 0.2s; transform: translateY(4px); z-index: 10; }
+        .copy-toast.show { opacity: 1; transform: translateY(0); }
 
         /* MAIN CONTENT & MUSIC PLAYER */
         .main-content { display: flex; flex-direction: column; gap: 16px; }
@@ -336,7 +279,6 @@
         .progress-bar:hover { height: 8px; }
         .progress-fill { position: absolute; top: 0; left: 0; height: 100%; width: 0%; background: var(--accent); box-shadow: 0 0 10px var(--accent); border-radius: 3px; pointer-events: none; }
         
-        /* Hover Time Tooltip */
         #timeline-tooltip {
             position: absolute; top: -26px; transform: translateX(-50%);
             background: rgba(12, 12, 16, 0.85); border: 1px solid var(--accent); color: #fff;
@@ -361,22 +303,8 @@
         .queue-item:hover { background: rgba(255,255,255,0.1); } .queue-item.active { background: var(--accent-glow); border-left: 3px solid var(--accent); }
         .queue-title { color: var(--text-main); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        .discord-guild-box { display: flex; align-items: center; justify-content: space-between; background: rgba(88, 101, 242, 0.12); border: 1px solid rgba(88, 101, 242, 0.3); padding: 12px 18px; border-radius: 12px; transition: all 0.2s ease; position: relative; }
-        .discord-guild-box:hover { background: rgba(88, 101, 242, 0.2); border-color: rgba(88, 101, 242, 0.55); }
-        .discord-guild-info { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 0.92rem; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
-        .btn-discord-join { background: #5865F2; color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 0.82rem; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s ease; }
-        .btn-discord-join:hover { background: #4752c4; box-shadow: 0 0 15px rgba(88, 101, 242, 0.5); transform: translateY(-1px); } 
-        .copy-toast { position: absolute; top: -26px; right: 20px; background: #22c55e; color: #0b0b0c; font-size: 0.75rem; font-weight: 700; padding: 3px 8px; border-radius: 5px; opacity: 0; pointer-events: none; transition: opacity 0.2s, transform 0.2s; transform: translateY(4px); z-index: 10; }
-        .copy-toast.show { opacity: 1; transform: translateY(0); }
-
-        /* MINECRAFT SERVER CARD */
-        .mc-server-card {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            border: 1px solid rgba(34, 197, 94, 0.3);
-            position: relative;
-        }
+        /* MINECRAFT SERVER CARD 2.0 */
+        .mc-server-card { display: flex; flex-direction: column; gap: 13px; border: 1px solid rgba(34, 197, 94, 0.3); position: relative; }
         .mc-header { display: flex; justify-content: space-between; align-items: center; }
         .mc-title-wrap { display: flex; align-items: center; gap: 10px; }
         .mc-icon { font-size: 1.3rem; color: #22c55e; filter: drop-shadow(0 0 8px rgba(34, 197, 94, 0.5)); }
@@ -386,10 +314,7 @@
             font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
             background: rgba(239, 68, 68, 0.18); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.35); transition: all 0.3s ease;
         }
-        .mc-badge.online {
-            background: rgba(34, 197, 94, 0.2); color: #4ade80; border-color: rgba(34, 197, 94, 0.45);
-            box-shadow: 0 0 12px rgba(34, 197, 94, 0.25);
-        }
+        .mc-badge.online { background: rgba(34, 197, 94, 0.2); color: #4ade80; border-color: rgba(34, 197, 94, 0.45); box-shadow: 0 0 12px rgba(34, 197, 94, 0.25); }
         .mc-pulse-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; display: inline-block; }
         .mc-badge.online .mc-pulse-dot { animation: pulseDot 1.8s infinite; }
         @keyframes pulseDot { 0%, 100% { transform: scale(1); opacity: 0.6; } 50% { transform: scale(1.6); opacity: 1; } }
@@ -414,7 +339,12 @@
             border-radius: 8px; padding: 8px 10px; display: flex; flex-direction: column; gap: 3px;
         }
         .mc-detail-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 600; }
-        .mc-detail-val { font-size: 0.85rem; font-weight: 800; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .mc-detail-val { font-size: 0.85rem; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 6px; }
+        .ping-sparkline { width: 42px; height: 14px; stroke: #4ade80; stroke-width: 2; fill: none; }
+
+        .mc-players-heads { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; padding-top: 2px; }
+        .mc-head-avatar { width: 22px; height: 22px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.3); transition: transform 0.15s; }
+        .mc-head-avatar:hover { transform: scale(1.25); border-color: var(--accent); }
 
         .mc-motd-line {
             font-size: 0.78rem; color: var(--text-main); border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -437,14 +367,9 @@
         .stat-card.yellow { background: linear-gradient(135deg, var(--stat-yellow), rgba(12,12,16,0.3)); } 
         .stat-card.blue { background: linear-gradient(135deg, var(--stat-blue), rgba(12,12,16,0.3)); }
         
-        /* Gestochen scharfe Stat-Labels trotz hellem Hintergrundvideo */
-        .stat-label { 
-            font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; color: #f8fafc; 
-            font-weight: 800; text-shadow: 0 1px 4px rgba(0, 0, 0, 0.95); 
-        }
+        .stat-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; color: #f8fafc; font-weight: 800; text-shadow: 0 1px 4px rgba(0, 0, 0, 0.95); }
         .stat-value { font-size: 1.45rem; font-weight: 800; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9); }
 
-        /* Specs Button & Live Telemetry Dropdown */
         .rig-specs-wrapper { position: relative; display: flex; flex-direction: column; }
         .rig-specs-btn {
             background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(12,12,16,0.28));
@@ -452,22 +377,19 @@
             backdrop-filter: blur(var(--glass-blur)) saturate(180%); -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
             color: var(--text-main); border-radius: 15px; padding: 13px 15px; font-size: 0.85rem; font-weight: 800;
             display: flex; align-items: center; justify-content: space-between; height: 100%; transition: all 0.2s ease;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255, 255, 255, 0.2);
-            text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255, 255, 255, 0.2); text-shadow: 0 1px 3px rgba(0,0,0,0.8);
         }
         .rig-specs-btn:hover { border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); transform: translateY(-2px); }
         
         .rig-specs-details {
             position: absolute; top: calc(100% + 8px); right: 0; left: -150px; z-index: 100;
-            background: rgba(12, 12, 16, 0.82); border: 1px solid rgba(255,255,255,0.22); backdrop-filter: blur(14px) saturate(190%);
+            background: rgba(12, 12, 16, 0.86); border: 1px solid rgba(255,255,255,0.22); backdrop-filter: blur(14px) saturate(190%);
             box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85), 0 0 18px var(--accent-glow);
             max-height: 0; opacity: 0; overflow: hidden; pointer-events: none;
             transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1); border-radius: 14px; padding: 0 14px;
             display: flex; flex-direction: column; gap: 6px; font-size: 0.75rem; color: var(--text-muted);
         }
-        .rig-specs-details.open {
-            max-height: 320px; opacity: 1; pointer-events: auto; padding: 12px 14px;
-        }
+        .rig-specs-details.open { max-height: 340px; opacity: 1; pointer-events: auto; padding: 12px 14px; }
         .spec-item { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
         .spec-item:last-child { border-bottom: none; } .spec-val { color: var(--text-main); font-weight: 700; margin-left: 12px; }
         .telemetry-bar {
@@ -476,9 +398,7 @@
         }
 
         /* LIVE GITHUB FEED CARD */
-        .github-feed-card {
-            display: flex; flex-direction: column; gap: 8px; padding: 14px 16px;
-        }
+        .github-feed-card { display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; }
         .gh-header { display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-main); text-shadow: 0 1px 3px rgba(0,0,0,0.9); }
         .gh-repo-list { display: flex; flex-direction: column; gap: 6px; }
         .gh-repo-item {
@@ -511,21 +431,31 @@
         }
         body.zen-mode #zen-hud { opacity: 1; pointer-events: auto; transform: translateY(0); }
 
-        /* MODALS */
+        /* MODALS & COMMAND PALETTE (CTRL+K) */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(6px); z-index: 200; display: none; align-items: center; justify-content: center; padding: 20px; opacity: 0; transition: opacity 0.25s ease; }
         .modal-overlay.active { display: flex; opacity: 1; }
-        .modal-box { background: rgba(16, 16, 22, 0.78); border: 1px solid rgba(255,255,255,0.22); backdrop-filter: blur(16px) saturate(180%); border-radius: 18px; max-width: 620px; width: 100%; padding: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.85), inset 0 1px 1px rgba(255,255,255,0.25); position: relative; transform: scale(0.95); transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
+        .modal-box { background: rgba(16, 16, 22, 0.82); border: 1px solid rgba(255,255,255,0.22); backdrop-filter: blur(16px) saturate(180%); border-radius: 18px; max-width: 640px; width: 100%; padding: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.85), inset 0 1px 1px rgba(255,255,255,0.25); position: relative; transform: scale(0.95); transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
         .modal-overlay.active .modal-box { transform: scale(1); }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
         .modal-title { font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; gap: 10px; }
         .modal-close { background: none; border: none; color: var(--text-muted); font-size: 1.2rem; transition: color 0.2s; } .modal-close:hover { color: var(--text-main); }
         
-        .project-grid { display: grid; grid-template-columns: 1fr; gap: 12px; max-height: 400px; overflow-y: auto; padding-right: 4px; }
-        .project-item { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 6px; transition: all 0.2s ease; text-decoration: none; color: inherit; }
-        .project-item:hover { background: rgba(255, 255, 255, 0.1); border-color: var(--accent); transform: translateY(-2px); }
-        .project-head { display: flex; justify-content: space-between; align-items: center; } .project-name { font-weight: 700; font-size: 0.95rem; }
-        .project-tag { font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; background: var(--accent-glow); color: #fff; font-weight: 600; border: 1px solid var(--accent); }
-        .project-desc { font-size: 0.8rem; color: var(--text-muted); line-height: 1.3; }
+        .project-grid { display: grid; grid-template-columns: 1fr; gap: 12px; max-height: 420px; overflow-y: auto; padding-right: 4px; }
+        .project-item { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 8px; transition: all 0.2s ease; color: inherit; }
+        .project-item:hover { background: rgba(255, 255, 255, 0.09); border-color: var(--accent); }
+        .project-head { display: flex; justify-content: space-between; align-items: center; } .project-name { font-weight: 800; font-size: 0.98rem; }
+        .project-tag { font-size: 0.7rem; padding: 2px 8px; border-radius: 5px; background: var(--accent-glow); color: #fff; font-weight: 700; border: 1px solid var(--accent); }
+        .project-desc { font-size: 0.8rem; color: var(--text-muted); line-height: 1.35; }
+        .project-actions { display: flex; align-items: center; justify-content: space-between; margin-top: 4px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.08); flex-wrap: wrap; gap: 8px; }
+        .sha-badge { font-family: 'Fira Code', monospace; font-size: 0.68rem; color: #94a3b8; background: rgba(0,0,0,0.4); padding: 3px 8px; border-radius: 5px; border: 1px solid rgba(255,255,255,0.1); }
+        .sha-badge:hover { border-color: var(--accent); color: #fff; }
+
+        /* COMMAND PALETTE (CTRL+K) */
+        .cmdk-input-wrap { display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.45); border: 1px solid var(--accent); border-radius: 12px; padding: 12px 16px; margin-bottom: 12px; box-shadow: 0 0 15px var(--accent-glow); }
+        .cmdk-input { background: transparent; border: none; outline: none; color: #fff; font-size: 0.95rem; width: 100%; }
+        .cmdk-list { display: flex; flex-direction: column; gap: 6px; max-height: 280px; overflow-y: auto; }
+        .cmdk-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-radius: 10px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); font-size: 0.85rem; transition: all 0.15s; }
+        .cmdk-item:hover { background: var(--accent-glow); border-color: var(--accent); transform: translateX(4px); }
 
         /* TERMINAL MODAL */
         .cli-box {
@@ -535,7 +465,6 @@
             box-shadow: 0 0 25px var(--accent-glow);
         }
         .cli-output { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; user-select: text; }
-        .cli-output::-webkit-scrollbar { width: 4px; } .cli-output::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
         .cli-input-line { display: flex; align-items: center; gap: 8px; margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 8px; }
         .cli-prompt { color: #22c55e; font-weight: bold; }
         .cli-input { background: transparent; border: none; outline: none; color: #fff; font-family: inherit; font-size: 0.85rem; flex: 1; }
@@ -557,10 +486,10 @@
 <body>
 
     <div id="boot-screen">
-        <div class="boot-line" style="animation: fade 0.1s forwards 0.1s">> initializing crystal glass UI [v2.5]...</div>
-        <div class="boot-line" style="animation: fade 0.1s forwards 0.3s">> loading modules: [SUPABASE, 3D_TILT, GH_API, AUDIO_ENGINE, MC_POLLER]</div>
-        <div class="boot-line" style="animation: fade 0.1s forwards 0.5s">> syncing hardware telemetry (Ryzen 7 5800X / RX 6750 XT)... OK</div>
-        <div class="boot-line" style="animation: fade 0.1s forwards 0.7s; color: #fff;">> Welcome back, UpperEchelon</div>
+        <div class="boot-line" style="animation: fade 0.1s forwards 0.1s">> initializing Vengeance OS [v3.0 Crystal Kernel]...</div>
+        <div class="boot-line" style="animation: fade 0.1s forwards 0.25s">> loading modules: [SUPABASE, LANYARD_WS, 3D_TILT, MC_POLLER, CMD_PALETTE]</div>
+        <div class="boot-line" style="animation: fade 0.1s forwards 0.45s">> syncing hardware telemetry (Ryzen 7 5800X / RX 6750 XT)... OK</div>
+        <div class="boot-line" style="animation: fade 0.1s forwards 0.65s; color: #fff;">> Welcome back, UpperEchelon</div>
     </div>
 
     <div class="scanlines" id="scanlines-layer"></div>
@@ -579,6 +508,7 @@
 
     <!-- TOP RIGHT ACTION BAR -->
     <div class="header-actions">
+        <button class="action-btn" id="cmdk-btn" title="Spotlight Command Palette (Ctrl+K)"><i class="fas fa-search"></i></button>
         <button class="action-btn" id="zen-btn" title="Cinema / Zen Mode (H)"><i class="fas fa-eye"></i></button>
         <button class="action-btn active" id="tilt-btn" title="Toggle 3D Card Tilt"><i class="fas fa-cube"></i></button>
         <button class="action-btn" id="tuner-btn" title="Glass & Theme Tuner"><i class="fas fa-sliders"></i></button>
@@ -602,7 +532,7 @@
         </div>
     </div>
 
-    <!-- ZEN MODE MINI HUD (Unten links wenn UI ausgeblendet ist) -->
+    <!-- ZEN MODE MINI HUD -->
     <div id="zen-hud">
         <button class="btn-control" onclick="changeSong(-1)"><i class="fas fa-backward"></i></button>
         <button class="btn-control" onclick="togglePlayPause()"><i class="fas fa-play" id="zen-play-icon"></i></button>
@@ -617,6 +547,7 @@
         <div class="card profile-card">
             <div class="avatar-wrapper">
                 <img id="avatar" src="https://via.placeholder.com/150" alt="Avatar" class="avatar">
+                <div class="discord-status-badge" id="discord-avatar-badge" title="Discord Live Status"></div>
             </div>
             <h1 id="username" class="username effect-wave">Loading...</h1>
             <p id="bio" class="bio">...</p>
@@ -630,6 +561,21 @@
             </div>
 
             <div id="links-container" class="links-list"></div>
+
+            <!-- REPARIERTE DISCORD COMMUNITY & ID COPY BOX -->
+            <div class="discord-guild-box clickable" id="discord-copy-box" title="Klicken um Discord User-ID zu kopieren">
+                <div class="copy-toast" id="copy-toast">Discord ID kopiert! ✓</div>
+                <div class="discord-guild-info">
+                    <i class="fab fa-discord" style="font-size: 1.25rem; color: #5865F2;"></i>
+                    <div>
+                        <div id="discord-guild-stats">Vengeance Hub</div>
+                        <div style="font-size:0.65rem; color:var(--text-muted); font-weight:500;">Klick = Copy User ID</div>
+                    </div>
+                </div>
+                <a href="https://discord.com" target="_blank" class="btn-discord-join" id="discord-guild-invite">
+                    Join <i class="fas fa-arrow-up-right-from-square" style="font-size:0.65rem;"></i>
+                </a>
+            </div>
         </div>
 
         <!-- MITTLERE HAUPTSPALTE -->
@@ -675,10 +621,9 @@
                 </div>
 
                 <div class="playlist-drawer" id="playlist-drawer"></div>
-
             </div>
 
-            <!-- MINECRAFT LIVE-STATUS CARD -->
+            <!-- MINECRAFT LIVE-STATUS CARD 2.0 -->
             <div class="card mc-server-card">
                 <div class="copy-toast" id="mc-copy-toast">Serveradresse kopiert! ✓</div>
                 
@@ -710,6 +655,7 @@
                     <div class="mc-detail-box">
                         <span class="mc-detail-label">Spieler</span>
                         <span class="mc-detail-val" id="mc-players">- / -</span>
+                        <div class="mc-players-heads" id="mc-players-heads"></div>
                     </div>
                     <div class="mc-detail-box">
                         <span class="mc-detail-label">Version</span>
@@ -717,7 +663,12 @@
                     </div>
                     <div class="mc-detail-box">
                         <span class="mc-detail-label">Latency / Ping</span>
-                        <span class="mc-detail-val" id="mc-ping">-- ms</span>
+                        <div class="mc-detail-val">
+                            <span id="mc-ping">-- ms</span>
+                            <svg class="ping-sparkline" viewBox="0 0 50 16">
+                                <polyline id="ping-poly" points="0,12 10,10 20,13 30,6 40,9 50,7" />
+                            </svg>
+                        </div>
                     </div>
                 </div>
 
@@ -745,7 +696,7 @@
                         <div class="spec-item"><span>GPU</span><span class="spec-val">RX 6750 XT Elite OC</span></div>
                         <div class="spec-item"><span>RAM</span><span class="spec-val">32 GB DDR4 3600</span></div>
                         <div class="spec-item"><span>Board</span><span class="spec-val">ROG Strix B550-A</span></div>
-                        <div class="spec-item"><span>OS</span><span class="spec-val">W11 Pro (AtlasOS)</span></div>
+                        <div class="spec-item"><span>Profile</span><span class="spec-val" id="spec-pbo">PBO2 + Curve Opt.</span></div>
                         <div class="telemetry-bar">
                             <span id="tele-cpu">CPU: 43°C | 4.65 GHz</span>
                             <span id="tele-gpu">GPU: 39°C</span>
@@ -759,10 +710,10 @@
                 <div id="stat-2" class="stat-value">3+</div>
             </div>
             
-            <div class="card stat-card yellow clickable" id="projects-trigger" title="Klicken um Projekte anzusehen">
+            <div class="card stat-card yellow clickable" id="projects-trigger" title="Klicken um Releases & Projekte anzusehen">
                 <div>
-                    <div class="stat-label">Projects Built</div>
-                    <div style="font-size:0.7rem; color:#f1f5f9; margin-top:2px; font-weight:600; text-shadow:0 1px 2px #000;"><i class="fas fa-external-link-alt" style="color:var(--accent);"></i> Show list</div>
+                    <div class="stat-label">Projects & Releases</div>
+                    <div style="font-size:0.7rem; color:#f1f5f9; margin-top:2px; font-weight:600; text-shadow:0 1px 2px #000;"><i class="fas fa-box-open" style="color:var(--accent);"></i> Open Release Hub</div>
                 </div>
                 <div id="stat-3" class="stat-value">20+</div>
             </div>
@@ -794,10 +745,10 @@
             </div>
         </div>
 
-        <!-- STATUS BANNER -->
+        <!-- STATUS BANNER (MIT LANYARD LIVE-SUPPORT) -->
         <div class="card status-banner">
             <div class="status-content-left">
-                <div class="status-dot"></div>
+                <div class="status-dot" id="banner-status-dot"></div>
                 <span id="discord-presence">Developing VengeancePlayer (Android YT/Spotify Hybrid) & C++ Desktop Utilities</span>
             </div>
             <div style="display:flex; align-items:center; gap:8px;">
@@ -810,50 +761,78 @@
             </div>
         </div>
 
-        <div class="footer-text">Website Coded by &bull; UpperEchelon / Vengeance Utilities</div>
+        <div class="footer-text">Website Coded by &bull; UpperEchelon / Vengeance Utilities [OS v3.0]</div>
     </div>
 
     <!-- CUSTOM CONTEXT MENU -->
     <div id="custom-context-menu">
+        <div class="ctx-item" id="ctx-cmdk"><i class="fas fa-search"></i> <span>Command Palette (Ctrl+K)</span></div>
         <div class="ctx-item" id="ctx-playpause"><i class="fas fa-play"></i> <span>Play / Pause</span></div>
         <div class="ctx-item" id="ctx-next"><i class="fas fa-forward"></i> <span>Next Song</span></div>
         <div class="ctx-item" id="ctx-mute"><i class="fas fa-volume-xmark"></i> <span>Toggle Mute</span></div>
         <div class="ctx-separator"></div>
         <div class="ctx-item" id="ctx-zen"><i class="fas fa-eye"></i> <span>Cinema / Zen Mode (H)</span></div>
         <div class="ctx-item" id="ctx-cli"><i class="fas fa-terminal"></i> <span>Open Terminal (~)</span></div>
-        <div class="ctx-item" id="ctx-projects"><i class="fas fa-layer-group"></i> <span>View Projects</span></div>
+        <div class="ctx-item" id="ctx-projects"><i class="fas fa-layer-group"></i> <span>Release Hub</span></div>
         <div class="ctx-separator"></div>
         <div class="ctx-item" id="ctx-copy-discord"><i class="fab fa-discord"></i> <span>Copy Discord ID</span></div>
     </div>
 
-    <!-- MODAL: PROJEKTE -->
+    <!-- MODAL: COMMAND PALETTE (CTRL+K) -->
+    <div class="modal-overlay" id="cmdk-modal">
+        <div class="modal-box" style="max-width: 540px;">
+            <div class="modal-header">
+                <div class="modal-title"><i class="fas fa-compass" style="color:var(--accent);"></i> Spotlight Command Palette</div>
+                <button class="modal-close" id="close-cmdk">&times;</button>
+            </div>
+            <div class="cmdk-input-wrap">
+                <i class="fas fa-search" style="color:var(--accent);"></i>
+                <input type="text" id="cmdk-input" class="cmdk-input" placeholder="Suche nach Aktionen, Songs, Themes oder Commands..." autocomplete="off">
+            </div>
+            <div class="cmdk-list" id="cmdk-list"></div>
+        </div>
+    </div>
+
+    <!-- MODAL: PROJEKTE & RELEASE HUB -->
     <div class="modal-overlay" id="projects-modal">
         <div class="modal-box">
             <div class="modal-header">
-                <div class="modal-title"><i class="fas fa-layer-group" style="color:var(--accent);"></i> Featured Projects</div>
+                <div class="modal-title"><i class="fas fa-layer-group" style="color:var(--accent);"></i> Vengeance Release & Software Hub</div>
                 <button class="modal-close" id="close-projects">&times;</button>
             </div>
             <div class="project-grid">
                 <div class="project-item">
                     <div class="project-head">
                         <span class="project-name">Vengeance Optimizer & Hardware Monitor</span>
-                        <span class="project-tag">C++ / WPF</span>
+                        <span class="project-tag">C++ / WPF • v2.4</span>
                     </div>
-                    <p class="project-desc">All-in-One Windows PC Optimizer & Custom Hardware Usage/Temp Monitor for low-latency gaming.</p>
+                    <p class="project-desc">Low-Latency Windows Gaming Optimizer & Echtzeit-Telemetrie-Monitor für CPU/GPU-Temps und PBO-Profile.</p>
+                    <div class="project-actions">
+                        <span class="sha-badge clickable" onclick="copyText('a94f8c2d...e81b', this)" title="Klicken um SHA-256 Hash zu kopieren"><i class="fas fa-shield-halved" style="color:#4ade80;"></i> SHA256: a94f8c2d...e81b</span>
+                        <a href="https://github.com" target="_blank" class="mc-copy-btn" style="text-decoration:none;"><i class="fab fa-github"></i> Release</a>
+                    </div>
                 </div>
                 <div class="project-item">
                     <div class="project-head">
-                        <span class="project-name">VengeancePlayer (Mobile APK)</span>
-                        <span class="project-tag">Android Studio / Kotlin</span>
+                        <span class="project-name">VengeancePlayer (Signed Mobile APK)</span>
+                        <span class="project-tag">Android / Kotlin • v1.8</span>
                     </div>
-                    <p class="project-desc">Custom signed Android Media & YT Music Player with integrated Spotify metadata for an Ad-Free Experience.</p>
+                    <p class="project-desc">Custom Android Media & YouTube-Audio-Stream-Player mit Spotify-Metadaten-Sync und Background-Playback.</p>
+                    <div class="project-actions">
+                        <span class="sha-badge clickable" onclick="copyText('7c31b90a...44f2', this)" title="Klicken um SHA-256 Hash zu kopieren"><i class="fas fa-shield-halved" style="color:#4ade80;"></i> SHA256: 7c31b90a...44f2</span>
+                        <a href="https://github.com" target="_blank" class="mc-copy-btn" style="text-decoration:none;"><i class="fab fa-android"></i> APK Info</a>
+                    </div>
                 </div>
                 <div class="project-item">
                     <div class="project-head">
-                        <span class="project-name">VengeanceUtilities.de</span>
-                        <span class="project-tag">HTML5 / Supabase / Playit.gg</span>
+                        <span class="project-name">Vengeance Game Launcher & Utilities</span>
+                        <span class="project-tag">C++ / CLI • v3.0</span>
                     </div>
-                    <p class="project-desc">Crystal Glass Bio Dashboard with Live YouTube Engine, NeoForge Server Poller & Interactive CLI.</p>
+                    <p class="project-desc">Custom Desktop Game-Launcher inkl. automatischem RAM-/JVM-Tuner für NeoForge & Dedicated Server.</p>
+                    <div class="project-actions">
+                        <span class="sha-badge clickable" onclick="copyText('f18e420c...90d1', this)" title="Klicken um SHA-256 Hash zu kopieren"><i class="fas fa-shield-halved" style="color:#4ade80;"></i> SHA256: f18e420c...90d1</span>
+                        <a href="https://github.com" target="_blank" class="mc-copy-btn" style="text-decoration:none;"><i class="fas fa-code"></i> Source</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -863,13 +842,13 @@
     <div class="modal-overlay" id="cli-modal">
         <div class="modal-box" style="max-width: 680px;">
             <div class="modal-header">
-                <div class="modal-title"><i class="fas fa-terminal" style="color:var(--accent);"></i> Vengeance Interactive CLI [v2.5]</div>
+                <div class="modal-title"><i class="fas fa-terminal" style="color:var(--accent);"></i> Vengeance Interactive CLI [v3.0]</div>
                 <button class="modal-close" id="close-cli">&times;</button>
             </div>
             <div class="cli-box">
                 <div class="cli-output" id="cli-output">
-                    <div>Vengeance OS [Version 2.5.26 - Crystal Kernel]</div>
-                    <div>Tippe <span style="color:#fff;">'help'</span> oder <span style="color:#fff;">'neofetch'</span> ein. (<span style="color:var(--text-muted);">Tab = Autocomplete, &uarr;/&darr; = History</span>)</div>
+                    <div>Vengeance OS [Version 3.0.26 - Crystal Kernel]</div>
+                    <div>Tippe <span style="color:#fff;">'help'</span>, <span style="color:#fff;">'neofetch'</span> oder <span style="color:#fff;">'overclock'</span> ein. (<span style="color:var(--text-muted);">Tab = Autocomplete</span>)</div>
                     <div style="height: 6px;"></div>
                 </div>
                 <div class="cli-input-line">
@@ -882,17 +861,17 @@
 
     <!-- MODAL: KEYBOARD SHORTCUTS -->
     <div class="modal-overlay" id="shortcuts-modal">
-        <div class="modal-box" style="max-width: 450px;">
+        <div class="modal-box" style="max-width: 460px;">
             <div class="modal-header">
                 <div class="modal-title"><i class="fas fa-keyboard" style="color:var(--accent);"></i> Keyboard Shortcuts</div>
                 <button class="modal-close" id="close-shortcuts">&times;</button>
             </div>
             <div class="shortcuts-list" style="display:flex; flex-direction:column; gap:10px; font-size:0.85rem;">
+                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.06); padding-bottom:8px;"><span>Spotlight Command Palette</span><span style="background:rgba(255,255,255,0.1); padding:2px 8px; border-radius:4px; font-family:monospace;">Ctrl + K</span></div>
                 <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.06); padding-bottom:8px;"><span>Play / Pause</span><span style="background:rgba(255,255,255,0.1); padding:2px 8px; border-radius:4px; font-family:monospace;">Space</span></div>
                 <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.06); padding-bottom:8px;"><span>Nächster / Vorheriger Song</span><span style="background:rgba(255,255,255,0.1); padding:2px 8px; border-radius:4px; font-family:monospace;">&rarr; / &larr;</span></div>
-                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.06); padding-bottom:8px;"><span>Cinema / Zen Mode (UI ausblenden)</span><span style="background:rgba(255,255,255,0.1); padding:2px 8px; border-radius:4px; font-family:monospace;">H</span></div>
+                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.06); padding-bottom:8px;"><span>Cinema / Zen Mode</span><span style="background:rgba(255,255,255,0.1); padding:2px 8px; border-radius:4px; font-family:monospace;">H</span></div>
                 <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.06); padding-bottom:8px;"><span>Zufall / Wiederholung</span><span style="background:rgba(255,255,255,0.1); padding:2px 8px; border-radius:4px; font-family:monospace;">S / R</span></div>
-                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.06); padding-bottom:8px;"><span>Lautstärke (+/- 5%)</span><span style="background:rgba(255,255,255,0.1); padding:2px 8px; border-radius:4px; font-family:monospace;">&uarr; / &darr;</span></div>
                 <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.06); padding-bottom:8px;"><span>Terminal Konsole öffnen</span><span style="background:rgba(255,255,255,0.1); padding:2px 8px; border-radius:4px; font-family:monospace;">~ / ^</span></div>
             </div>
         </div>
@@ -903,6 +882,7 @@
         let audioUnlocked = false;
         let tiltEnabled = true;
         let matrixMode = false;
+        let overclockMode = false;
         const sessionStartTime = Date.now();
 
         window.addEventListener('load', () => {
@@ -913,7 +893,7 @@
                     boot.style.display = 'none';
                     document.getElementById('bento-grid').style.opacity = '1';
                 }, 400);
-            }, 750);
+            }, 700);
         });
 
         const SUPABASE_URL = 'https://pdyrfnbjegsyjmcmbqck.supabase.co';
@@ -923,10 +903,10 @@
         let activeDiscordUserId = '935755290203283546';
         let activeDiscordServerId = '1106609783680802886';
 
-        // MINECRAFT STATE
         let mcPollTarget = "cairo-pumping.tun.ply.gg:45750";
         let mcDisplayDomain = "vengeanceutilities.de";
         let latestMcData = null;
+        let pingHistory = [24, 22, 25, 23, 24, 21];
 
         let playlist = [];
         let currentSongIndex = 0;
@@ -940,29 +920,29 @@
             tryInitPlayer();
         };
 
-        // UNLOCK AUDIO FALLBACK
+        function copyText(txt, el) {
+            navigator.clipboard.writeText(txt);
+            const orig = el.innerHTML;
+            el.innerHTML = `<i class="fas fa-check" style="color:#4ade80;"></i> Copied!`;
+            setTimeout(() => el.innerHTML = orig, 1500);
+        }
+
         function unlockAudioOnInteraction(e) {
             if (audioUnlocked || !ytPlayer || typeof ytPlayer.unMute !== 'function') return;
             if (e && e.target && e.target.closest('#mute-icon')) return;
-
             audioUnlocked = true;
             const vol = document.getElementById('volume-slider')?.value || 50;
             ytPlayer.unMute();
             ytPlayer.setVolume(vol);
-            
             const muteIcon = document.getElementById('mute-icon');
             if (muteIcon) muteIcon.className = 'fas fa-volume-down';
-
             const state = (typeof ytPlayer.getPlayerState === 'function') ? ytPlayer.getPlayerState() : -1;
-            if (state !== YT.PlayerState.PLAYING) {
-                ytPlayer.playVideo();
-            }
+            if (state !== YT.PlayerState.PLAYING) ytPlayer.playVideo();
         }
-
         window.addEventListener('click', unlockAudioOnInteraction, { capture: true });
         window.addEventListener('keydown', unlockAudioOnInteraction, { capture: true });
 
-        /* SOUND FX ENGINE */
+        /* SYNTH SOUND FX ENGINE */
         let audioCtx = null;
         function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
         function playSfx(type = 'click') {
@@ -972,15 +952,21 @@
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
                 osc.connect(gain); gain.connect(audioCtx.destination);
+                const now = audioCtx.currentTime;
                 if (type === 'click') {
-                    osc.type = 'sine'; osc.frequency.setValueAtTime(650, audioCtx.currentTime);
-                    osc.frequency.exponentialRampToValueAtTime(160, audioCtx.currentTime + 0.04);
-                    gain.gain.setValueAtTime(0.04, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.04);
-                    osc.start(); osc.stop(audioCtx.currentTime + 0.04);
+                    osc.type = 'sine'; osc.frequency.setValueAtTime(680, now);
+                    osc.frequency.exponentialRampToValueAtTime(170, now + 0.045);
+                    gain.gain.setValueAtTime(0.04, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.045);
+                    osc.start(now); osc.stop(now + 0.045);
                 } else if (type === 'hover') {
-                    osc.type = 'triangle'; osc.frequency.setValueAtTime(340, audioCtx.currentTime);
-                    gain.gain.setValueAtTime(0.012, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.025);
-                    osc.start(); osc.stop(audioCtx.currentTime + 0.025);
+                    osc.type = 'triangle'; osc.frequency.setValueAtTime(360, now);
+                    gain.gain.setValueAtTime(0.012, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.025);
+                    osc.start(now); osc.stop(now + 0.025);
+                } else if (type === 'powerup') {
+                    osc.type = 'sawtooth'; osc.frequency.setValueAtTime(220, now);
+                    osc.frequency.exponentialRampToValueAtTime(880, now + 0.18);
+                    gain.gain.setValueAtTime(0.05, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+                    osc.start(now); osc.stop(now + 0.2);
                 }
             } catch (e) {}
         }
@@ -992,6 +978,15 @@
                 sfxBtn.innerHTML = sfxEnabled ? '<i class="fas fa-volume-high"></i>' : '<i class="fas fa-volume-xmark"></i>';
                 playSfx('click');
             });
+        }
+
+        /* OVERCLOCK MODE */
+        function toggleOverclock() {
+            overclockMode = !overclockMode;
+            document.body.classList.toggle('overclock-active', overclockMode);
+            const pboEl = document.getElementById('spec-pbo');
+            if (pboEl) pboEl.innerText = overclockMode ? 'PBO MAX (4.85 GHz OC)' : 'PBO2 + Curve Opt.';
+            playSfx('powerup');
         }
 
         /* ZEN / CINEMA MODE */
@@ -1033,13 +1028,14 @@
             localStorage.setItem('v_blur', this.value);
         });
 
+        function applyAccentColor(c) {
+            document.documentElement.style.setProperty('--accent', c);
+            document.documentElement.style.setProperty('--accent-glow', c + '55');
+            localStorage.setItem('v_accent', c);
+        }
+
         document.querySelectorAll('.swatch').forEach(sw => {
-            sw.addEventListener('click', () => {
-                const c = sw.dataset.color;
-                document.documentElement.style.setProperty('--accent', c);
-                document.documentElement.style.setProperty('--accent-glow', c + '55');
-                localStorage.setItem('v_accent', c);
-            });
+            sw.addEventListener('click', () => applyAccentColor(sw.dataset.color));
         });
 
         /* 3D INTERACTIVE TILT & SPOTLIGHT */
@@ -1047,9 +1043,7 @@
         tiltBtn.addEventListener('click', () => {
             tiltEnabled = !tiltEnabled;
             tiltBtn.classList.toggle('active', tiltEnabled);
-            if (!tiltEnabled) {
-                document.querySelectorAll('.card').forEach(c => c.style.transform = '');
-            }
+            if (!tiltEnabled) document.querySelectorAll('.card').forEach(c => c.style.transform = '');
         });
 
         document.querySelectorAll('.card').forEach(card => {
@@ -1068,10 +1062,7 @@
                     card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateZ(2px)`;
                 }
             });
-
-            card.addEventListener('mouseleave', () => {
-                if (tiltEnabled) card.style.transform = '';
-            });
+            card.addEventListener('mouseleave', () => { if (tiltEnabled) card.style.transform = ''; });
         });
 
         /* CURSOR */
@@ -1095,10 +1086,9 @@
         animateCursorTrail();
 
         function applyCursorHoverEffects() {
-            document.querySelectorAll('button, a, .clickable, input, .queue-item, .ctx-item, .mc-address-row, .progress-bar, .gh-repo-item').forEach(el => {
+            document.querySelectorAll('button, a, .clickable, input, .queue-item, .ctx-item, .mc-address-row, .progress-bar, .gh-repo-item, .cmdk-item').forEach(el => {
                 if(el.dataset.cursorBound) return;
                 el.dataset.cursorBound = "true";
-
                 el.addEventListener('mouseenter', () => {
                     cursor.style.width = '14px'; cursor.style.height = '14px';
                     cursor.style.transform = `translate3d(${mouseX - 7}px, ${mouseY - 7}px, 0)`;
@@ -1124,8 +1114,9 @@
         function updateVisualizer(isPlaying) {
             vizBars.forEach((bar, index) => {
                 if (isPlaying) {
-                    const wave = Math.sin(Date.now() / 130 + index * 0.55) * 9 + Math.random() * 6 + 8;
-                    bar.style.height = `${Math.max(4, Math.min(24, Math.floor(wave)))}px`;
+                    const boost = overclockMode ? 1.3 : 1;
+                    const wave = (Math.sin(Date.now() / 130 + index * 0.55) * 9 + Math.random() * 6 + 8) * boost;
+                    bar.style.height = `${Math.max(4, Math.min(25, Math.floor(wave)))}px`;
                 } else {
                     bar.style.height = '4px';
                 }
@@ -1157,7 +1148,8 @@
                 this.size = Math.random() * 2 + 1; this.speedX = (Math.random() - 0.5) * 0.6; this.speedY = (Math.random() - 0.5) * 0.6;
             }
             update() {
-                this.x += this.speedX; this.y += this.speedY;
+                const mult = overclockMode ? 3.2 : 1;
+                this.x += this.speedX * mult; this.y += this.speedY * mult;
                 if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
                 if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
                 if (mouse.x !== null && mouse.y !== null) {
@@ -1171,8 +1163,8 @@
                 }
             }
             draw() {
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.28)'; ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.closePath(); ctx.fill();
+                ctx.fillStyle = overclockMode ? getComputedStyle(document.documentElement).getPropertyValue('--accent') : 'rgba(255, 255, 255, 0.28)';
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.closePath(); ctx.fill();
             }
         }
         for (let i = 0; i < (window.innerWidth > 900 ? 55 : 25); i++) particles.push(new Particle());
@@ -1207,7 +1199,7 @@
         }
         animateParticles();
 
-        /* CLOCK & LIVE HARDWARE TELEMETRY SIMULATION */
+        /* CLOCK & LIVE HARDWARE TELEMETRY */
         function updateClockAndTelemetry() {
             const clockEl = document.querySelector('#live-clock span');
             if (clockEl) { const now = new Date(); clockEl.innerText = 'DE • ' + now.toLocaleTimeString('de-DE'); }
@@ -1218,16 +1210,45 @@
             const upEl = document.querySelector('#session-uptime span');
             if (upEl) upEl.innerText = `${upMin}:${upRem}`;
 
-            // Ryzen 7 5800X & RX 6750 XT Telemetry
-            const cpuTemp = Math.floor(42 + Math.sin(Date.now() / 4000) * 4 + Math.random() * 2);
-            const cpuBoost = (4.60 + Math.random() * 0.22).toFixed(2);
-            const gpuTemp = Math.floor(38 + Math.cos(Date.now() / 5000) * 3 + Math.random() * 2);
+            const baseTemp = overclockMode ? 58 : 42;
+            const cpuTemp = Math.floor(baseTemp + Math.sin(Date.now() / 4000) * 4 + Math.random() * 2);
+            const cpuBoost = overclockMode ? (4.80 + Math.random() * 0.06).toFixed(2) : (4.60 + Math.random() * 0.20).toFixed(2);
+            const gpuTemp = Math.floor((overclockMode ? 52 : 38) + Math.cos(Date.now() / 5000) * 3 + Math.random() * 2);
             const teleCpu = document.getElementById('tele-cpu');
             const teleGpu = document.getElementById('tele-gpu');
             if (teleCpu) teleCpu.innerText = `CPU: ${cpuTemp}°C | ${cpuBoost} GHz`;
             if (teleGpu) teleGpu.innerText = `GPU: ${gpuTemp}°C`;
         }
         setInterval(updateClockAndTelemetry, 1000); updateClockAndTelemetry();
+
+        /* DISCORD LANYARD LIVE PRESENCE INTEGRATION */
+        async function fetchLanyardPresence() {
+            try {
+                const res = await fetch(`https://api.lanyard.rest/v1/users/${activeDiscordUserId}`);
+                if (!res.ok) return;
+                const json = await res.json();
+                if (!json.success || !json.data) return;
+
+                const d = json.data;
+                const badge = document.getElementById('discord-avatar-badge');
+                const bannerDot = document.getElementById('banner-status-dot');
+                const presenceTxt = document.getElementById('discord-presence');
+
+                const statusColors = { online: '#22c55e', idle: '#f59e0b', dnd: '#ef4444', offline: '#64748b' };
+                const col = statusColors[d.discord_status] || '#22c55e';
+                if (badge) { badge.style.background = col; badge.style.boxShadow = `0 0 10px ${col}`; }
+                if (bannerDot) bannerDot.style.background = col;
+
+                if (d.listening_to_spotify && d.spotify) {
+                    presenceTxt.innerHTML = `<i class="fab fa-spotify" style="color:#1db954; margin-right:6px;"></i> Listening to <b>${d.spotify.song}</b> by ${d.spotify.artist}`;
+                } else if (d.activities && d.activities.length > 0) {
+                    const act = d.activities.find(a => a.type !== 4) || d.activities[0];
+                    if (act.name) {
+                        presenceTxt.innerText = `${act.name}${act.details ? ' — ' + act.details : ''}${act.state ? ' (' + act.state + ')' : ''}`;
+                    }
+                }
+            } catch (e) {}
+        }
 
         /* RIG SPECS TOGGLE */
         const rigToggle = document.getElementById('rig-toggle'); 
@@ -1239,7 +1260,6 @@
                 const isOpen = rigDetails.classList.toggle('open');
                 rigChevron.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
             });
-
             document.addEventListener('click', (e) => {
                 if (!rigToggle.contains(e.target) && !rigDetails.contains(e.target)) {
                     rigDetails.classList.remove('open');
@@ -1255,6 +1275,20 @@
             queueBtn.addEventListener('click', () => playlistDrawer.classList.toggle('open'));
         }
 
+        function selectSong(idx) {
+            currentSongIndex = idx;
+            if (ytPlayer && ytApiReady && typeof ytPlayer.loadVideoById === 'function') {
+                ytPlayer.loadVideoById(playlist[currentSongIndex].id);
+                if (typeof ytPlayer.unMute === 'function') ytPlayer.unMute();
+                audioUnlocked = true;
+                ytPlayer.playVideo();
+            }
+            updatePlayerUI();
+            renderQueue();
+            document.querySelector('#play-pause-btn i').className = 'fas fa-pause';
+            document.getElementById('yt-cover').classList.add('playing');
+        }
+
         function renderQueue() {
             if (!playlistDrawer) return;
             playlistDrawer.innerHTML = '';
@@ -1262,25 +1296,13 @@
                 const item = document.createElement('div');
                 item.className = `queue-item ${idx === currentSongIndex ? 'active' : ''}`;
                 item.innerHTML = `<i class="fas fa-play" style="font-size:0.7rem; color:var(--text-muted);"></i><div style="overflow:hidden;"><div class="queue-title">${song.title}</div><div class="queue-artist" style="font-size:0.72rem; color:var(--text-muted);">${song.artist}</div></div>`;
-                
-                item.addEventListener('click', () => {
-                    currentSongIndex = idx;
-                    if (ytPlayer && ytApiReady && typeof ytPlayer.loadVideoById === 'function') {
-                        ytPlayer.loadVideoById(playlist[currentSongIndex].id);
-                        if (typeof ytPlayer.unMute === 'function') ytPlayer.unMute();
-                        audioUnlocked = true;
-                        ytPlayer.playVideo();
-                    }
-                    updatePlayerUI();
-                    document.querySelector('#play-pause-btn i').className = 'fas fa-pause';
-                    document.getElementById('yt-cover').classList.add('playing');
-                });
+                item.addEventListener('click', () => selectSong(idx));
                 playlistDrawer.appendChild(item);
             });
             applyCursorHoverEffects(); 
         }
 
-        /* MODALS */
+        /* MODALS & SPOTLIGHT COMMAND PALETTE (CTRL+K) */
         const projectsModal = document.getElementById('projects-modal'); 
         const projectsTrigger = document.getElementById('projects-trigger'); 
         const closeProjects = document.getElementById('close-projects');
@@ -1295,6 +1317,12 @@
         const helpBtn = document.getElementById('help-btn'); 
         const closeShortcuts = document.getElementById('close-shortcuts');
 
+        const cmdkModal = document.getElementById('cmdk-modal');
+        const cmdkBtn = document.getElementById('cmdk-btn');
+        const closeCmdk = document.getElementById('close-cmdk');
+        const cmdkInput = document.getElementById('cmdk-input');
+        const cmdkList = document.getElementById('cmdk-list');
+
         if (projectsTrigger) { projectsTrigger.addEventListener('click', () => projectsModal.classList.add('active')); closeProjects.addEventListener('click', () => projectsModal.classList.remove('active')); }
         if (helpBtn) { helpBtn.addEventListener('click', () => shortcutsModal.classList.add('active')); closeShortcuts.addEventListener('click', () => shortcutsModal.classList.remove('active')); }
         
@@ -1303,7 +1331,58 @@
         if (cliBtn) cliBtn.addEventListener('click', openCli);
         if (closeCli) closeCli.addEventListener('click', closeCliModal);
 
-        [projectsModal, cliModal, shortcutsModal].forEach(modal => { 
+        function openCmdk() {
+            cmdkModal.classList.add('active');
+            cmdkInput.value = '';
+            renderCmdkItems('');
+            setTimeout(() => cmdkInput.focus(), 80);
+        }
+        if (cmdkBtn) cmdkBtn.addEventListener('click', openCmdk);
+        if (closeCmdk) closeCmdk.addEventListener('click', () => cmdkModal.classList.remove('active'));
+        document.getElementById('ctx-cmdk')?.addEventListener('click', openCmdk);
+
+        function renderCmdkItems(filter = '') {
+            const q = filter.toLowerCase();
+            const actions = [
+                { icon: 'fa-bolt', label: 'Toggle Overclock Mode (4.85 GHz Boost)', tag: 'System', run: () => toggleOverclock() },
+                { icon: 'fa-eye', label: 'Toggle Cinema / Zen Mode', tag: 'View', run: () => toggleZenMode() },
+                { icon: 'fa-code', label: 'Matrix Code Rain ein-/ausschalten', tag: 'FX', run: () => { matrixMode = !matrixMode; } },
+                { icon: 'fa-layer-group', label: 'Vengeance Release & APK Hub öffnen', tag: 'Modal', run: () => projectsModal.classList.add('active') },
+                { icon: 'fa-terminal', label: 'Interactive Terminal (~) öffnen', tag: 'CLI', run: () => openCli() },
+                { icon: 'fa-cube', label: 'Minecraft Server IP kopieren', tag: 'Server', run: () => document.getElementById('mc-address-row').click() },
+                { icon: 'fa-palette', label: 'Theme: Cyber Pink (#ec4899)', tag: 'Theme', run: () => applyAccentColor('#ec4899') },
+                { icon: 'fa-palette', label: 'Theme: Ice Cyan (#06b6d4)', tag: 'Theme', run: () => applyAccentColor('#06b6d4') },
+                { icon: 'fa-palette', label: 'Theme: Matrix Emerald (#10b981)', tag: 'Theme', run: () => applyAccentColor('#10b981') }
+            ];
+
+            playlist.forEach((s, idx) => {
+                actions.push({
+                    icon: 'fa-music',
+                    label: `Play: ${s.title} — ${s.artist}`,
+                    tag: 'Track',
+                    run: () => selectSong(idx)
+                });
+            });
+
+            cmdkList.innerHTML = '';
+            actions.filter(a => a.label.toLowerCase().includes(q) || a.tag.toLowerCase().includes(q)).forEach(act => {
+                const div = document.createElement('div');
+                div.className = 'cmdk-item clickable';
+                div.innerHTML = `<span><i class="fas ${act.icon}" style="color:var(--accent); width:22px;"></i> ${act.label}</span><span class="project-tag">${act.tag}</span>`;
+                div.addEventListener('click', () => {
+                    cmdkModal.classList.remove('active');
+                    act.run();
+                });
+                cmdkList.appendChild(div);
+            });
+            applyCursorHoverEffects();
+        }
+
+        if (cmdkInput) {
+            cmdkInput.addEventListener('input', (e) => renderCmdkItems(e.target.value));
+        }
+
+        [projectsModal, cliModal, shortcutsModal, cmdkModal].forEach(modal => { 
             if(modal) modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); }); 
         });
 
@@ -1319,7 +1398,7 @@
             });
         }
 
-        /* MINECRAFT STATUS POLLER & COPY */
+        /* MINECRAFT STATUS POLLER 2.0 (INKL. AVATAR HEADS & SPARKLINE) */
         const mcAddressRow = document.getElementById('mc-address-row');
         const mcCopyToast = document.getElementById('mc-copy-toast');
         if (mcAddressRow) {
@@ -1331,32 +1410,64 @@
             });
         }
 
+        function updatePingSparkline(newPing) {
+            pingHistory.push(newPing);
+            if (pingHistory.length > 6) pingHistory.shift();
+            const poly = document.getElementById('ping-poly');
+            if (!poly) return;
+            const max = Math.max(...pingHistory, 60);
+            const pts = pingHistory.map((v, i) => {
+                const x = i * 10;
+                const y = Math.max(2, Math.min(14, 15 - (v / max) * 13));
+                return `${x},${y.toFixed(1)}`;
+            }).join(' ');
+            poly.setAttribute('points', pts);
+        }
+
         async function fetchMinecraftStatus() {
             const badge = document.getElementById('mc-status-badge');
             const statusText = document.getElementById('mc-status-text');
             const playersEl = document.getElementById('mc-players');
+            const headsWrap = document.getElementById('mc-players-heads');
             const versionEl = document.getElementById('mc-version');
             const pingEl = document.getElementById('mc-ping');
             const motdText = document.getElementById('mc-motd-text');
 
             try {
+                const startT = performance.now();
                 const res = await fetch(`https://api.mcstatus.io/v2/status/java/${mcPollTarget}`);
                 const data = await res.json();
+                const measuredPing = Math.round(performance.now() - startT);
                 latestMcData = data;
 
                 if (data && data.online) {
                     badge.classList.add('online');
                     statusText.innerText = 'Online';
                     playersEl.innerText = `${data.players.online} / ${data.players.max}`;
-                    versionEl.innerText = data.version.name_clean || 'NeoForge';
-                    pingEl.innerText = `${data.round_trip_latency || 24} ms`;
+                    versionEl.innerText = data.version?.name_clean || 'NeoForge';
+                    const lat = data.round_trip_latency || Math.min(65, Math.floor(measuredPing / 3));
+                    pingEl.innerText = `${lat} ms`;
+                    updatePingSparkline(lat);
                     motdText.innerText = data.motd?.clean || 'Vengeance NeoForge Server';
+
+                    if (headsWrap) {
+                        headsWrap.innerHTML = '';
+                        const list = data.players?.list || [];
+                        list.slice(0, 5).forEach(p => {
+                            const img = document.createElement('img');
+                            img.className = 'mc-head-avatar';
+                            img.src = `https://mc-heads.net/avatar/${p.uuid || p.name_clean}/24`;
+                            img.title = p.name_clean;
+                            headsWrap.appendChild(img);
+                        });
+                    }
                 } else {
                     badge.classList.remove('online');
                     statusText.innerText = 'Offline';
                     playersEl.innerText = '0 / 0';
+                    if (headsWrap) headsWrap.innerHTML = '';
                     pingEl.innerText = '-- ms';
-                    motdText.innerText = 'Server aktuell offline';
+                    motdText.innerText = 'Server aktuell im Standby / Offline';
                 }
             } catch (err) {
                 badge.classList.remove('online');
@@ -1395,8 +1506,8 @@
             } catch (e) {}
         }
 
-        /* CLI COMMANDS + HISTORY + TAB AUTOCOMPLETE */
-        const cliCommandsList = ['help', 'neofetch', 'mc', 'status', 'projects', 'specs', 'skills', 'matrix', 'zen', 'glass', 'theme', 'play', 'pause', 'next', 'prev', 'clear', 'cls'];
+        /* CLI COMMANDS + OVERCLOCK */
+        const cliCommandsList = ['help', 'neofetch', 'overclock', 'mc', 'status', 'projects', 'specs', 'skills', 'matrix', 'zen', 'glass', 'theme', 'play', 'pause', 'next', 'prev', 'clear', 'cls'];
         let cliHistory = [];
         let cliHistoryIdx = -1;
 
@@ -1404,27 +1515,16 @@
             cliInput.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter') {
                     const cmd = cliInput.value.trim();
-                    if (cmd) {
-                        cliHistory.push(cmd);
-                        cliHistoryIdx = cliHistory.length;
-                    }
+                    if (cmd) { cliHistory.push(cmd); cliHistoryIdx = cliHistory.length; }
                     cliInput.value = '';
                     handleCliCommand(cmd.toLowerCase());
                 } else if (e.key === 'ArrowUp') {
                     e.preventDefault();
-                    if (cliHistoryIdx > 0) {
-                        cliHistoryIdx--;
-                        cliInput.value = cliHistory[cliHistoryIdx];
-                    }
+                    if (cliHistoryIdx > 0) { cliHistoryIdx--; cliInput.value = cliHistory[cliHistoryIdx]; }
                 } else if (e.key === 'ArrowDown') {
                     e.preventDefault();
-                    if (cliHistoryIdx < cliHistory.length - 1) {
-                        cliHistoryIdx++;
-                        cliInput.value = cliHistory[cliHistoryIdx];
-                    } else {
-                        cliHistoryIdx = cliHistory.length;
-                        cliInput.value = '';
-                    }
+                    if (cliHistoryIdx < cliHistory.length - 1) { cliHistoryIdx++; cliInput.value = cliHistory[cliHistoryIdx]; }
+                    else { cliHistoryIdx = cliHistory.length; cliInput.value = ''; }
                 } else if (e.key === 'Tab') {
                     e.preventDefault();
                     const current = cliInput.value.trim().toLowerCase();
@@ -1451,21 +1551,25 @@
                 case 'help':
                     res.innerHTML = `Verfügbare Befehle:<br>
                     • <span style="color:var(--accent);">neofetch</span> - System & Hardware ASCII-Übersicht<br>
+                    • <span style="color:var(--accent);">overclock</span> - PBO Max-Boost & Neon-Overdrive einschalten<br>
                     • <span style="color:var(--accent);">mc / status</span> - Minecraft Server Live-Status<br>
-                    • <span style="color:var(--accent);">glass &lt;0-20&gt;</span> - Glas-Blur in Echtzeit ändern (z.B. 'glass 4')<br>
-                    • <span style="color:var(--accent);">theme &lt;#hex&gt;</span> - Akzentfarbe setzen (z.B. 'theme #06b6d4')<br>
-                    • <span style="color:var(--accent);">matrix</span> - Schaltet den Matrix-Code-Rain ein/aus<br>
-                    • <span style="color:var(--accent);">zen</span> - Cinema/Zen-Mode umschalten<br>
+                    • <span style="color:var(--accent);">glass &lt;0-20&gt;</span> - Glas-Blur in Echtzeit ändern<br>
+                    • <span style="color:var(--accent);">theme &lt;#hex&gt;</span> - Akzentfarbe setzen<br>
+                    • <span style="color:var(--accent);">matrix / zen</span> - Matrix-Rain oder Cinema-Mode<br>
                     • <span style="color:var(--accent);">projects / specs / skills</span> - Portfolio-Infos<br>
                     • <span style="color:var(--accent);">play / pause / next / prev</span> - Music-Player steuern<br>
                     • <span style="color:var(--accent);">clear / cls</span> - Terminal leeren`;
+                    break;
+                case 'overclock':
+                    toggleOverclock();
+                    res.innerHTML = `PBO Curve Optimizer Overclock: <span style="color:#4ade80; font-weight:bold;">${overclockMode ? 'ACTIVE (4.85 GHz)' : 'STANDARD (4.65 GHz)'}</span>`;
                     break;
                 case 'neofetch':
                     res.innerHTML = `<pre style="color:var(--accent); font-size:0.75rem; line-height:1.25; margin:4px 0;">
    /\\   /\\     <span style="color:#fff; font-weight:bold;">upperechelon@vengeance</span>
   /  \\ /  \\    ----------------------
- |    V    |   <span style="color:var(--accent);">OS:</span> Windows 11 Pro (AtlasOS)
-  \\       /    <span style="color:var(--accent);">CPU:</span> AMD Ryzen 7 5800X (8C/16T)
+ |    V    |   <span style="color:var(--accent);">OS:</span> Windows 11 Pro (AtlasOS) / Vengeance v3.0
+  \\       /    <span style="color:var(--accent);">CPU:</span> AMD Ryzen 7 5800X (8C/16T @ ${overclockMode ? '4.85' : '4.65'} GHz)
    \\     /     <span style="color:var(--accent);">GPU:</span> AMD Radeon RX 6750 XT Elite OC
     \\   /      <span style="color:var(--accent);">Board:</span> ASUS ROG Strix B550-A Gaming
      \\ /       <span style="color:var(--accent);">RAM:</span> 32 GB DDR4 @ 3600 MHz
@@ -1480,39 +1584,29 @@
                         blurSlider.value = val;
                         blurValLabel.innerText = val + 'px';
                         res.innerHTML = `Crystal Glass Blur gesetzt auf <span style="color:#fff;">${val}px</span>.`;
-                    } else {
-                        res.innerHTML = `Nutzung: <span style="color:#fff;">glass 5</span> (Wert zwischen 0 und 20)`;
-                    }
+                    } else { res.innerHTML = `Nutzung: <span style="color:#fff;">glass 5</span>`; }
                     break;
                 case 'theme':
                     if (arg && arg.startsWith('#')) {
-                        document.documentElement.style.setProperty('--accent', arg);
-                        document.documentElement.style.setProperty('--accent-glow', arg + '55');
-                        localStorage.setItem('v_accent', arg);
+                        applyAccentColor(arg);
                         res.innerHTML = `Accent Color geändert auf <span style="color:${arg};">${arg}</span>.`;
-                    } else {
-                        res.innerHTML = `Nutzung: <span style="color:#fff;">theme #ec4899</span>`;
-                    }
+                    } else { res.innerHTML = `Nutzung: <span style="color:#fff;">theme #ec4899</span>`; }
                     break;
                 case 'matrix':
                     matrixMode = !matrixMode;
                     res.innerHTML = `Matrix Rain Mode: <span style="color:#22c55e;">${matrixMode ? 'ENABLED' : 'DISABLED'}</span>`;
                     break;
                 case 'zen':
-                    toggleZenMode();
-                    closeCliModal();
-                    res.innerText = 'Zen Mode toggled.';
+                    toggleZenMode(); closeCliModal(); res.innerText = 'Zen Mode toggled.';
                     break;
                 case 'mc':
                 case 'status':
                     if (latestMcData && latestMcData.online) {
                         res.innerHTML = `Status: <span style="color:#22c55e;">ONLINE</span> | Spieler: ${latestMcData.players.online}/${latestMcData.players.max} | Host: ${mcDisplayDomain}`;
-                    } else {
-                        res.innerHTML = `Status: <span style="color:#ef4444;">OFFLINE</span> | Host: ${mcDisplayDomain}`;
-                    }
+                    } else { res.innerHTML = `Status: <span style="color:#ef4444;">OFFLINE</span> | Host: ${mcDisplayDomain}`; }
                     break;
                 case 'projects':
-                    res.innerHTML = `1. Vengeance Optimizer (C++/WPF)<br>2. VengeancePlayer APK (Android/Kotlin)<br>3. VengeanceUtilities.de (HTML/Supabase)`;
+                    res.innerHTML = `1. Vengeance Optimizer (C++/WPF)<br>2. VengeancePlayer APK (Android/Kotlin)<br>3. Vengeance Game Launcher & Web Dashboard`;
                     break;
                 case 'specs':
                     res.innerHTML = `AMD Ryzen 7 5800X | Radeon RX 6750 XT | 32GB RAM | ASUS ROG Strix B550-A`;
@@ -1522,26 +1616,17 @@
                     break;
                 case 'play':
                 case 'pause':
-                    togglePlayPause();
-                    res.innerText = 'Player toggled.';
-                    break;
+                    togglePlayPause(); res.innerText = 'Player toggled.'; break;
                 case 'next':
-                    changeSong(1);
-                    res.innerText = 'Next song loaded.';
-                    break;
+                    changeSong(1); res.innerText = 'Next song loaded.'; break;
                 case 'prev':
-                    changeSong(-1);
-                    res.innerText = 'Previous song loaded.';
-                    break;
+                    changeSong(-1); res.innerText = 'Previous song loaded.'; break;
                 case 'clear':
                 case 'cls':
-                    cliOutput.innerHTML = '';
-                    return;
-                case '':
-                    return;
+                    cliOutput.innerHTML = ''; return;
+                case '': return;
                 default:
-                    res.innerHTML = `Befehl nicht gefunden: '${cmd}'. Tippe 'help' für Hilfe.`;
-                    break;
+                    res.innerHTML = `Befehl nicht gefunden: '${cmd}'. Tippe 'help' für Hilfe.`; break;
             }
             cliOutput.appendChild(res);
             cliOutput.scrollTop = cliOutput.scrollHeight;
@@ -1554,7 +1639,7 @@
             ctxMenu.style.display = 'block';
             let x = e.clientX, y = e.clientY;
             if (x + 200 > window.innerWidth) x = window.innerWidth - 210;
-            if (y + 250 > window.innerHeight) y = window.innerHeight - 260;
+            if (y + 280 > window.innerHeight) y = window.innerHeight - 290;
             ctxMenu.style.left = `${x}px`;
             ctxMenu.style.top = `${y}px`;
         });
@@ -1592,14 +1677,12 @@
                     shuffleBtn.classList.toggle('active', isShuffling);
                 });
             }
-
             if (loopBtn) {
                 loopBtn.addEventListener('click', () => {
                     isLooping = !isLooping;
                     loopBtn.classList.toggle('active', isLooping);
                 });
             }
-
             if (volumeSlider) {
                 volumeSlider.addEventListener('input', function() {
                     if (ytPlayer && typeof ytPlayer.setVolume === 'function') {
@@ -1610,7 +1693,6 @@
                     }
                 });
             }
-
             if (muteIcon) {
                 muteIcon.addEventListener('click', () => {
                     if (!ytPlayer || typeof ytPlayer.isMuted !== 'function') return;
@@ -1638,7 +1720,6 @@
                         }
                     }
                 });
-
                 timeline.addEventListener('click', function(e) {
                     if (!ytPlayer || !playlist[currentSongIndex]?.id) return;
                     const rect = this.getBoundingClientRect(); 
@@ -1651,6 +1732,15 @@
             }
 
             window.addEventListener('keydown', (e) => {
+                if ((e.ctrlKey || e.metaKey) && e.code === 'KeyK') {
+                    e.preventDefault();
+                    openCmdk();
+                    return;
+                }
+                if (e.key === 'Escape') {
+                    [projectsModal, cliModal, shortcutsModal, cmdkModal].forEach(m => m?.classList.remove('active'));
+                    return;
+                }
                 if (['input', 'textarea'].includes(document.activeElement.tagName.toLowerCase())) return;
                 if (e.code === 'Space') { e.preventDefault(); togglePlayPause(); }
                 else if (e.code === 'ArrowRight') { e.preventDefault(); changeSong(1); }
@@ -1688,21 +1778,14 @@
         /* DATA LOADER */
         async function loadWebsiteData() {
             try {
-                // 1. SITE CUSTOMIZATION
                 const { data: customization } = await sbClient.from('site_customization').select('*').limit(1).maybeSingle();
                 if (customization) {
                     if (customization.font_family) {
                         document.documentElement.style.setProperty('--global-font', customization.font_family);
                         localStorage.setItem('v_font', customization.font_family);
                     }
-                    if (customization.accent_color) {
-                        document.documentElement.style.setProperty('--accent', customization.accent_color);
-                        document.documentElement.style.setProperty('--accent-glow', customization.accent_color + '55');
-                        localStorage.setItem('v_accent', customization.accent_color);
-                    }
-                    if (customization.crt_scanlines) {
-                        document.getElementById('scanlines-layer').style.display = 'block';
-                    }
+                    if (customization.accent_color) applyAccentColor(customization.accent_color);
+                    if (customization.crt_scanlines) document.getElementById('scanlines-layer').style.display = 'block';
                     if (customization.bg_mode_solid) {
                         document.body.classList.add('solid-bg-mode');
                         const bgWrap = document.getElementById('video-bg-wrap');
@@ -1710,7 +1793,6 @@
                     }
                 }
 
-                // 2. PROFILE
                 const { data: profile } = await sbClient.from('profile').select('*').eq('id', 1).maybeSingle();
                 const userEffect = customization?.username_effect || 'wave';
                 if (profile) {
@@ -1721,19 +1803,16 @@
                     setAnimatedUsername('UpperEchelon', userEffect);
                 }
 
-                // 3. STATS
                 const { data: stats } = await sbClient.from('stats').select('*').eq('id', 1).maybeSingle();
                 if (stats) {
                     document.getElementById('stat-1').innerText = stats.years_coding || '3+';
                     document.getElementById('stat-2').innerText = stats.languages || '3+';
                     document.getElementById('stat-3').innerText = stats.projects || '20+';
-                    
                     const currentViews = (stats.views || 0) + 1;
                     document.getElementById('stat-4').innerText = currentViews.toLocaleString();
                     sbClient.from('stats').update({ views: currentViews }).eq('id', 1).then();
                 }
 
-                // 4. MINECRAFT CONFIG AUS SUPABASE
                 const { data: mcConfig } = await sbClient.from('minecraft_config').select('*').limit(1).maybeSingle();
                 if (mcConfig) {
                     if (mcConfig.domain) {
@@ -1741,17 +1820,13 @@
                         const ipText = document.getElementById('mc-ip-text');
                         if (ipText) ipText.innerText = mcConfig.domain;
                     }
-                    if (mcConfig.poll_target) {
-                        mcPollTarget = mcConfig.poll_target;
-                    }
+                    if (mcConfig.poll_target) mcPollTarget = mcConfig.poll_target;
                     if (mcConfig.server_name) {
                         const titleEl = document.getElementById('mc-display-name');
                         if (titleEl) {
                             if (mcConfig.server_name.startsWith('http')) {
                                 titleEl.innerHTML = `<a href="${mcConfig.server_name}" target="_blank" style="color:var(--text-main); text-decoration:underline;">CurseForge Modpack <i class="fas fa-external-link-alt" style="font-size:0.75rem;"></i></a>`;
-                            } else {
-                                titleEl.innerText = mcConfig.server_name;
-                            }
+                            } else { titleEl.innerText = mcConfig.server_name; }
                         }
                     }
                     if (mcConfig.notes) {
@@ -1762,14 +1837,14 @@
                 fetchMinecraftStatus();
                 setInterval(fetchMinecraftStatus, 45000);
 
-                // 5. DISCORD CONFIG AUS SUPABASE
                 const { data: discordCfg } = await sbClient.from('discord_config').select('*').limit(1).maybeSingle();
                 if (discordCfg) {
                     if (discordCfg.user_id) activeDiscordUserId = discordCfg.user_id;
                     if (discordCfg.server_id) activeDiscordServerId = discordCfg.server_id;
                 }
+                fetchLanyardPresence();
+                setInterval(fetchLanyardPresence, 30000);
 
-                // 6. PLAYLIST
                 const { data: dbPlaylist } = await sbClient.from('youtube_playlist').select('*').order('position', { ascending: true });
                 if (dbPlaylist && dbPlaylist.length > 0) {
                     playlist = dbPlaylist.map(song => ({ title: song.song_title, artist: song.artist, id: song.youtube_id, cover: song.cover_url }));
@@ -1778,7 +1853,6 @@
                 }
                 renderQueue();
 
-                // 7. LINKS + AUTO GITHUB USERNAME EXTRACTION
                 const { data: dbLinks } = await sbClient.from('links').select('*');
                 const linksContainer = document.getElementById('links-container');
                 if (dbLinks && dbLinks.length > 0 && linksContainer) {
@@ -1795,11 +1869,12 @@
                     if (detectedGhUser) fetchGithubRepos(detectedGhUser);
                 }
 
-                // 8. DISCORD WIDGET STATUS
                 fetch(`https://discord.com/api/guilds/${activeDiscordServerId}/widget.json`).then(res => res.json()).then(data => {
                     if (data && data.name) {
-                        document.getElementById('discord-guild-stats').innerText = `${data.name} (${data.presence_count || 'Online'})`;
-                        if (data.instant_invite) document.getElementById('discord-guild-invite').href = data.instant_invite;
+                        const st = document.getElementById('discord-guild-stats');
+                        const inv = document.getElementById('discord-guild-invite');
+                        if (st) st.innerText = `${data.name} (${data.presence_count || 'Online'})`;
+                        if (data.instant_invite && inv) inv.href = data.instant_invite;
                     }
                 }).catch(() => {});
 
@@ -1814,7 +1889,6 @@
             const container = document.getElementById('username'); 
             container.className = `username effect-${effect}`;
             container.innerHTML = ''; 
-
             if (effect === 'wave') {
                 [...(name || 'UpperEchelon')].forEach((char, index) => {
                     const span = document.createElement('span'); 
@@ -1833,22 +1907,11 @@
                 ytPlayer = new YT.Player('youtube-player', {
                     videoId: playlist[currentSongIndex]?.id || '',
                     playerVars: { 
-                        'autoplay': 1, 
-                        'mute': 0,
-                        'controls': 0,
-                        'disablekb': 1,
-                        'enablejsapi': 1,
-                        'fs': 0,
-                        'iv_load_policy': 3,
-                        'modestbranding': 1,
-                        'rel': 0,
-                        'showinfo': 0,
-                        'playsinline': 1
+                        'autoplay': 1, 'mute': 0, 'controls': 0, 'disablekb': 1,
+                        'enablejsapi': 1, 'fs': 0, 'iv_load_policy': 3,
+                        'modestbranding': 1, 'rel': 0, 'showinfo': 0, 'playsinline': 1
                     }, 
-                    events: { 
-                        'onReady': onPlayerReady, 
-                        'onStateChange': onPlayerStateChange 
-                    }
+                    events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange }
                 });
             }
         }
@@ -1867,16 +1930,13 @@
                         ytPlayer.playVideo();
                         const muteIcon = document.getElementById('mute-icon');
                         if (muteIcon) muteIcon.className = 'fas fa-volume-mute';
-                    } else {
-                        audioUnlocked = true;
-                    }
+                    } else { audioUnlocked = true; }
                 }
             }, 400);
         }
 
         function togglePlayPause() {
             if (!ytPlayer || !playlist[currentSongIndex]?.id) return;
-
             const state = (typeof ytPlayer.getPlayerState === 'function') ? ytPlayer.getPlayerState() : -1; 
             const icon = document.querySelector('#play-pause-btn i');
             const zenIcon = document.getElementById('zen-play-icon');
@@ -1912,29 +1972,14 @@
             if (playlist.length === 0) return;
             if (isShuffling && playlist.length > 1) {
                 let nextIdx = currentSongIndex;
-                while (nextIdx === currentSongIndex) {
-                    nextIdx = Math.floor(Math.random() * playlist.length);
-                }
+                while (nextIdx === currentSongIndex) nextIdx = Math.floor(Math.random() * playlist.length);
                 currentSongIndex = nextIdx;
             } else {
                 currentSongIndex += direction;
                 if (currentSongIndex >= playlist.length) currentSongIndex = 0;
                 if (currentSongIndex < 0) currentSongIndex = playlist.length - 1;
             }
-
-            if (ytPlayer && ytApiReady && typeof ytPlayer.loadVideoById === 'function') {
-                ytPlayer.loadVideoById(playlist[currentSongIndex].id);
-                if (typeof ytPlayer.unMute === 'function') ytPlayer.unMute();
-                audioUnlocked = true;
-                ytPlayer.playVideo();
-            }
-
-            updatePlayerUI(); 
-            renderQueue();
-            const icon = document.querySelector('#play-pause-btn i');
-            if (icon) icon.className = 'fas fa-pause';
-            const cover = document.getElementById('yt-cover');
-            if (cover) cover.classList.add('playing');
+            selectSong(currentSongIndex);
         }
 
         function updatePlayerUI() {
@@ -1945,10 +1990,8 @@
             const zenTitle = document.getElementById('zen-song-title');
             if (zenTitle) zenTitle.innerText = `${currentSong.title} - ${currentSong.artist}`;
             document.getElementById('yt-progress').style.width = '0%';
-            
             const imgElement = document.getElementById('yt-cover'); 
-            let targetCover = currentSong.cover || `https://img.youtube.com/vi/${currentSong.id}/hqdefault.jpg`;
-            imgElement.src = targetCover;
+            imgElement.src = currentSong.cover || `https://img.youtube.com/vi/${currentSong.id}/hqdefault.jpg`;
         }
 
         function onPlayerStateChange(event) {
@@ -1964,14 +2007,11 @@
                 if (zenIcon) zenIcon.className = 'fas fa-play';
                 if (cover) cover.classList.remove('playing'); 
             }
-
             if (event.data === YT.PlayerState.ENDED) {
                 if (isLooping) {
                     if (typeof ytPlayer.seekTo === 'function') ytPlayer.seekTo(0);
                     if (typeof ytPlayer.playVideo === 'function') ytPlayer.playVideo();
-                } else {
-                    changeSong(1);
-                }
+                } else { changeSong(1); }
             } 
         }
 
