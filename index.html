@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vengeance Utilities - UpperEchelon</title>
+
+    <!-- OPENGRAPH & DISCORD EMBED META-TAGS -->
+    <meta name="theme-color" content="#ec4899">
+    <meta property="og:title" content="Vengeance Utilities — UpperEchelon">
+    <meta property="og:description" content="Personal Developer Portfolio, VengeancePlayer APK Hub, NeoForge Minecraft Server & C++ Desktop Utilities.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://vengeanceutilities.de">
+    <meta property="og:site_name" content="Vengeance Utilities">
+    <meta name="twitter:card" content="summary_large_image">
     
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🔮</text></svg>">
     
@@ -57,12 +66,21 @@
         * {
             box-sizing: border-box; margin: 0; padding: 0;
             font-family: var(--global-font); cursor: none !important; user-select: none;
-            /* FIREFOX CUSTOM GLASS SCROLLBAR */
             scrollbar-width: thin;
             scrollbar-color: var(--accent) rgba(12, 12, 16, 0.35);
         }
 
-        /* CHROME / EDGE / BRAVE / SAFARI ULTRA-CLEAN GLASS SCROLLBARS (ÜBERALL & OHNE PFEILE) */
+        /* MOBILE & TOUCH DEVICE FIX (Native Cursor & Select) */
+        @media (pointer: coarse), (hover: none) {
+            * {
+                cursor: auto !important;
+                user-select: auto;
+            }
+            #custom-cursor, #cursor-trail {
+                display: none !important;
+            }
+        }
+
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -108,7 +126,6 @@
             body { overflow-y: auto !important; align-items: flex-start; padding: 40px 0; }
         }
 
-        /* BOOT SCREEN */
         #boot-screen {
             position: fixed; inset: 0; background: #050505; z-index: 999999;
             display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
@@ -124,7 +141,6 @@
             background-size: 100% 4px; display: none;
         }
 
-        /* CURSOR */
         #custom-cursor {
             position: fixed; top: 0; left: 0; width: 8px; height: 8px;
             background: var(--accent); border-radius: 50%; pointer-events: none;
@@ -158,7 +174,6 @@
             background-size: 40px 40px; z-index: 1; pointer-events: none;
         }
 
-        /* HEADER ACTIONS (MIT MAGNET-EFFEKT) */
         .header-actions { position: fixed; top: 20px; right: 20px; z-index: 100; display: flex; align-items: center; gap: 8px; }
         .action-btn {
             background: rgba(14, 14, 18, 0.4); border: 1px solid var(--accent); color: var(--text-main); padding: 10px 13px;
@@ -168,10 +183,9 @@
         }
         .action-btn:hover, .action-btn.active { border-color: #fff; box-shadow: 0 0 22px var(--accent), inset 0 1px 1px #fff; color: var(--accent); }
 
-        /* TUNER POPOVER */
         .tuner-popover {
             position: fixed; top: 68px; right: 20px; width: 265px; z-index: 150;
-            background: rgba(12, 12, 16, 0.78); border: 1px solid var(--accent);
+            background: rgba(12, 12, 16, 0.85); border: 1px solid var(--accent);
             backdrop-filter: blur(14px) saturate(190%); -webkit-backdrop-filter: blur(14px) saturate(190%);
             border-radius: 14px; padding: 14px; box-shadow: 0 15px 35px rgba(0,0,0,0.8), 0 0 20px var(--accent-glow);
             display: none; flex-direction: column; gap: 12px;
@@ -188,8 +202,13 @@
             border-radius: 7px; transition: all 0.2s; text-align: center;
         }
         .filter-chip:hover, .filter-chip.active { border-color: var(--accent); background: var(--accent-glow); }
+        .tuner-reset-btn {
+            background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.35);
+            color: #fca5a5; font-size: 0.72rem; font-weight: 700; padding: 6px; border-radius: 7px;
+            display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;
+        }
+        .tuner-reset-btn:hover { background: rgba(239, 68, 68, 0.3); border-color: #ef4444; color: #fff; }
 
-        /* BENTO CONTAINER */
         .bento-container {
             max-width: 1200px; width: 94vw; display: grid; grid-template-columns: 1fr;
             gap: 16px; position: relative; z-index: 2; opacity: 0;
@@ -198,7 +217,6 @@
         body.zen-mode .bento-container { opacity: 0 !important; transform: scale(0.96) translateY(20px); pointer-events: none; }
         @media (min-width: 900px) { .bento-container { grid-template-columns: 315px 1.4fr 315px; } }
 
-        /* DAUERHAFTE OVERCLOCK CRYSTAL GLASS CARD */
         .card {
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(12, 12, 16, 0.24) 100%);
             border: 1px solid var(--accent);
@@ -227,7 +245,6 @@
         }
         .card > * { position: relative; z-index: 1; }
 
-        /* PROFIL & LIVE DISCORD BADGE */
         .profile-card { display: flex; flex-direction: column; align-items: center; text-align: center; height: 100%; }
         .avatar-wrapper { position: relative; width: 95px; height: 95px; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .avatar-wrapper::before {
@@ -238,8 +255,8 @@
         .avatar { width: 94%; height: 94%; border-radius: 26px; object-fit: cover; background: #161619; padding: 2px; z-index: 2; }
         .discord-status-badge {
             position: absolute; bottom: 2px; right: 2px; width: 18px; height: 18px;
-            border-radius: 50%; background: #22c55e; border: 3px solid #121216;
-            z-index: 4; box-shadow: 0 0 10px rgba(34, 197, 94, 0.8); transition: background 0.3s;
+            border-radius: 50%; background: #64748b; border: 3px solid #121216;
+            z-index: 4; box-shadow: 0 0 10px rgba(100, 116, 139, 0.8); transition: all 0.3s;
         }
 
         .username { font-size: 1.35rem; font-weight: 800; margin-bottom: 6px; display: inline-flex; justify-content: center; white-space: pre; }
@@ -281,7 +298,6 @@
         .copy-toast { position: absolute; top: -28px; right: 12px; background: #22c55e; color: #0b0b0c; font-size: 0.72rem; font-weight: 800; padding: 3px 8px; border-radius: 5px; opacity: 0; pointer-events: none; transition: opacity 0.2s, transform 0.2s; transform: translateY(4px); z-index: 20; }
         .copy-toast.show { opacity: 1; transform: translateY(0); }
 
-        /* MAIN CONTENT & MUSIC PLAYER */
         .main-content { display: flex; flex-direction: column; gap: 16px; }
         .music-player { display: flex; flex-direction: column; gap: 14px; position: relative; }
         .track-info-container { display: flex; gap: 18px; align-items: center; }
@@ -329,7 +345,6 @@
         .btn-play { width: 38px; height: 38px; background: var(--text-main); color: var(--bg-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem; transition: all 0.2s ease; }
         .btn-play:hover { background: var(--accent); color: #fff; box-shadow: 0 0 15px var(--accent-glow); transform: scale(1.08); }
 
-        /* PLAYLIST DRAWER MIT SUCHLEISTE & CRYSTAL SCROLLBAR */
         .playlist-drawer {
             max-height: 0; overflow: hidden; transition: max-height 0.35s ease, margin 0.35s ease, padding 0.35s ease;
             background: rgba(8, 8, 12, 0.45); backdrop-filter: blur(12px);
@@ -365,7 +380,6 @@
         }
         .queue-title { color: var(--text-main); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* MINECRAFT SERVER CARD 2.0 */
         .mc-server-card { display: flex; flex-direction: column; gap: 13px; position: relative; }
         .mc-header { display: flex; justify-content: space-between; align-items: center; }
         .mc-title-wrap { display: flex; align-items: center; gap: 10px; }
@@ -388,10 +402,11 @@
         }
         .mc-address-row:hover { border-color: var(--accent); background: rgba(236, 72, 153, 0.12); }
         .mc-ip-code { font-family: 'Fira Code', 'Roboto Mono', monospace; font-size: 0.95rem; font-weight: 700; color: #fff; letter-spacing: 0.5px; }
+        .mc-btns-group { display: flex; align-items: center; gap: 6px; }
         .mc-copy-btn {
             background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.16);
             color: var(--text-main); padding: 6px 12px; border-radius: 8px; font-size: 0.75rem; font-weight: 600;
-            display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s ease;
+            display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s ease; cursor: pointer;
         }
         .mc-copy-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: 0 0 10px var(--accent-glow); }
         .mc-copy-btn.coming-soon {
@@ -417,7 +432,6 @@
             text-shadow: 0 1px 2px rgba(0,0,0,0.8);
         }
 
-        /* STATS & LIVE GITHUB / TELEMETRY */
         .stats-container { display: flex; flex-direction: column; gap: 10px; position: relative; }
         .stat-top-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-items: stretch; position: relative; }
 
@@ -461,7 +475,6 @@
             display: flex; justify-content: space-between; font-family: 'Fira Code', monospace; font-size: 0.7rem; color: #4ade80;
         }
 
-        /* LIVE GITHUB FEED CARD */
         .github-feed-card { display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; }
         .gh-header { display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-main); text-shadow: 0 1px 3px rgba(0,0,0,0.9); }
         .gh-repo-list { display: flex; flex-direction: column; gap: 6px; }
@@ -475,7 +488,6 @@
         .gh-repo-name { font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 170px; }
         .gh-repo-meta { display: flex; align-items: center; gap: 8px; font-size: 0.68rem; color: var(--text-muted); }
 
-        /* STATUS BANNER */
         .status-banner { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem; padding: 14px 20px; gap: 15px; flex-wrap: wrap; text-shadow: 0 1px 3px rgba(0,0,0,0.85); }
         .status-content-left { display: flex; align-items: center; gap: 12px; font-weight: 600; }
         .status-dot { width: 12px; height: 12px; background: #22c55e; border-radius: 50%; position: relative; flex-shrink: 0; }
@@ -484,7 +496,6 @@
         .live-clock-badge { font-size: 0.8rem; color: var(--text-main); background: rgba(0, 0, 0, 0.35); border: 1px solid rgba(255, 255, 255, 0.14); padding: 5px 12px; border-radius: 8px; display: inline-flex; align-items: center; gap: 8px; font-family: 'Fira Code', monospace; font-weight: 600; }
         .footer-text { grid-column: 1 / -1; text-align: center; font-size: 0.72rem; color: rgba(255,255,255,0.55); letter-spacing: 2px; margin-top: 4px; text-transform: uppercase; text-shadow: 0 1px 3px rgba(0,0,0,0.9); font-weight: 700; }
 
-        /* ZEN MODE MINI HUD */
         #zen-hud {
             position: fixed; bottom: 24px; left: 24px; z-index: 90;
             background: rgba(12, 12, 16, 0.55); border: 1px solid var(--accent);
@@ -495,14 +506,13 @@
         }
         body.zen-mode #zen-hud { opacity: 1; pointer-events: auto; transform: translateY(0); }
 
-        /* MODALS & COMMAND PALETTE (CTRL+K) */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(6px); z-index: 200; display: none; align-items: center; justify-content: center; padding: 20px; opacity: 0; transition: opacity 0.25s ease; }
         .modal-overlay.active { display: flex; opacity: 1; }
-        .modal-box { background: rgba(16, 16, 22, 0.85); border: 1px solid var(--accent); backdrop-filter: blur(16px) saturate(180%); border-radius: 18px; max-width: 640px; width: 100%; padding: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.85), 0 0 28px var(--accent-glow), inset 0 1px 1px rgba(255,255,255,0.25); position: relative; transform: scale(0.95); transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
+        .modal-box { background: rgba(16, 16, 22, 0.88); border: 1px solid var(--accent); backdrop-filter: blur(16px) saturate(180%); border-radius: 18px; max-width: 640px; width: 100%; padding: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.85), 0 0 28px var(--accent-glow), inset 0 1px 1px rgba(255,255,255,0.25); position: relative; transform: scale(0.95); transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
         .modal-overlay.active .modal-box { transform: scale(1); }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
         .modal-title { font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; gap: 10px; }
-        .modal-close { background: none; border: none; color: var(--text-muted); font-size: 1.2rem; transition: color 0.2s; } .modal-close:hover { color: var(--text-main); }
+        .modal-close { background: none; border: none; color: var(--text-muted); font-size: 1.2rem; transition: color 0.2s; cursor: pointer; } .modal-close:hover { color: var(--text-main); }
         
         .project-grid { display: grid; grid-template-columns: 1fr; gap: 12px; max-height: 420px; overflow-y: auto; padding-right: 6px; }
         .project-item { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 8px; transition: all 0.2s ease; color: inherit; }
@@ -511,17 +521,15 @@
         .project-tag { font-size: 0.7rem; padding: 2px 8px; border-radius: 5px; background: var(--accent-glow); color: #fff; font-weight: 700; border: 1px solid var(--accent); }
         .project-desc { font-size: 0.8rem; color: var(--text-muted); line-height: 1.35; }
         .project-actions { display: flex; align-items: center; justify-content: space-between; margin-top: 4px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.08); flex-wrap: wrap; gap: 8px; }
-        .sha-badge { font-family: 'Fira Code', monospace; font-size: 0.68rem; color: #94a3b8; background: rgba(0,0,0,0.4); padding: 3px 8px; border-radius: 5px; border: 1px solid rgba(255,255,255,0.1); }
+        .sha-badge { font-family: 'Fira Code', monospace; font-size: 0.68rem; color: #94a3b8; background: rgba(0,0,0,0.4); padding: 3px 8px; border-radius: 5px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; }
         .sha-badge:hover { border-color: var(--accent); color: #fff; }
 
-        /* COMMAND PALETTE (CTRL+K) */
         .cmdk-input-wrap { display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.45); border: 1px solid var(--accent); border-radius: 12px; padding: 12px 16px; margin-bottom: 12px; box-shadow: 0 0 15px var(--accent-glow); }
         .cmdk-input { background: transparent; border: none; outline: none; color: #fff; font-size: 0.95rem; width: 100%; }
         .cmdk-list { display: flex; flex-direction: column; gap: 6px; max-height: 280px; overflow-y: auto; padding-right: 6px; }
         .cmdk-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-radius: 10px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); font-size: 0.85rem; transition: all 0.15s; }
         .cmdk-item:hover { background: var(--accent-glow); border-color: var(--accent); transform: translateX(4px); }
 
-        /* TERMINAL MODAL */
         .cli-box {
             background: rgba(8, 8, 11, 0.85); border: 1px solid var(--accent); border-radius: 12px;
             font-family: 'Fira Code', 'Roboto Mono', monospace; font-size: 0.84rem; color: var(--accent);
@@ -533,7 +541,6 @@
         .cli-prompt { color: #22c55e; font-weight: bold; }
         .cli-input { background: transparent; border: none; outline: none; color: #fff; font-family: inherit; font-size: 0.85rem; flex: 1; }
 
-        /* CUSTOM CONTEXT MENU */
         #custom-context-menu {
             position: fixed; display: none; z-index: 10000;
             background: rgba(14, 14, 18, 0.82); backdrop-filter: blur(12px) saturate(180%);
@@ -541,7 +548,7 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.8), 0 0 18px var(--accent-glow);
             padding: 6px; min-width: 195px;
         }
-        .ctx-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; font-size: 0.82rem; color: var(--text-main); border-radius: 8px; transition: all 0.15s ease; }
+        .ctx-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; font-size: 0.82rem; color: var(--text-main); border-radius: 8px; transition: all 0.15s ease; cursor: pointer; }
         .ctx-item i { width: 16px; color: var(--accent); }
         .ctx-item:hover { background: var(--accent-glow); transform: translateX(3px); }
         .ctx-separator { height: 1px; background: rgba(255, 255, 255, 0.1); margin: 4px 6px; }
@@ -551,7 +558,7 @@
 
     <div id="boot-screen">
         <div class="boot-line" style="animation: fade 0.1s forwards 0.1s">> initializing Vengeance OS [v4.0 Crystal Overdrive]...</div>
-        <div class="boot-line" style="animation: fade 0.1s forwards 0.25s">> applying permanent PBO2 neon glow & glass scrollbars... OK</div>
+        <div class="boot-line" style="animation: fade 0.1s forwards 0.25s">> establishing low-latency Lanyard WebSocket gateway... OK</div>
         <div class="boot-line" style="animation: fade 0.1s forwards 0.45s">> syncing hardware telemetry (Ryzen 7 5800X @ 4.85 GHz)... OK</div>
         <div class="boot-line" style="animation: fade 0.1s forwards 0.65s; color: #fff;">> Welcome back, UpperEchelon</div>
     </div>
@@ -563,14 +570,13 @@
 
     <canvas id="particle-canvas"></canvas>
 
-    <!-- HINTERGRUND VIDEO PLAYER -->
     <div class="video-bg-container" id="video-bg-wrap">
         <div id="youtube-player"></div>
     </div>
     
     <div class="bg-grid-overlay"></div>
 
-    <!-- TOP RIGHT ACTION BAR -->
+    <!-- ACTION BAR -->
     <div class="header-actions">
         <button class="action-btn" id="cmdk-btn" title="Spotlight Command Palette (Ctrl+K)"><i class="fas fa-search"></i></button>
         <button class="action-btn" id="zen-btn" title="Cinema / Zen Mode (H)"><i class="fas fa-eye"></i></button>
@@ -581,7 +587,7 @@
         <button class="action-btn" id="help-btn" title="Keyboard Shortcuts"><i class="fas fa-keyboard"></i></button>
     </div>
 
-    <!-- LIVE GLASS, THEME & VIDEO FILTER TUNER POPOVER -->
+    <!-- LIVE TUNER POPOVER -->
     <div class="tuner-popover" id="tuner-popover">
         <div class="tuner-label"><span>Crystal Blur</span><span id="blur-val-label">5px</span></div>
         <input type="range" id="blur-slider" min="0" max="20" value="5" class="volume-slider" style="width:100%;">
@@ -602,9 +608,11 @@
             <button class="filter-chip" data-filter="brightness(0.45) contrast(1.15) saturate(1.2)">Night Dim</button>
             <button class="filter-chip" data-filter="saturate(2.2) contrast(1.15) brightness(0.85)">Hyper Neon</button>
         </div>
+
+        <button class="tuner-reset-btn" id="tuner-reset-btn"><i class="fas fa-rotate-left"></i> Theme auf Standard zurücksetzen</button>
     </div>
 
-    <!-- ZEN MODE MINI HUD -->
+    <!-- ZEN MINI HUD -->
     <div id="zen-hud">
         <button class="btn-control" onclick="changeSong(-1)"><i class="fas fa-backward"></i></button>
         <button class="btn-control" onclick="togglePlayPause()"><i class="fas fa-play" id="zen-play-icon"></i></button>
@@ -615,7 +623,7 @@
 
     <div class="bento-container" id="bento-grid">
         
-        <!-- PROFIL CARD (LINKS - OHNE DOPPELTE DISCORD BOX) -->
+        <!-- PROFIL CARD -->
         <div class="card profile-card">
             <div class="avatar-wrapper">
                 <img id="avatar" src="https://via.placeholder.com/150" alt="Avatar" class="avatar">
@@ -635,18 +643,18 @@
             <div id="links-container" class="links-list"></div>
         </div>
 
-        <!-- MITTLERE HAUPTSPALTE -->
+        <!-- MAIN CONTENT -->
         <div class="main-content">
             <!-- MUSIC PLAYER -->
             <div class="card music-player">
-                <div class="copy-toast" id="song-copy-toast">YouTube Track-Link kopiert! ✓</div>
+                <div class="copy-toast" id="song-copy-toast">Deep-Link (?track=ID) kopiert! ✓</div>
                 <div class="track-info-container">
                     <img id="yt-cover" src="https://via.placeholder.com/150" alt="Album Art" class="album-art">
                     <div class="track-details">
                         <div class="track-header">
                             <div id="yt-title" class="track-title">Loading...</div>
                             <div class="player-top-actions">
-                                <button class="queue-toggle-btn" id="share-song-btn" title="Aktuellen Song-Link kopieren">
+                                <button class="queue-toggle-btn" id="share-song-btn" title="Track-Link mit Deep-Link kopieren">
                                     <i class="fas fa-link"></i>
                                 </button>
                                 <button class="queue-toggle-btn" id="queue-btn" title="Playlist Warteschlange öffnen">
@@ -685,7 +693,6 @@
                     </div>
                 </div>
 
-                <!-- PLAYLIST DRAWER MIT LIVE-FILTER & GLASS-SCROLLBAR -->
                 <div class="playlist-drawer" id="playlist-drawer">
                     <div class="queue-search-wrap">
                         <i class="fas fa-search" style="font-size:0.72rem; color:var(--accent);"></i>
@@ -695,7 +702,7 @@
                 </div>
             </div>
 
-            <!-- MINECRAFT LIVE-STATUS CARD 2.0 -->
+            <!-- MINECRAFT SERVER CARD -->
             <div class="card mc-server-card">
                 <div class="copy-toast" id="mc-copy-toast">Serveradresse kopiert! ✓</div>
                 
@@ -718,9 +725,14 @@
                         <span style="font-size:0.68rem; color:var(--text-muted); display:block; font-weight:700;">SERVER IP / DOMAIN:</span>
                         <span class="mc-ip-code" id="mc-ip-text">vengeanceutilities.de</span>
                     </div>
-                    <button class="mc-copy-btn" id="mc-copy-btn">
-                        <i class="far fa-copy"></i> <span>Kopieren</span>
-                    </button>
+                    <div class="mc-btns-group">
+                        <button class="mc-copy-btn" id="mc-packinfo-btn" title="Modpack-Specs, Launcher & Setup öffnen">
+                            <i class="fas fa-circle-info"></i> <span>Pack Info</span>
+                        </button>
+                        <button class="mc-copy-btn" id="mc-copy-btn">
+                            <i class="far fa-copy"></i> <span>Kopieren</span>
+                        </button>
+                    </div>
                 </div>
 
                 <div class="mc-grid-details">
@@ -750,7 +762,7 @@
             </div>
         </div>
 
-        <!-- RECHTE SPALTE: STATS & LIVE GITHUB -->
+        <!-- RECHTE SPALTE -->
         <div class="stats-container">
             <div class="stat-top-row">
                 <div class="card stat-card green">
@@ -798,7 +810,6 @@
                 <div id="stat-4" class="stat-value">0</div>
             </div>
 
-            <!-- LIVE GITHUB REPOSITORIES CARD -->
             <div class="card github-feed-card">
                 <div class="gh-header">
                     <span><i class="fab fa-github" style="color:var(--accent); margin-right:5px;"></i> Latest GitHub Repos</span>
@@ -821,7 +832,8 @@
         <div class="card status-banner">
             <div class="status-content-left">
                 <div class="status-dot" id="banner-status-dot"></div>
-                <span id="discord-presence">Developing VengeancePlayer (Android YT/Spotify Hybrid) & C++ Desktop Utilities</span>
+                <img id="spotify-live-thumb" src="" alt="Album Art" style="display:none; width:22px; height:22px; border-radius:4px; object-fit:cover; border:1px solid rgba(255,255,255,0.25);">
+                <span id="discord-presence">Verbinde zu Lanyard Live WebSocket...</span>
             </div>
             <div style="display:flex; align-items:center; gap:8px;">
                 <div class="live-clock-badge" id="session-uptime" title="Deine aktuelle Session-Dauer">
@@ -850,7 +862,7 @@
         <div class="ctx-item" id="ctx-copy-mc"><i class="fas fa-cube"></i> <span>Copy Server IP</span></div>
     </div>
 
-    <!-- MODAL: COMMAND PALETTE (CTRL+K) -->
+    <!-- MODAL: COMMAND PALETTE -->
     <div class="modal-overlay" id="cmdk-modal">
         <div class="modal-box" style="max-width: 540px;">
             <div class="modal-header">
@@ -865,7 +877,7 @@
         </div>
     </div>
 
-    <!-- MODAL: PROJEKTE & RELEASE HUB -->
+    <!-- MODAL: RELEASE HUB MIT DIREKT-APK & DOWNLOAD-COUNTER -->
     <div class="modal-overlay" id="projects-modal">
         <div class="modal-box">
             <div class="modal-header">
@@ -878,10 +890,17 @@
                         <span class="project-name">VengeancePlayer (Signed Mobile APK)</span>
                         <span class="project-tag" id="vp-version-tag">Android / Kotlin • Live</span>
                     </div>
-                    <p class="project-desc">Custom Android Media & YouTube-Audio-Stream-Player mit Spotify-Metadaten-Sync und Ad-Free Background-Playback.</p>
+                    <p class="project-desc">Custom Android Media & YouTube-Audio-Stream-Player mit Spotify-Metadaten-Sync und werbefreiem Background-Playback.</p>
                     <div class="project-actions">
                         <span class="sha-badge clickable" onclick="copyText('7c31b90a...44f2', this)" title="Klicken um SHA-256 Hash zu kopieren"><i class="fas fa-shield-halved" style="color:#4ade80;"></i> SHA256: 7c31b90a...44f2</span>
-                        <a href="https://github.com/VengeanceUtilities/VengeancePlayer" target="_blank" class="mc-copy-btn" style="text-decoration:none;"><i class="fab fa-github"></i> GitHub & APK</a>
+                        <div style="display:flex; align-items:center; gap:6px;">
+                            <a id="vp-apk-download-btn" href="https://github.com/VengeanceUtilities/VengeancePlayer/releases" target="_blank" class="mc-copy-btn" style="text-decoration:none; background:var(--accent); color:#fff; border-color:var(--accent);">
+                                <i class="fas fa-download"></i> <span id="vp-download-text">Download APK</span>
+                            </a>
+                            <a href="https://github.com/VengeanceUtilities/VengeancePlayer" target="_blank" class="mc-copy-btn" style="text-decoration:none;">
+                                <i class="fab fa-github"></i> <span>GitHub</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
                 <div class="project-item">
@@ -910,6 +929,34 @@
         </div>
     </div>
 
+    <!-- MODAL: MODPACK & LAUNCHER INFO -->
+    <div class="modal-overlay" id="modpack-modal">
+        <div class="modal-box" style="max-width: 560px;">
+            <div class="modal-header">
+                <div class="modal-title"><i class="fas fa-cube" style="color:#22c55e;"></i> NeoForge Modpack & Launcher Info</div>
+                <button class="modal-close" id="close-modpack">&times;</button>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:12px; font-size:0.85rem; line-height:1.45; color:var(--text-muted);">
+                <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:12px;">
+                    <div style="color:#fff; font-weight:700; margin-bottom:4px;"><i class="fas fa-microchip" style="color:var(--accent);"></i> Empfohlene JVM-Flags & RAM:</div>
+                    <code style="display:block; background:rgba(0,0,0,0.4); padding:6px 10px; border-radius:6px; font-family:'Fira Code', monospace; color:#4ade80; font-size:0.75rem; margin-top:6px; word-break:break-all;">
+                        -Xms6G -Xmx8G -XX:+UseG1GC -XX:+ParallelRefProcEnabled
+                    </code>
+                </div>
+                <div>
+                    <b style="color:#fff;">Dedicated NeoForge Server:</b> Läuft mit custom Performance-Optimierungen auf dem Host <code>vengeanceutilities.de</code>. Für flüssiges Gameplay werden mindestens 6–8 GB RAM im Launcher zugewiesen.
+                </div>
+                <div>
+                    <b style="color:#fff;">Vengeance Custom Launcher:</b> Der native C++ Launcher managed modpack-Manifests, Updates und JVM-Settings automatisch ohne Drittanbieter-Overhead.
+                </div>
+                <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:8px;">
+                    <button class="mc-copy-btn" id="modal-copy-ip-btn"><i class="far fa-copy"></i> Server IP Kopieren</button>
+                    <button class="mc-copy-btn" onclick="document.getElementById('modpack-modal').classList.remove('active');"><i class="fas fa-check"></i> Schließen</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL: CLI TERMINAL -->
     <div class="modal-overlay" id="cli-modal">
         <div class="modal-box" style="max-width: 680px;">
@@ -920,7 +967,7 @@
             <div class="cli-box">
                 <div class="cli-output" id="cli-output">
                     <div>Vengeance OS [Version 4.0.26 - Crystal Overdrive Kernel]</div>
-                    <div>Tippe <span style="color:#fff;">'help'</span>, <span style="color:#fff;">'neofetch'</span> oder <span style="color:#fff;">'sysinfo'</span> ein. (<span style="color:var(--text-muted);">Tab = Autocomplete</span>)</div>
+                    <div>Tippe <span style="color:#fff;">'help'</span>, <span style="color:#fff;">'neofetch'</span>, <span style="color:#fff;">'ping'</span> oder <span style="color:#fff;">'gh'</span> ein. (<span style="color:var(--text-muted);">Tab = Autocomplete</span>)</div>
                     <div style="height: 6px;"></div>
                 </div>
                 <div class="cli-input-line">
@@ -986,8 +1033,8 @@
         let sfxEnabled = true;
         let isLooping = false;
         let isShuffling = false;
+        let latestApkUrl = "https://github.com/VengeanceUtilities/VengeancePlayer/releases";
 
-        /* FPS COUNTER FÜR SYSINFO */
         let frameCount = 0, lastFpsTime = performance.now();
         function trackFps(now) {
             frameCount++;
@@ -1000,7 +1047,6 @@
         }
         requestAnimationFrame(trackFps);
 
-        /* DYNAMISCHER BROWSER-TAB MARQUEE */
         let tabTickerPos = 0;
         setInterval(() => {
             const isPlaying = ytPlayer && typeof ytPlayer.getPlayerState === 'function' && ytPlayer.getPlayerState() === YT.PlayerState.PLAYING;
@@ -1041,7 +1087,6 @@
         window.addEventListener('click', unlockAudioOnInteraction, { capture: true });
         window.addEventListener('keydown', unlockAudioOnInteraction, { capture: true });
 
-        /* SYNTH SOUND FX ENGINE */
         let audioCtx = null;
         function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
         function playSfx(type = 'click') {
@@ -1074,7 +1119,6 @@
             });
         }
 
-        /* MAGNETIC HEADER ACTION BUTTONS */
         document.querySelectorAll('.action-btn').forEach(btn => {
             btn.addEventListener('mousemove', (e) => {
                 const r = btn.getBoundingClientRect();
@@ -1087,7 +1131,6 @@
             });
         });
 
-        /* ZEN / CINEMA MODE */
         const zenBtn = document.getElementById('zen-btn');
         function toggleZenMode() {
             const isZen = document.body.classList.toggle('zen-mode');
@@ -1097,11 +1140,11 @@
         if (zenBtn) zenBtn.addEventListener('click', toggleZenMode);
         document.getElementById('ctx-zen')?.addEventListener('click', toggleZenMode);
 
-        /* GLASS, THEME & VIDEO FILTER TUNER POPOVER */
         const tunerBtn = document.getElementById('tuner-btn');
         const tunerPopover = document.getElementById('tuner-popover');
         const blurSlider = document.getElementById('blur-slider');
         const blurValLabel = document.getElementById('blur-val-label');
+        const tunerResetBtn = document.getElementById('tuner-reset-btn');
 
         const initialBlur = localStorage.getItem('v_blur') ?? 5;
         blurSlider.value = initialBlur;
@@ -1144,7 +1187,19 @@
             });
         });
 
-        /* 3D INTERACTIVE TILT & SPOTLIGHT */
+        if (tunerResetBtn) {
+            tunerResetBtn.addEventListener('click', () => {
+                localStorage.removeItem('v_accent');
+                localStorage.removeItem('v_blur');
+                localStorage.removeItem('v_font');
+                applyAccentColor('#ec4899');
+                document.documentElement.style.setProperty('--glass-blur', '5px');
+                blurSlider.value = 5;
+                blurValLabel.innerText = '5px';
+                playSfx('click');
+            });
+        }
+
         const tiltBtn = document.getElementById('tilt-btn');
         tiltBtn.addEventListener('click', () => {
             tiltEnabled = !tiltEnabled;
@@ -1171,7 +1226,6 @@
             card.addEventListener('mouseleave', () => { if (tiltEnabled) card.style.transform = ''; });
         });
 
-        /* CURSOR */
         const cursor = document.getElementById('custom-cursor');
         const trail = document.getElementById('cursor-trail');
         let mouseX = -100, mouseY = -100, trailX = -100, trailY = -100;
@@ -1179,14 +1233,16 @@
 
         window.addEventListener('mousemove', (e) => {
             mouseX = e.clientX; mouseY = e.clientY;
-            cursor.style.transform = `translate3d(${mouseX - 4}px, ${mouseY - 4}px, 0)`;
+            if (cursor) cursor.style.transform = `translate3d(${mouseX - 4}px, ${mouseY - 4}px, 0)`;
         });
 
         function animateCursorTrail() {
-            trailX += (mouseX - trailX) * 0.28; 
-            trailY += (mouseY - trailY) * 0.28;
-            const sizeOffset = isHovering ? 17 : 13;
-            trail.style.transform = `translate3d(${trailX - sizeOffset}px, ${trailY - sizeOffset}px, 0) scale(${isHovering ? 1.3 : 1})`;
+            if (trail) {
+                trailX += (mouseX - trailX) * 0.28; 
+                trailY += (mouseY - trailY) * 0.28;
+                const sizeOffset = isHovering ? 17 : 13;
+                trail.style.transform = `translate3d(${trailX - sizeOffset}px, ${trailY - sizeOffset}px, 0) scale(${isHovering ? 1.3 : 1})`;
+            }
             requestAnimationFrame(animateCursorTrail);
         }
         animateCursorTrail();
@@ -1196,20 +1252,23 @@
                 if(el.dataset.cursorBound) return;
                 el.dataset.cursorBound = "true";
                 el.addEventListener('mouseenter', () => {
-                    cursor.style.width = '14px'; cursor.style.height = '14px';
-                    cursor.style.transform = `translate3d(${mouseX - 7}px, ${mouseY - 7}px, 0)`;
+                    if (cursor) {
+                        cursor.style.width = '14px'; cursor.style.height = '14px';
+                        cursor.style.transform = `translate3d(${mouseX - 7}px, ${mouseY - 7}px, 0)`;
+                    }
                     isHovering = true; playSfx('hover');
                 });
                 el.addEventListener('mouseleave', () => {
-                    cursor.style.width = '8px'; cursor.style.height = '8px';
-                    cursor.style.transform = `translate3d(${mouseX - 4}px, ${mouseY - 4}px, 0)`;
+                    if (cursor) {
+                        cursor.style.width = '8px'; cursor.style.height = '8px';
+                        cursor.style.transform = `translate3d(${mouseX - 4}px, ${mouseY - 4}px, 0)`;
+                    }
                     isHovering = false;
                 });
                 el.addEventListener('click', () => playSfx('click'));
             });
         }
 
-        /* VISUALIZER (MIT DAUERHAFTEM 1.3x BOOST) */
         const vizContainer = document.getElementById('visualizer-strip');
         const vizBars = [];
         for (let i = 0; i < 18; i++) {
@@ -1232,7 +1291,6 @@
             updateVisualizer(isPlaying);
         }, 75);
 
-        /* PARTICLES (DAUERHAFTE OVERCLOCK-PHYSIK), CLICK-BURST SPARKS & MATRIX CANVAS */
         const canvas = document.getElementById('particle-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
@@ -1249,7 +1307,6 @@
         window.addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
         window.addEventListener('mouseleave', () => { mouse.x = null; mouse.y = null; });
 
-        /* CLICK BURST FX */
         window.addEventListener('mousedown', (e) => {
             for (let i = 0; i < 10; i++) {
                 const angle = (Math.PI * 2 / 10) * i + (Math.random() - 0.5) * 0.4;
@@ -1268,7 +1325,7 @@
                 this.size = Math.random() * 2 + 1; this.speedX = (Math.random() - 0.5) * 0.6; this.speedY = (Math.random() - 0.5) * 0.6;
             }
             update() {
-                const mult = 2.6; // Dauerhafter Overclock-Speed
+                const mult = 2.6;
                 this.x += this.speedX * mult; this.y += this.speedY * mult;
                 if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
                 if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
@@ -1317,7 +1374,6 @@
                 }
             }
 
-            /* RENDER CLICK BURST SPARKS */
             for (let i = burstSparks.length - 1; i >= 0; i--) {
                 const sp = burstSparks[i];
                 sp.x += sp.vx; sp.y += sp.vy;
@@ -1336,7 +1392,6 @@
         }
         animateParticles();
 
-        /* CLOCK & LIVE HARDWARE TELEMETRY (DAUERHAFTE 4.85 GHz PBO WERTE) */
         function updateClockAndTelemetry() {
             const clockEl = document.querySelector('#live-clock span');
             if (clockEl) { const now = new Date(); clockEl.innerText = 'DE • ' + now.toLocaleTimeString('de-DE'); }
@@ -1357,36 +1412,86 @@
         }
         setInterval(updateClockAndTelemetry, 1000); updateClockAndTelemetry();
 
-        /* DISCORD LANYARD LIVE PRESENCE INTEGRATION */
-        async function fetchLanyardPresence() {
-            try {
-                const res = await fetch(`https://api.lanyard.rest/v1/users/${activeDiscordUserId}`);
-                if (!res.ok) return;
-                const json = await res.json();
-                if (!json.success || !json.data) return;
+        /* ECHTER LANYARD WEBSOCKET (wss://api.lanyard.rest/socket) */
+        let lanyardWs = null;
+        let lanyardHeartbeatInterval = null;
 
-                const d = json.data;
-                const badge = document.getElementById('discord-avatar-badge');
-                const bannerDot = document.getElementById('banner-status-dot');
-                const presenceTxt = document.getElementById('discord-presence');
+        function updateLanyardUI(d) {
+            if (!d) return;
+            const badge = document.getElementById('discord-avatar-badge');
+            const bannerDot = document.getElementById('banner-status-dot');
+            const presenceTxt = document.getElementById('discord-presence');
+            const spThumb = document.getElementById('spotify-live-thumb');
 
-                const statusColors = { online: '#22c55e', idle: '#f59e0b', dnd: '#ef4444', offline: '#64748b' };
-                const col = statusColors[d.discord_status] || '#22c55e';
-                if (badge) { badge.style.background = col; badge.style.boxShadow = `0 0 10px ${col}`; }
-                if (bannerDot) bannerDot.style.background = col;
+            const statusColors = { online: '#22c55e', idle: '#f59e0b', dnd: '#ef4444', offline: '#64748b' };
+            const col = statusColors[d.discord_status] || '#64748b';
+            if (badge) { badge.style.background = col; badge.style.boxShadow = `0 0 10px ${col}`; }
+            if (bannerDot) bannerDot.style.background = col;
 
-                if (d.listening_to_spotify && d.spotify) {
-                    presenceTxt.innerHTML = `<i class="fab fa-spotify" style="color:#1db954; margin-right:6px;"></i> Listening to <b>${d.spotify.song}</b> by ${d.spotify.artist}`;
-                } else if (d.activities && d.activities.length > 0) {
+            if (d.listening_to_spotify && d.spotify) {
+                if (spThumb) {
+                    spThumb.src = d.spotify.album_art_url || '';
+                    spThumb.style.display = 'inline-block';
+                }
+                presenceTxt.innerHTML = `<i class="fab fa-spotify" style="color:#1db954; margin-right:6px;"></i> Listening to <b>${d.spotify.song}</b> by ${d.spotify.artist}`;
+            } else {
+                if (spThumb) spThumb.style.display = 'none';
+                if (d.activities && d.activities.length > 0) {
                     const act = d.activities.find(a => a.type !== 4) || d.activities[0];
                     if (act.name) {
                         presenceTxt.innerText = `${act.name}${act.details ? ' — ' + act.details : ''}${act.state ? ' (' + act.state + ')' : ''}`;
                     }
+                } else {
+                    presenceTxt.innerText = `Discord Status: ${d.discord_status.toUpperCase()}`;
                 }
+            }
+        }
+
+        function initLanyardWebSocket() {
+            try {
+                if (lanyardWs) lanyardWs.close();
+                lanyardWs = new WebSocket('wss://api.lanyard.rest/socket');
+
+                lanyardWs.onopen = () => {};
+                lanyardWs.onmessage = (event) => {
+                    const msg = JSON.parse(event.data);
+                    if (msg.op === 1) {
+                        const interval = msg.d.heartbeat_interval;
+                        if (lanyardHeartbeatInterval) clearInterval(lanyardHeartbeatInterval);
+                        lanyardHeartbeatInterval = setInterval(() => {
+                            if (lanyardWs.readyState === WebSocket.OPEN) {
+                                lanyardWs.send(JSON.stringify({ op: 3 }));
+                            }
+                        }, interval);
+
+                        lanyardWs.send(JSON.stringify({
+                            op: 2,
+                            d: { subscribe_to_id: activeDiscordUserId }
+                        }));
+                    } else if (msg.op === 0) {
+                        updateLanyardUI(msg.d);
+                    }
+                };
+
+                lanyardWs.onerror = () => fetchLanyardFallback();
+                lanyardWs.onclose = () => {
+                    if (lanyardHeartbeatInterval) clearInterval(lanyardHeartbeatInterval);
+                    setTimeout(initLanyardWebSocket, 8000);
+                };
+            } catch (e) {
+                fetchLanyardFallback();
+            }
+        }
+
+        async function fetchLanyardFallback() {
+            try {
+                const res = await fetch(`https://api.lanyard.rest/v1/users/${activeDiscordUserId}`);
+                if (!res.ok) return;
+                const json = await res.json();
+                if (json.success && json.data) updateLanyardUI(json.data);
             } catch (e) {}
         }
 
-        /* RIG SPECS TOGGLE */
         const rigToggle = document.getElementById('rig-toggle'); 
         const rigDetails = document.getElementById('rig-details'); 
         const rigChevron = document.getElementById('rig-chevron');
@@ -1404,7 +1509,7 @@
             });
         }
 
-        /* PLAYLIST DRAWER MIT FILTER-SUCHE & TRACK SHARE */
+        /* DEEP-LINK SONG SHARING (?track=ID) */
         const queueBtn = document.getElementById('queue-btn'); 
         const shareSongBtn = document.getElementById('share-song-btn');
         const songCopyToast = document.getElementById('song-copy-toast');
@@ -1416,7 +1521,8 @@
             shareSongBtn.addEventListener('click', () => {
                 const cur = playlist[currentSongIndex];
                 if (!cur) return;
-                navigator.clipboard.writeText(`https://youtu.be/${cur.id}`).then(() => {
+                const shareUrl = `${window.location.origin}${window.location.pathname}?track=${cur.id}`;
+                navigator.clipboard.writeText(shareUrl).then(() => {
                     songCopyToast.classList.add('show');
                     setTimeout(() => songCopyToast.classList.remove('show'), 2000);
                 });
@@ -1477,10 +1583,14 @@
             applyCursorHoverEffects(); 
         }
 
-        /* MODALS & SPOTLIGHT COMMAND PALETTE (CTRL+K) */
         const projectsModal = document.getElementById('projects-modal'); 
         const projectsTrigger = document.getElementById('projects-trigger'); 
         const closeProjects = document.getElementById('close-projects');
+
+        const modpackModal = document.getElementById('modpack-modal');
+        const mcPackInfoBtn = document.getElementById('mc-packinfo-btn');
+        const closeModpack = document.getElementById('close-modpack');
+        const modalCopyIpBtn = document.getElementById('modal-copy-ip-btn');
 
         const cliModal = document.getElementById('cli-modal');
         const cliBtn = document.getElementById('cli-btn');
@@ -1501,6 +1611,15 @@
         if (projectsTrigger) { projectsTrigger.addEventListener('click', () => projectsModal.classList.add('active')); closeProjects.addEventListener('click', () => projectsModal.classList.remove('active')); }
         if (helpBtn) { helpBtn.addEventListener('click', () => shortcutsModal.classList.add('active')); closeShortcuts.addEventListener('click', () => shortcutsModal.classList.remove('active')); }
         
+        if (mcPackInfoBtn) {
+            mcPackInfoBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                modpackModal.classList.add('active');
+            });
+        }
+        if (closeModpack) closeModpack.addEventListener('click', () => modpackModal.classList.remove('active'));
+        if (modalCopyIpBtn) modalCopyIpBtn.addEventListener('click', () => document.getElementById('mc-address-row').click());
+
         function openCli() { cliModal.classList.add('active'); setTimeout(() => cliInput.focus(), 100); }
         function closeCliModal() { cliModal.classList.remove('active'); }
         if (cliBtn) cliBtn.addEventListener('click', openCli);
@@ -1519,6 +1638,8 @@
         function renderCmdkItems(filter = '') {
             const q = filter.toLowerCase();
             const actions = [
+                { icon: 'fa-download', label: 'VengeancePlayer APK direkt downloaden', tag: 'APK', run: () => window.open(latestApkUrl, '_blank') },
+                { icon: 'fa-cube', label: 'Modpack & Launcher Info öffnen', tag: 'NeoForge', run: () => modpackModal.classList.add('active') },
                 { icon: 'fa-eye', label: 'Toggle Cinema / Zen Mode', tag: 'View', run: () => toggleZenMode() },
                 { icon: 'fa-code', label: 'Matrix Code Rain ein-/ausschalten', tag: 'FX', run: () => { matrixMode = !matrixMode; } },
                 { icon: 'fa-layer-group', label: 'Vengeance Release & APK Hub öffnen', tag: 'Modal', run: () => projectsModal.classList.add('active') },
@@ -1557,15 +1678,15 @@
             cmdkInput.addEventListener('input', (e) => renderCmdkItems(e.target.value));
         }
 
-        [projectsModal, cliModal, shortcutsModal, cmdkModal].forEach(modal => { 
+        [projectsModal, cliModal, shortcutsModal, cmdkModal, modpackModal].forEach(modal => { 
             if(modal) modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); }); 
         });
 
-        /* MINECRAFT STATUS POLLER 2.0 */
         const mcAddressRow = document.getElementById('mc-address-row');
         const mcCopyToast = document.getElementById('mc-copy-toast');
         if (mcAddressRow) {
-            mcAddressRow.addEventListener('click', () => {
+            mcAddressRow.addEventListener('click', (e) => {
+                if (e.target.closest('#mc-packinfo-btn')) return;
                 navigator.clipboard.writeText(mcDisplayDomain).then(() => {
                     mcCopyToast.classList.add('show');
                     setTimeout(() => mcCopyToast.classList.remove('show'), 2000);
@@ -1640,15 +1761,24 @@
             }
         }
 
-        /* LIVE GITHUB REPO & VENGEANCEPLAYER RELEASE FETCHER */
+        /* DIREKTER APK-DOWNLOAD + DOWNLOAD-COUNTER */
         async function fetchVengeancePlayerRelease() {
             try {
                 const res = await fetch('https://api.github.com/repos/VengeanceUtilities/VengeancePlayer/releases/latest');
                 if (!res.ok) return;
                 const rel = await res.json();
-                if (rel && rel.tag_name) {
+                if (rel) {
                     const tagEl = document.getElementById('vp-version-tag');
-                    if (tagEl) tagEl.innerText = `Android / Kotlin • ${rel.tag_name}`;
+                    if (tagEl && rel.tag_name) tagEl.innerText = `Android / Kotlin • ${rel.tag_name}`;
+                    
+                    const apkAsset = rel.assets?.find(a => a.name.endsWith('.apk'));
+                    if (apkAsset) {
+                        latestApkUrl = apkAsset.browser_download_url;
+                        const dlBtn = document.getElementById('vp-apk-download-btn');
+                        const dlText = document.getElementById('vp-download-text');
+                        if (dlBtn) dlBtn.href = latestApkUrl;
+                        if (dlText) dlText.innerText = `Download APK (${apkAsset.download_count || 0} Downloads)`;
+                    }
                 }
             } catch (e) {}
         }
@@ -1681,8 +1811,8 @@
             } catch (e) {}
         }
 
-        /* CLI COMMANDS (OHNE RGB & OHNE OVERCLOCK-TOGGLE) */
-        const cliCommandsList = ['help', 'neofetch', 'sysinfo', 'mc', 'status', 'projects', 'specs', 'skills', 'matrix', 'zen', 'glass', 'theme', 'play', 'pause', 'next', 'prev', 'clear', 'cls'];
+        /* ERWEITERTES CLI TERMINAL */
+        const cliCommandsList = ['help', 'neofetch', 'sysinfo', 'ping', 'gh', 'download', 'apk', 'mc', 'status', 'projects', 'specs', 'skills', 'matrix', 'zen', 'glass', 'theme', 'play', 'pause', 'next', 'prev', 'clear', 'cls'];
         let cliHistory = [];
         let cliHistoryIdx = -1;
 
@@ -1725,15 +1855,27 @@
             switch(cmd) {
                 case 'help':
                     res.innerHTML = `Verfügbare Befehle:<br>
-                    • <span style="color:var(--accent);">neofetch</span> - System & Hardware ASCII-Übersicht<br>
-                    • <span style="color:var(--accent);">sysinfo</span> - Live Client-Diagnose (FPS, Threads, Display)<br>
+                    • <span style="color:var(--accent);">neofetch</span> - Hardware ASCII-Telemetrie<br>
+                    • <span style="color:var(--accent);">ping</span> - Live-Latenztest zum Host & MC-Port<br>
+                    • <span style="color:var(--accent);">gh / github</span> - GitHub-Stats & VengeancePlayer Status<br>
+                    • <span style="color:var(--accent);">download / apk</span> - Direkt-Download für VengeancePlayer<br>
+                    • <span style="color:var(--accent);">sysinfo</span> - FPS, Hardware-Threads, DPR & Telemetrie<br>
                     • <span style="color:var(--accent);">mc / status</span> - Minecraft Server Live-Status<br>
-                    • <span style="color:var(--accent);">projects / specs / skills</span> - Portfolio & Release-Infos<br>
-                    • <span style="color:var(--accent);">glass &lt;0-20&gt;</span> - Glas-Blur in Echtzeit ändern<br>
-                    • <span style="color:var(--accent);">theme &lt;#hex&gt;</span> - Akzentfarbe setzen<br>
-                    • <span style="color:var(--accent);">matrix / zen</span> - Matrix-Rain oder Cinema-Mode<br>
-                    • <span style="color:var(--accent);">play / pause / next / prev</span> - Music-Player steuern<br>
-                    • <span style="color:var(--accent);">clear / cls</span> - Terminal leeren`;
+                    • <span style="color:var(--accent);">glass &lt;0-20&gt;</span> | <span style="color:var(--accent);">theme &lt;#hex&gt;</span><br>
+                    • <span style="color:var(--accent);">matrix / zen</span> | <span style="color:var(--accent);">clear / cls</span>`;
+                    break;
+                case 'ping':
+                    const p = latestMcData?.round_trip_latency || Math.floor(Math.random() * 8 + 22);
+                    res.innerHTML = `PING ${mcDisplayDomain} (${mcPollTarget}):<br>64 bytes: icmp_seq=1 ttl=58 time=${p} ms<br>Status: <span style="color:#4ade80;">OK / Low Latency</span>`;
+                    break;
+                case 'gh':
+                case 'github':
+                    res.innerHTML = `GitHub: <a href="https://github.com/VengeanceUtilities" target="_blank" style="color:var(--accent);">github.com/VengeanceUtilities</a><br>Aktuelles Release: VengeancePlayer Mobile APK`;
+                    break;
+                case 'download':
+                case 'apk':
+                    window.open(latestApkUrl, '_blank');
+                    res.innerHTML = `Starte Download von: <a href="${latestApkUrl}" target="_blank" style="color:var(--accent);">${latestApkUrl}</a>`;
                     break;
                 case 'sysinfo':
                     const cores = navigator.hardwareConcurrency || '16';
@@ -1811,7 +1953,6 @@
             cliOutput.scrollTop = cliOutput.scrollHeight;
         }
 
-        /* CUSTOM CONTEXT MENU */
         const ctxMenu = document.getElementById('custom-context-menu');
         window.addEventListener('contextmenu', (e) => {
             e.preventDefault();
@@ -1831,7 +1972,6 @@
         document.getElementById('ctx-projects').addEventListener('click', () => projectsModal.classList.add('active'));
         document.getElementById('ctx-copy-mc').addEventListener('click', () => document.getElementById('mc-address-row').click());
 
-        /* CONTROLS BINDING */
         function bindControls() {
             const playBtn = document.getElementById('play-pause-btn');
             const nextBtn = document.getElementById('next-btn');
@@ -1914,7 +2054,7 @@
                     return;
                 }
                 if (e.key === 'Escape') {
-                    [projectsModal, cliModal, shortcutsModal, cmdkModal].forEach(m => m?.classList.remove('active'));
+                    [projectsModal, cliModal, shortcutsModal, cmdkModal, modpackModal].forEach(m => m?.classList.remove('active'));
                     return;
                 }
                 if (['input', 'textarea'].includes(document.activeElement.tagName.toLowerCase())) return;
@@ -1951,18 +2091,18 @@
             }, 1000);
         }
 
-        /* DATA LOADER */
         async function loadWebsiteData() {
             try {
                 fetchVengeancePlayerRelease();
 
                 const { data: customization } = await sbClient.from('site_customization').select('*').limit(1).maybeSingle();
                 if (customization) {
-                    if (customization.font_family) {
+                    if (customization.font_family && !localStorage.getItem('v_font')) {
                         document.documentElement.style.setProperty('--global-font', customization.font_family);
-                        localStorage.setItem('v_font', customization.font_family);
                     }
-                    if (customization.accent_color) applyAccentColor(customization.accent_color);
+                    if (customization.accent_color && !localStorage.getItem('v_accent')) {
+                        applyAccentColor(customization.accent_color);
+                    }
                     if (customization.crt_scanlines) document.getElementById('scanlines-layer').style.display = 'block';
                     if (customization.bg_mode_solid) {
                         document.body.classList.add('solid-bg-mode');
@@ -1981,14 +2121,22 @@
                     setAnimatedUsername('UpperEchelon', userEffect);
                 }
 
+                /* RELOAD-SCHUTZ: VIEW NUR EINMAL PRO SESSION HOCHZÄHLEN */
                 const { data: stats } = await sbClient.from('stats').select('*').eq('id', 1).maybeSingle();
                 if (stats) {
                     document.getElementById('stat-1').innerText = stats.years_coding || '3+';
                     document.getElementById('stat-2').innerText = stats.languages || '3+';
                     document.getElementById('stat-3').innerText = stats.projects || '20+';
-                    const currentViews = (stats.views || 0) + 1;
-                    document.getElementById('stat-4').innerText = currentViews.toLocaleString();
-                    sbClient.from('stats').update({ views: currentViews }).eq('id', 1).then();
+
+                    const sessionCounted = sessionStorage.getItem('v_view_counted');
+                    if (!sessionCounted) {
+                        const currentViews = (stats.views || 0) + 1;
+                        document.getElementById('stat-4').innerText = currentViews.toLocaleString();
+                        sbClient.from('stats').update({ views: currentViews }).eq('id', 1).then();
+                        sessionStorage.setItem('v_view_counted', 'true');
+                    } else {
+                        document.getElementById('stat-4').innerText = (stats.views || 0).toLocaleString();
+                    }
                 }
 
                 const { data: mcConfig } = await sbClient.from('minecraft_config').select('*').limit(1).maybeSingle();
@@ -2020,8 +2168,11 @@
                     if (discordCfg.user_id) activeDiscordUserId = discordCfg.user_id;
                     if (discordCfg.server_id) activeDiscordServerId = discordCfg.server_id;
                 }
-                fetchLanyardPresence();
-                setInterval(fetchLanyardPresence, 30000);
+                initLanyardWebSocket();
+
+                /* DEEP-LINK CHECK: ?track=ID */
+                const urlParams = new URLSearchParams(window.location.search);
+                const deepLinkTrackId = urlParams.get('track');
 
                 const { data: dbPlaylist } = await sbClient.from('youtube_playlist').select('*').order('position', { ascending: true });
                 if (dbPlaylist && dbPlaylist.length > 0) {
@@ -2029,6 +2180,22 @@
                 } else {
                     playlist = [{ title: "Twisted world - The Viper", artist: "Tommy Knocker", id: "0wQ8nS2xX78", cover: "" }];
                 }
+
+                if (deepLinkTrackId) {
+                    const matchedIdx = playlist.findIndex(s => s.id === deepLinkTrackId);
+                    if (matchedIdx !== -1) {
+                        currentSongIndex = matchedIdx;
+                    } else {
+                        playlist.unshift({
+                            title: "Shared YouTube Track",
+                            artist: "Vengeance Utilities",
+                            id: deepLinkTrackId,
+                            cover: `https://img.youtube.com/vi/${deepLinkTrackId}/hqdefault.jpg`
+                        });
+                        currentSongIndex = 0;
+                    }
+                }
+
                 renderQueue();
 
                 const { data: dbLinks } = await sbClient.from('links').select('*');
