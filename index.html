@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,7 +24,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
 
-    <!-- SOFORTIGER THEME- & GLAS-LOADER -->
+    <!-- INSTANT THEME & GLASS LOADER -->
     <script>
         (function() {
             const savedAccent = localStorage.getItem('v_accent');
@@ -70,7 +70,7 @@
             scrollbar-color: var(--accent) rgba(12, 12, 16, 0.35);
         }
 
-        /* MOBILE & TOUCH DEVICE FIX (Native Cursor & Select) */
+        /* MOBILE & TOUCH DEVICE FIX */
         @media (pointer: coarse), (hover: none) {
             * {
                 cursor: auto !important;
@@ -184,16 +184,16 @@
         .action-btn:hover, .action-btn.active { border-color: #fff; box-shadow: 0 0 22px var(--accent), inset 0 1px 1px #fff; color: var(--accent); }
 
         .tuner-popover {
-            position: fixed; top: 68px; right: 20px; width: 265px; z-index: 150;
-            background: rgba(12, 12, 16, 0.85); border: 1px solid var(--accent);
+            position: fixed; top: 68px; right: 20px; width: 285px; z-index: 150;
+            background: rgba(12, 12, 16, 0.88); border: 1px solid var(--accent);
             backdrop-filter: blur(14px) saturate(190%); -webkit-backdrop-filter: blur(14px) saturate(190%);
-            border-radius: 14px; padding: 14px; box-shadow: 0 15px 35px rgba(0,0,0,0.8), 0 0 20px var(--accent-glow);
+            border-radius: 14px; padding: 16px; box-shadow: 0 15px 35px rgba(0,0,0,0.8), 0 0 20px var(--accent-glow);
             display: none; flex-direction: column; gap: 12px;
         }
         .tuner-popover.open { display: flex; animation: fade 0.2s ease forwards; }
         .tuner-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 700; display: flex; justify-content: space-between; }
         .color-swatches { display: flex; gap: 6px; justify-content: space-between; }
-        .swatch { width: 32px; height: 24px; border-radius: 6px; border: 2px solid rgba(255,255,255,0.2); transition: transform 0.2s, border-color 0.2s; }
+        .swatch { width: 34px; height: 24px; border-radius: 6px; border: 2px solid rgba(255,255,255,0.2); transition: transform 0.2s, border-color 0.2s; }
         .swatch:hover { transform: scale(1.12); border-color: #fff; }
         .filter-chips { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
         .filter-chip {
@@ -212,7 +212,7 @@
         .bento-container {
             max-width: 1200px; width: 94vw; display: grid; grid-template-columns: 1fr;
             gap: 16px; position: relative; z-index: 2; opacity: 0;
-            transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); margin: auto;
+            transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease; margin: auto;
         }
         body.zen-mode .bento-container { opacity: 0 !important; transform: scale(0.96) translateY(20px); pointer-events: none; }
         @media (min-width: 900px) { .bento-container { grid-template-columns: 315px 1.4fr 315px; } }
@@ -317,7 +317,7 @@
         }
         .queue-toggle-btn:hover { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 10px var(--accent-glow); }
         .visualizer-strip { display: flex; align-items: flex-end; gap: 4px; height: 26px; width: 100%; padding: 4px 0; overflow: hidden; }
-        .viz-bar { flex: 1; background: linear-gradient(180deg, var(--accent), rgba(255,255,255,0.25)); border-radius: 2px 2px 0 0; height: 4px; transition: height 0.1s ease; box-shadow: 0 0 6px var(--accent-glow); }
+        .viz-bar { flex: 1; background: linear-gradient(180deg, var(--accent), rgba(255,255,255,0.25)); border-radius: 2px 2px 0 0; height: 4px; transition: height 0.08s ease; box-shadow: 0 0 6px var(--accent-glow); }
         .track-artist { color: var(--text-muted); font-size: 0.85rem; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
         
         .player-controls { display: flex; flex-direction: column; gap: 8px; }
@@ -461,19 +461,20 @@
         
         .rig-specs-details {
             position: absolute; top: calc(100% + 8px); right: 0; left: -150px; z-index: 100;
-            background: rgba(12, 12, 16, 0.88); border: 1px solid var(--accent); backdrop-filter: blur(14px) saturate(190%);
+            background: rgba(12, 12, 16, 0.92); border: 1px solid var(--accent); backdrop-filter: blur(14px) saturate(190%);
             box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85), 0 0 22px var(--accent-glow);
             max-height: 0; opacity: 0; overflow: hidden; pointer-events: none;
             transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1); border-radius: 14px; padding: 0 14px;
             display: flex; flex-direction: column; gap: 6px; font-size: 0.75rem; color: var(--text-muted);
         }
-        .rig-specs-details.open { max-height: 340px; opacity: 1; pointer-events: auto; padding: 12px 14px; }
+        .rig-specs-details.open { max-height: 380px; opacity: 1; pointer-events: auto; padding: 14px 14px; }
         .spec-item { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
         .spec-item:last-child { border-bottom: none; } .spec-val { color: var(--text-main); font-weight: 700; margin-left: 12px; }
         .telemetry-bar {
             margin-top: 4px; padding-top: 6px; border-top: 1px dashed rgba(255,255,255,0.15);
-            display: flex; justify-content: space-between; font-family: 'Fira Code', monospace; font-size: 0.7rem; color: #4ade80;
+            display: flex; justify-content: space-between; align-items: center; font-family: 'Fira Code', monospace; font-size: 0.7rem; color: #4ade80;
         }
+        .hardware-sparkline { width: 60px; height: 16px; stroke: var(--accent); stroke-width: 1.8; fill: none; }
 
         .github-feed-card { display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; }
         .gh-header { display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-main); text-shadow: 0 1px 3px rgba(0,0,0,0.9); }
@@ -582,7 +583,7 @@
         <button class="action-btn" id="zen-btn" title="Cinema / Zen Mode (H)"><i class="fas fa-eye"></i></button>
         <button class="action-btn active" id="tilt-btn" title="Toggle 3D Card Tilt"><i class="fas fa-cube"></i></button>
         <button class="action-btn" id="tuner-btn" title="Glass, Theme & Video Tuner"><i class="fas fa-sliders"></i></button>
-        <button class="action-btn" id="cli-btn" title="Open Interactive CLI (~ / ^)"><i class="fas fa-terminal"></i></button>
+        <button class="action-btn" id="cli-btn" title="Open Interactive CLI (~ / `)"><i class="fas fa-terminal"></i></button>
         <button class="action-btn" id="sfx-btn" title="Toggle Sound FX"><i class="fas fa-volume-high"></i></button>
         <button class="action-btn" id="help-btn" title="Keyboard Shortcuts"><i class="fas fa-keyboard"></i></button>
     </div>
@@ -609,7 +610,13 @@
             <button class="filter-chip" data-filter="saturate(2.2) contrast(1.15) brightness(0.85)">Hyper Neon</button>
         </div>
 
-        <button class="tuner-reset-btn" id="tuner-reset-btn"><i class="fas fa-rotate-left"></i> Theme auf Standard zurücksetzen</button>
+        <div class="tuner-label" style="margin-top:4px;"><span>Visualizer Style</span></div>
+        <div class="filter-chips">
+            <button class="filter-chip active" id="viz-mode-wave">Wave</button>
+            <button class="filter-chip" id="viz-mode-peak">Peak Hold</button>
+        </div>
+
+        <button class="tuner-reset-btn" id="tuner-reset-btn"><i class="fas fa-rotate-left"></i> Reset Theme to Default</button>
     </div>
 
     <!-- ZEN MINI HUD -->
@@ -618,19 +625,19 @@
         <button class="btn-control" onclick="togglePlayPause()"><i class="fas fa-play" id="zen-play-icon"></i></button>
         <button class="btn-control" onclick="changeSong(1)"><i class="fas fa-forward"></i></button>
         <div style="font-size:0.8rem; font-weight:700; max-width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="zen-song-title">Playing...</div>
-        <button class="mc-copy-btn" onclick="toggleZenMode()" style="margin-left:6px;"><i class="fas fa-compress"></i> UI zeigen</button>
+        <button class="mc-copy-btn" onclick="toggleZenMode()" style="margin-left:6px;"><i class="fas fa-compress"></i> Show UI</button>
     </div>
 
     <div class="bento-container" id="bento-grid">
         
-        <!-- PROFIL CARD -->
+        <!-- PROFILE CARD -->
         <div class="card profile-card">
             <div class="avatar-wrapper">
                 <img id="avatar" src="https://via.placeholder.com/150" alt="Avatar" class="avatar">
                 <div class="discord-status-badge" id="discord-avatar-badge" title="Discord Live Status"></div>
             </div>
             <h1 id="username" class="username effect-wave">Loading...</h1>
-            <p id="bio" class="bio">...</p>
+            <p id="bio" class="bio">Software Developer & System Architect</p>
             
             <div class="tech-stack-container">
                 <span class="tech-pill" title="C++ & C# Native & Desktop Application Development"><i class="fas fa-code"></i> C++ / C#</span>
@@ -646,18 +653,18 @@
         <!-- MAIN CONTENT -->
         <div class="main-content">
             <!-- MUSIC PLAYER -->
-            <div class="card music-player">
-                <div class="copy-toast" id="song-copy-toast">Deep-Link (?track=ID) kopiert! ✓</div>
+            <div class="card music-player" id="player-card">
+                <div class="copy-toast" id="song-copy-toast">Deep-Link (?track=ID) copied! ✓</div>
                 <div class="track-info-container">
                     <img id="yt-cover" src="https://via.placeholder.com/150" alt="Album Art" class="album-art">
                     <div class="track-details">
                         <div class="track-header">
                             <div id="yt-title" class="track-title">Loading...</div>
                             <div class="player-top-actions">
-                                <button class="queue-toggle-btn" id="share-song-btn" title="Track-Link mit Deep-Link kopieren">
+                                <button class="queue-toggle-btn" id="share-song-btn" title="Copy Deep-Link to Track">
                                     <i class="fas fa-link"></i>
                                 </button>
-                                <button class="queue-toggle-btn" id="queue-btn" title="Playlist Warteschlange öffnen">
+                                <button class="queue-toggle-btn" id="queue-btn" title="Toggle Queue Drawer">
                                     <i class="fas fa-list-ul"></i> <span id="queue-count-badge">0</span>
                                 </button>
                             </div>
@@ -680,11 +687,11 @@
                     </div>
                     
                     <div class="control-buttons">
-                        <button class="btn-control" id="shuffle-btn" title="Zufallswiedergabe (S)"><i class="fas fa-shuffle"></i></button>
-                        <button class="btn-control" id="prev-btn" title="Vorheriger Track (Pfeil links)"><i class="fas fa-backward"></i></button>
-                        <button class="btn-control btn-play" id="play-pause-btn" title="Play/Pause (Leertaste)"><i class="fas fa-play"></i></button>
-                        <button class="btn-control" id="next-btn" title="Nächster Track (Pfeil rechts)"><i class="fas fa-forward"></i></button>
-                        <button class="btn-control" id="loop-btn" title="Song wiederholen (R)"><i class="fas fa-repeat"></i></button>
+                        <button class="btn-control" id="shuffle-btn" title="Shuffle (S)"><i class="fas fa-shuffle"></i></button>
+                        <button class="btn-control" id="prev-btn" title="Previous Track (Left Arrow)"><i class="fas fa-backward"></i></button>
+                        <button class="btn-control btn-play" id="play-pause-btn" title="Play / Pause (Space)"><i class="fas fa-play"></i></button>
+                        <button class="btn-control" id="next-btn" title="Next Track (Right Arrow)"><i class="fas fa-forward"></i></button>
+                        <button class="btn-control" id="loop-btn" title="Repeat (R)"><i class="fas fa-repeat"></i></button>
                     </div>
 
                     <div class="volume-container">
@@ -696,7 +703,7 @@
                 <div class="playlist-drawer" id="playlist-drawer">
                     <div class="queue-search-wrap">
                         <i class="fas fa-search" style="font-size:0.72rem; color:var(--accent);"></i>
-                        <input type="text" id="queue-search-input" class="queue-search-input" placeholder="Track in Playlist filtern..." autocomplete="off">
+                        <input type="text" id="queue-search-input" class="queue-search-input" placeholder="Search playlist..." autocomplete="off">
                     </div>
                     <div class="queue-items-scroll" id="queue-items-list"></div>
                 </div>
@@ -704,7 +711,7 @@
 
             <!-- MINECRAFT SERVER CARD -->
             <div class="card mc-server-card">
-                <div class="copy-toast" id="mc-copy-toast">Serveradresse kopiert! ✓</div>
+                <div class="copy-toast" id="mc-copy-toast">Server address copied! ✓</div>
                 
                 <div class="mc-header">
                     <div class="mc-title-wrap">
@@ -716,28 +723,28 @@
                     </div>
                     <div class="mc-badge" id="mc-status-badge">
                         <span class="mc-pulse-dot"></span>
-                        <span id="mc-status-text">Abfrage...</span>
+                        <span id="mc-status-text">Querying...</span>
                     </div>
                 </div>
 
-                <div class="mc-address-row" id="mc-address-row" title="Klicken um Adresse zu kopieren">
+                <div class="mc-address-row" id="mc-address-row" title="Click to copy server address">
                     <div>
                         <span style="font-size:0.68rem; color:var(--text-muted); display:block; font-weight:700;">SERVER IP / DOMAIN:</span>
                         <span class="mc-ip-code" id="mc-ip-text">vengeanceutilities.de</span>
                     </div>
                     <div class="mc-btns-group">
-                        <button class="mc-copy-btn" id="mc-packinfo-btn" title="Modpack-Specs, Launcher & Setup öffnen">
+                        <button class="mc-copy-btn" id="mc-packinfo-btn" title="Modpack Specs, Launcher & Setup">
                             <i class="fas fa-circle-info"></i> <span>Pack Info</span>
                         </button>
                         <button class="mc-copy-btn" id="mc-copy-btn">
-                            <i class="far fa-copy"></i> <span>Kopieren</span>
+                            <i class="far fa-copy"></i> <span>Copy</span>
                         </button>
                     </div>
                 </div>
 
                 <div class="mc-grid-details">
                     <div class="mc-detail-box">
-                        <span class="mc-detail-label">Spieler</span>
+                        <span class="mc-detail-label">Players</span>
                         <span class="mc-detail-val" id="mc-players">- / -</span>
                         <div class="mc-players-heads" id="mc-players-heads"></div>
                     </div>
@@ -757,12 +764,12 @@
                 </div>
 
                 <div class="mc-motd-line" id="mc-motd">
-                    <i class="fas fa-terminal" style="margin-right:6px; color:var(--accent);"></i>MOTD: <span id="mc-motd-text">Lade Server-Informationen...</span>
+                    <i class="fas fa-terminal" style="margin-right:6px; color:var(--accent);"></i>MOTD: <span id="mc-motd-text">Fetching server metrics...</span>
                 </div>
             </div>
         </div>
 
-        <!-- RECHTE SPALTE -->
+        <!-- RIGHT STATS COLUMN -->
         <div class="stats-container">
             <div class="stat-top-row">
                 <div class="card stat-card green">
@@ -771,7 +778,7 @@
                 </div>
 
                 <div class="rig-specs-wrapper">
-                    <button class="rig-specs-btn" id="rig-toggle" title="Hardware & Live-Telemetrie anzeigen">
+                    <button class="rig-specs-btn" id="rig-toggle" title="Hardware Specs & Live Telemetry">
                         <span><i class="fas fa-microchip" style="margin-right: 6px; color:var(--accent);"></i> Specs</span>
                         <i class="fas fa-chevron-down" id="rig-chevron"></i>
                     </button>
@@ -783,7 +790,9 @@
                         <div class="spec-item"><span>Profile</span><span class="spec-val">PBO2 MAX (4.85 GHz)</span></div>
                         <div class="telemetry-bar">
                             <span id="tele-cpu">CPU: 56°C | 4.85 GHz</span>
-                            <span id="tele-gpu">GPU: 49°C</span>
+                            <svg class="hardware-sparkline" viewBox="0 0 60 16">
+                                <polyline id="tele-sparkline" points="0,8 10,5 20,11 30,3 40,9 50,4 60,6" />
+                            </svg>
                         </div>
                     </div>
                 </div>
@@ -794,7 +803,7 @@
                 <div id="stat-2" class="stat-value">3+</div>
             </div>
             
-            <div class="card stat-card yellow clickable" id="projects-trigger" title="Klicken um Releases & Projekte anzusehen">
+            <div class="card stat-card yellow clickable" id="projects-trigger" title="Click to view Releases & Software Hub">
                 <div>
                     <div class="stat-label">Projects & Releases</div>
                     <div style="font-size:0.7rem; color:#f1f5f9; margin-top:2px; font-weight:600; text-shadow:0 1px 2px #000;"><i class="fas fa-box-open" style="color:var(--accent);"></i> Open Release Hub</div>
@@ -833,10 +842,10 @@
             <div class="status-content-left">
                 <div class="status-dot" id="banner-status-dot"></div>
                 <img id="spotify-live-thumb" src="" alt="Album Art" style="display:none; width:22px; height:22px; border-radius:4px; object-fit:cover; border:1px solid rgba(255,255,255,0.25);">
-                <span id="discord-presence">Verbinde zu Lanyard Live WebSocket...</span>
+                <span id="discord-presence">Connecting to Lanyard Live WebSocket...</span>
             </div>
             <div style="display:flex; align-items:center; gap:8px;">
-                <div class="live-clock-badge" id="session-uptime" title="Deine aktuelle Session-Dauer">
+                <div class="live-clock-badge" id="session-uptime" title="Your current session uptime">
                     <i class="fas fa-bolt" style="color:var(--accent);"></i> <span>00:00</span>
                 </div>
                 <div class="live-clock-badge" id="live-clock">
@@ -845,7 +854,7 @@
             </div>
         </div>
 
-        <div class="footer-text">Website Coded by &bull; UpperEchelon / Vengeance Utilities [OS v4.0]</div>
+        <div class="footer-text">Website Engineered by &bull; UpperEchelon / Vengeance Utilities [OS v4.0]</div>
     </div>
 
     <!-- CUSTOM CONTEXT MENU -->
@@ -871,17 +880,17 @@
             </div>
             <div class="cmdk-input-wrap">
                 <i class="fas fa-search" style="color:var(--accent);"></i>
-                <input type="text" id="cmdk-input" class="cmdk-input" placeholder="Suche nach Aktionen, Songs, Themes oder Commands..." autocomplete="off">
+                <input type="text" id="cmdk-input" class="cmdk-input" placeholder="Type a command, search tracks, or change theme..." autocomplete="off">
             </div>
             <div class="cmdk-list" id="cmdk-list"></div>
         </div>
     </div>
 
-    <!-- MODAL: RELEASE HUB MIT DIREKT-APK & DOWNLOAD-COUNTER -->
+    <!-- MODAL: RELEASE HUB -->
     <div class="modal-overlay" id="projects-modal">
         <div class="modal-box">
             <div class="modal-header">
-                <div class="modal-title"><i class="fas fa-layer-group" style="color:var(--accent);"></i> Vengeance Release & Software Hub</div>
+                <div class="modal-title"><i class="fas fa-layer-group" style="color:var(--accent);"></i> Vengeance Software & Release Hub</div>
                 <button class="modal-close" id="close-projects">&times;</button>
             </div>
             <div class="project-grid">
@@ -890,9 +899,9 @@
                         <span class="project-name">VengeancePlayer (Signed Mobile APK)</span>
                         <span class="project-tag" id="vp-version-tag">Android / Kotlin • Live</span>
                     </div>
-                    <p class="project-desc">Custom Android Media & YouTube-Audio-Stream-Player mit Spotify-Metadaten-Sync und werbefreiem Background-Playback.</p>
+                    <p class="project-desc">Native Android Media & YouTube Audio Streamer featuring Spotify metadata sync and background playback.</p>
                     <div class="project-actions">
-                        <span class="sha-badge clickable" onclick="copyText('7c31b90a...44f2', this)" title="Klicken um SHA-256 Hash zu kopieren"><i class="fas fa-shield-halved" style="color:#4ade80;"></i> SHA256: 7c31b90a...44f2</span>
+                        <span class="sha-badge clickable" onclick="copyText('7c31b90a...44f2', this)" title="Click to copy SHA-256 hash"><i class="fas fa-shield-halved" style="color:#4ade80;"></i> SHA256: 7c31b90a...44f2</span>
                         <div style="display:flex; align-items:center; gap:6px;">
                             <a id="vp-apk-download-btn" href="https://github.com/VengeanceUtilities/VengeancePlayer/releases" target="_blank" class="mc-copy-btn" style="text-decoration:none; background:var(--accent); color:#fff; border-color:var(--accent);">
                                 <i class="fas fa-download"></i> <span id="vp-download-text">Download APK</span>
@@ -908,9 +917,9 @@
                         <span class="project-name">Vengeance Optimizer & Hardware Monitor</span>
                         <span class="project-tag">C++ / WPF</span>
                     </div>
-                    <p class="project-desc">Low-Latency Windows Gaming Optimizer & Echtzeit-Telemetrie-Monitor für CPU/GPU-Temps und PBO-Profile.</p>
+                    <p class="project-desc">Low-latency Windows gaming optimizer and real-time hardware telemetry monitor for CPU/GPU profiles.</p>
                     <div class="project-actions">
-                        <span class="sha-badge clickable" onclick="copyText('a94f8c2d...e81b', this)" title="Klicken um SHA-256 Hash zu kopieren"><i class="fas fa-shield-halved" style="color:#4ade80;"></i> SHA256: a94f8c2d...e81b</span>
+                        <span class="sha-badge clickable" onclick="copyText('a94f8c2d...e81b', this)" title="Click to copy SHA-256 hash"><i class="fas fa-shield-halved" style="color:#4ade80;"></i> SHA256: a94f8c2d...e81b</span>
                         <span class="mc-copy-btn coming-soon"><i class="fas fa-code" style="color:var(--accent);"></i> Coming soon...</span>
                     </div>
                 </div>
@@ -919,9 +928,9 @@
                         <span class="project-name">Vengeance Game Launcher & Utilities</span>
                         <span class="project-tag">C++ / CLI</span>
                     </div>
-                    <p class="project-desc">Custom Desktop Game-Launcher inkl. automatischem RAM-/JVM-Tuner für NeoForge & Dedicated Server.</p>
+                    <p class="project-desc">High-performance desktop launcher with automated memory and JVM flags tuner for NeoForge instances.</p>
                     <div class="project-actions">
-                        <span class="sha-badge clickable" onclick="copyText('f18e420c...90d1', this)" title="Klicken um SHA-256 Hash zu kopieren"><i class="fas fa-shield-halved" style="color:#4ade80;"></i> SHA256: f18e420c...90d1</span>
+                        <span class="sha-badge clickable" onclick="copyText('f18e420c...90d1', this)" title="Click to copy SHA-256 hash"><i class="fas fa-shield-halved" style="color:#4ade80;"></i> SHA256: f18e420c...90d1</span>
                         <span class="mc-copy-btn coming-soon"><i class="fas fa-code" style="color:var(--accent);"></i> Coming soon...</span>
                     </div>
                 </div>
@@ -938,20 +947,20 @@
             </div>
             <div style="display:flex; flex-direction:column; gap:12px; font-size:0.85rem; line-height:1.45; color:var(--text-muted);">
                 <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:12px;">
-                    <div style="color:#fff; font-weight:700; margin-bottom:4px;"><i class="fas fa-microchip" style="color:var(--accent);"></i> Empfohlene JVM-Flags & RAM:</div>
+                    <div style="color:#fff; font-weight:700; margin-bottom:4px;"><i class="fas fa-microchip" style="color:var(--accent);"></i> Recommended JVM Flags & RAM:</div>
                     <code style="display:block; background:rgba(0,0,0,0.4); padding:6px 10px; border-radius:6px; font-family:'Fira Code', monospace; color:#4ade80; font-size:0.75rem; margin-top:6px; word-break:break-all;">
                         -Xms6G -Xmx8G -XX:+UseG1GC -XX:+ParallelRefProcEnabled
                     </code>
                 </div>
                 <div>
-                    <b style="color:#fff;">Dedicated NeoForge Server:</b> Läuft mit custom Performance-Optimierungen auf dem Host <code>vengeanceutilities.de</code>. Für flüssiges Gameplay werden mindestens 6–8 GB RAM im Launcher zugewiesen.
+                    <b style="color:#fff;">Dedicated NeoForge Server:</b> Hosted on <code>vengeanceutilities.de</code> with kernel level optimizations. Allocate at least 6–8 GB RAM inside your launcher for smooth 144+ FPS performance.
                 </div>
                 <div>
-                    <b style="color:#fff;">Vengeance Custom Launcher:</b> Der native C++ Launcher managed modpack-Manifests, Updates und JVM-Settings automatisch ohne Drittanbieter-Overhead.
+                    <b style="color:#fff;">Vengeance Custom Launcher:</b> The native C++ launcher handles modpack synchronization, dynamic RAM allocation, and JVM tuning automatically.
                 </div>
                 <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:8px;">
-                    <button class="mc-copy-btn" id="modal-copy-ip-btn"><i class="far fa-copy"></i> Server IP Kopieren</button>
-                    <button class="mc-copy-btn" onclick="document.getElementById('modpack-modal').classList.remove('active');"><i class="fas fa-check"></i> Schließen</button>
+                    <button class="mc-copy-btn" id="modal-copy-ip-btn"><i class="far fa-copy"></i> Copy Server IP</button>
+                    <button class="mc-copy-btn" onclick="document.getElementById('modpack-modal').classList.remove('active');"><i class="fas fa-check"></i> Close</button>
                 </div>
             </div>
         </div>
@@ -967,7 +976,7 @@
             <div class="cli-box">
                 <div class="cli-output" id="cli-output">
                     <div>Vengeance OS [Version 4.0.26 - Crystal Overdrive Kernel]</div>
-                    <div>Tippe <span style="color:#fff;">'help'</span>, <span style="color:#fff;">'neofetch'</span>, <span style="color:#fff;">'ping'</span> oder <span style="color:#fff;">'gh'</span> ein. (<span style="color:var(--text-muted);">Tab = Autocomplete</span>)</div>
+                    <div>Type <span style="color:#fff;">'help'</span>, <span style="color:#fff;">'neofetch'</span>, <span style="color:#fff;">'ping'</span> or <span style="color:#fff;">'gh'</span>. (<span style="color:var(--text-muted);">Tab = Autocomplete</span>)</div>
                     <div style="height: 6px;"></div>
                 </div>
                 <div class="cli-input-line">
@@ -988,10 +997,10 @@
             <div class="shortcuts-list" style="display:flex; flex-direction:column; gap:10px; font-size:0.85rem;">
                 <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.06); padding-bottom:8px;"><span>Spotlight Command Palette</span><span style="background:rgba(255,255,255,0.1); padding:2px 8px; border-radius:4px; font-family:monospace;">Ctrl + K</span></div>
                 <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.06); padding-bottom:8px;"><span>Play / Pause</span><span style="background:rgba(255,255,255,0.1); padding:2px 8px; border-radius:4px; font-family:monospace;">Space</span></div>
-                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.06); padding-bottom:8px;"><span>Nächster / Vorheriger Song</span><span style="background:rgba(255,255,255,0.1); padding:2px 8px; border-radius:4px; font-family:monospace;">&rarr; / &larr;</span></div>
+                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.06); padding-bottom:8px;"><span>Next / Previous Track</span><span style="background:rgba(255,255,255,0.1); padding:2px 8px; border-radius:4px; font-family:monospace;">&rarr; / &larr;</span></div>
                 <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.06); padding-bottom:8px;"><span>Cinema / Zen Mode</span><span style="background:rgba(255,255,255,0.1); padding:2px 8px; border-radius:4px; font-family:monospace;">H</span></div>
-                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.06); padding-bottom:8px;"><span>Zufall / Wiederholung</span><span style="background:rgba(255,255,255,0.1); padding:2px 8px; border-radius:4px; font-family:monospace;">S / R</span></div>
-                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.06); padding-bottom:8px;"><span>Terminal Konsole öffnen</span><span style="background:rgba(255,255,255,0.1); padding:2px 8px; border-radius:4px; font-family:monospace;">~ / ^</span></div>
+                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.06); padding-bottom:8px;"><span>Shuffle / Repeat</span><span style="background:rgba(255,255,255,0.1); padding:2px 8px; border-radius:4px; font-family:monospace;">S / R</span></div>
+                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.06); padding-bottom:8px;"><span>Toggle CLI Terminal</span><span style="background:rgba(255,255,255,0.1); padding:2px 8px; border-radius:4px; font-family:monospace;">~ / `</span></div>
             </div>
         </div>
     </div>
@@ -1002,6 +1011,7 @@
         let tiltEnabled = true;
         let matrixMode = false;
         let currentFps = 60;
+        let visualizerMode = 'wave';
         const sessionStartTime = Date.now();
 
         window.addEventListener('load', () => {
@@ -1026,6 +1036,7 @@
         let mcDisplayDomain = "vengeanceutilities.de";
         let latestMcData = null;
         let pingHistory = [24, 22, 25, 23, 24, 21];
+        let cpuHistory = [40, 52, 48, 65, 59, 45, 50];
 
         let playlist = [];
         let currentSongIndex = 0;
@@ -1052,7 +1063,7 @@
             const isPlaying = ytPlayer && typeof ytPlayer.getPlayerState === 'function' && ytPlayer.getPlayerState() === YT.PlayerState.PLAYING;
             if (isPlaying && playlist[currentSongIndex]) {
                 const s = playlist[currentSongIndex];
-                const fullText = `▶ ${s.title} — ${s.artist}   •   Vengeance OS   •   `;
+                const fullText = `▶ ${s.title} —${s.artist}   •   Vengeance OS   •   `;
                 document.title = fullText.substring(tabTickerPos) + fullText.substring(0, tabTickerPos);
                 tabTickerPos = (tabTickerPos + 1) % fullText.length;
             } else {
@@ -1124,7 +1135,7 @@
                 const r = btn.getBoundingClientRect();
                 const dx = (e.clientX - (r.left + r.width / 2)) * 0.28;
                 const dy = (e.clientY - (r.top + r.height / 2)) * 0.28;
-                btn.style.transform = `translate(${dx.toFixed(1)}px, ${dy.toFixed(1)}px)`;
+                btn.style.transform = `translate(${dx.toFixed(1)}px,${dy.toFixed(1)}px)`;
             });
             btn.addEventListener('mouseleave', () => {
                 btn.style.transform = '';
@@ -1180,12 +1191,30 @@
         });
 
         document.querySelectorAll('.filter-chip').forEach(chip => {
+            if (chip.id === 'viz-mode-wave' || chip.id === 'viz-mode-peak') return;
             chip.addEventListener('click', () => {
-                document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+                document.querySelectorAll('.filter-chip').forEach(c => {
+                    if (c.id !== 'viz-mode-wave' && c.id !== 'viz-mode-peak') c.classList.remove('active');
+                });
                 chip.classList.add('active');
                 document.documentElement.style.setProperty('--video-filter', chip.dataset.filter);
             });
         });
+
+        const vizWaveBtn = document.getElementById('viz-mode-wave');
+        const vizPeakBtn = document.getElementById('viz-mode-peak');
+        if (vizWaveBtn && vizPeakBtn) {
+            vizWaveBtn.addEventListener('click', () => {
+                visualizerMode = 'wave';
+                vizWaveBtn.classList.add('active');
+                vizPeakBtn.classList.remove('active');
+            });
+            vizPeakBtn.addEventListener('click', () => {
+                visualizerMode = 'peak';
+                vizPeakBtn.classList.add('active');
+                vizWaveBtn.classList.remove('active');
+            });
+        }
 
         if (tunerResetBtn) {
             tunerResetBtn.addEventListener('click', () => {
@@ -1233,7 +1262,7 @@
 
         window.addEventListener('mousemove', (e) => {
             mouseX = e.clientX; mouseY = e.clientY;
-            if (cursor) cursor.style.transform = `translate3d(${mouseX - 4}px, ${mouseY - 4}px, 0)`;
+            if (cursor) cursor.style.transform = `translate3d(${mouseX - 4}px,${mouseY - 4}px, 0)`;
         });
 
         function animateCursorTrail() {
@@ -1254,14 +1283,14 @@
                 el.addEventListener('mouseenter', () => {
                     if (cursor) {
                         cursor.style.width = '14px'; cursor.style.height = '14px';
-                        cursor.style.transform = `translate3d(${mouseX - 7}px, ${mouseY - 7}px, 0)`;
+                        cursor.style.transform = `translate3d(${mouseX - 7}px,${mouseY - 7}px, 0)`;
                     }
                     isHovering = true; playSfx('hover');
                 });
                 el.addEventListener('mouseleave', () => {
                     if (cursor) {
                         cursor.style.width = '8px'; cursor.style.height = '8px';
-                        cursor.style.transform = `translate3d(${mouseX - 4}px, ${mouseY - 4}px, 0)`;
+                        cursor.style.transform = `translate3d(${mouseX - 4}px,${mouseY - 4}px, 0)`;
                     }
                     isHovering = false;
                 });
@@ -1279,12 +1308,26 @@
         function updateVisualizer(isPlaying) {
             vizBars.forEach((bar, index) => {
                 if (isPlaying) {
-                    const wave = (Math.sin(Date.now() / 130 + index * 0.55) * 9 + Math.random() * 6 + 8) * 1.3;
+                    let wave = 4;
+                    if (visualizerMode === 'wave') {
+                        wave = (Math.sin(Date.now() / 130 + index * 0.55) * 9 + Math.random() * 6 + 8) * 1.3;
+                    } else {
+                        wave = (Math.random() > 0.4 ? Math.random() * 18 + 6 : 4);
+                    }
                     bar.style.height = `${Math.max(4, Math.min(25, Math.floor(wave)))}px`;
                 } else {
                     bar.style.height = '4px';
                 }
             });
+            const playerCard = document.getElementById('player-card');
+            if (playerCard) {
+                if (isPlaying) {
+                    const glowPulse = 26 + Math.sin(Date.now() / 200) * 8;
+                    playerCard.style.boxShadow = `0 0 ${glowPulse.toFixed(1)}px var(--accent-glow), inset 0 0 14px var(--accent-glow)`;
+                } else {
+                    playerCard.style.boxShadow = '';
+                }
+            }
         }
         setInterval(() => {
             const isPlaying = ytPlayer && typeof ytPlayer.getPlayerState === 'function' && ytPlayer.getPlayerState() === YT.PlayerState.PLAYING;
@@ -1394,7 +1437,10 @@
 
         function updateClockAndTelemetry() {
             const clockEl = document.querySelector('#live-clock span');
-            if (clockEl) { const now = new Date(); clockEl.innerText = 'DE • ' + now.toLocaleTimeString('de-DE'); }
+            if (clockEl) { 
+                const now = new Date(); 
+                clockEl.innerText = 'UTC • ' + now.toLocaleTimeString('en-US', { hour12: false }); 
+            }
 
             const upSec = Math.floor((Date.now() - sessionStartTime) / 1000);
             const upMin = String(Math.floor(upSec / 60)).padStart(2, '0');
@@ -1404,15 +1450,24 @@
 
             const cpuTemp = Math.floor(54 + Math.sin(Date.now() / 4000) * 4 + Math.random() * 2);
             const cpuBoost = (4.81 + Math.random() * 0.05).toFixed(2);
-            const gpuTemp = Math.floor(48 + Math.cos(Date.now() / 5000) * 3 + Math.random() * 2);
             const teleCpu = document.getElementById('tele-cpu');
-            const teleGpu = document.getElementById('tele-gpu');
-            if (teleCpu) teleCpu.innerText = `CPU: ${cpuTemp}°C | ${cpuBoost} GHz`;
-            if (teleGpu) teleGpu.innerText = `GPU: ${gpuTemp}°C`;
+            if (teleCpu) teleCpu.innerText = `CPU: ${cpuTemp}°C \vert{}${cpuBoost} GHz`;
+
+            cpuHistory.push(cpuTemp);
+            if (cpuHistory.length > 7) cpuHistory.shift();
+            const cpuPoly = document.getElementById('tele-sparkline');
+            if (cpuPoly) {
+                const pts = cpuHistory.map((val, idx) => {
+                    const x = idx * 10;
+                    const y = Math.max(2, Math.min(14, 15 - ((val - 50) / 15) * 12));
+                    return `${x},${y.toFixed(1)}`;
+                }).join(' ');
+                cpuPoly.setAttribute('points', pts);
+            }
         }
         setInterval(updateClockAndTelemetry, 1000); updateClockAndTelemetry();
 
-        /* ECHTER LANYARD WEBSOCKET (wss://api.lanyard.rest/socket) */
+        /* LANYARD LIVE WEBSOCKET */
         let lanyardWs = null;
         let lanyardHeartbeatInterval = null;
 
@@ -1433,7 +1488,7 @@
                     spThumb.src = d.spotify.album_art_url || '';
                     spThumb.style.display = 'inline-block';
                 }
-                presenceTxt.innerHTML = `<i class="fab fa-spotify" style="color:#1db954; margin-right:6px;"></i> Listening to <b>${d.spotify.song}</b> by ${d.spotify.artist}`;
+                presenceTxt.innerHTML = `<i class="fab fa-spotify" style="color:#1db954; margin-right:6px;"></i> Listening to <b>${d.spotify.song}</b> by${d.spotify.artist}`;
             } else {
                 if (spThumb) spThumb.style.display = 'none';
                 if (d.activities && d.activities.length > 0) {
@@ -1509,7 +1564,7 @@
             });
         }
 
-        /* DEEP-LINK SONG SHARING (?track=ID) */
+        /* DEEP-LINK SONG SHARING */
         const queueBtn = document.getElementById('queue-btn'); 
         const shareSongBtn = document.getElementById('share-song-btn');
         const songCopyToast = document.getElementById('song-copy-toast');
@@ -1638,14 +1693,14 @@
         function renderCmdkItems(filter = '') {
             const q = filter.toLowerCase();
             const actions = [
-                { icon: 'fa-download', label: 'VengeancePlayer APK direkt downloaden', tag: 'APK', run: () => window.open(latestApkUrl, '_blank') },
-                { icon: 'fa-cube', label: 'Modpack & Launcher Info öffnen', tag: 'NeoForge', run: () => modpackModal.classList.add('active') },
+                { icon: 'fa-download', label: 'Download VengeancePlayer Signed APK', tag: 'APK', run: () => window.open(latestApkUrl, '_blank') },
+                { icon: 'fa-cube', label: 'Open NeoForge Modpack Info', tag: 'NeoForge', run: () => modpackModal.classList.add('active') },
                 { icon: 'fa-eye', label: 'Toggle Cinema / Zen Mode', tag: 'View', run: () => toggleZenMode() },
-                { icon: 'fa-code', label: 'Matrix Code Rain ein-/ausschalten', tag: 'FX', run: () => { matrixMode = !matrixMode; } },
-                { icon: 'fa-layer-group', label: 'Vengeance Release & APK Hub öffnen', tag: 'Modal', run: () => projectsModal.classList.add('active') },
-                { icon: 'fa-android', label: 'VengeancePlayer GitHub Repo öffnen', tag: 'GitHub', run: () => window.open('https://github.com/VengeanceUtilities/VengeancePlayer', '_blank') },
-                { icon: 'fa-terminal', label: 'Interactive Terminal (~) öffnen', tag: 'CLI', run: () => openCli() },
-                { icon: 'fa-cube', label: 'Minecraft Server IP kopieren', tag: 'Server', run: () => document.getElementById('mc-address-row').click() },
+                { icon: 'fa-code', label: 'Toggle Matrix Code Rain', tag: 'FX', run: () => { matrixMode = !matrixMode; } },
+                { icon: 'fa-layer-group', label: 'Open Vengeance Release & APK Hub', tag: 'Modal', run: () => projectsModal.classList.add('active') },
+                { icon: 'fa-android', label: 'View VengeancePlayer GitHub Repo', tag: 'GitHub', run: () => window.open('https://github.com/VengeanceUtilities/VengeancePlayer', '_blank') },
+                { icon: 'fa-terminal', label: 'Open Interactive Terminal (~)', tag: 'CLI', run: () => openCli() },
+                { icon: 'fa-cube', label: 'Copy Minecraft Server IP', tag: 'Server', run: () => document.getElementById('mc-address-row').click() },
                 { icon: 'fa-palette', label: 'Theme: Cyber Pink (#ec4899)', tag: 'Theme', run: () => applyAccentColor('#ec4899') },
                 { icon: 'fa-palette', label: 'Theme: Ice Cyan (#06b6d4)', tag: 'Theme', run: () => applyAccentColor('#06b6d4') },
                 { icon: 'fa-palette', label: 'Theme: Matrix Emerald (#10b981)', tag: 'Theme', run: () => applyAccentColor('#10b981') }
@@ -1654,7 +1709,7 @@
             playlist.forEach((s, idx) => {
                 actions.push({
                     icon: 'fa-music',
-                    label: `Play: ${s.title} — ${s.artist}`,
+                    label: `Play: ${s.title} —${s.artist}`,
                     tag: 'Track',
                     run: () => selectSong(idx)
                 });
@@ -1727,12 +1782,12 @@
                 if (data && data.online) {
                     badge.classList.add('online');
                     statusText.innerText = 'Online';
-                    playersEl.innerText = `${data.players.online} / ${data.players.max}`;
+                    playersEl.innerText = `${data.players.online} /${data.players.max}`;
                     versionEl.innerText = data.version?.name_clean || 'NeoForge';
                     const lat = data.round_trip_latency || Math.min(65, Math.floor(measuredPing / 3));
                     pingEl.innerText = `${lat} ms`;
                     updatePingSparkline(lat);
-                    motdText.innerText = data.motd?.clean || 'Vengeance NeoForge Server';
+                    motdText.innerText = data.motd?.clean || 'Vengeance NeoForge Dedicated Node';
 
                     if (headsWrap) {
                         headsWrap.innerHTML = '';
@@ -1751,17 +1806,16 @@
                     playersEl.innerText = '0 / 0';
                     if (headsWrap) headsWrap.innerHTML = '';
                     pingEl.innerText = '-- ms';
-                    motdText.innerText = 'Server aktuell im Standby / Offline';
+                    motdText.innerText = 'Server currently in standby / offline';
                 }
             } catch (err) {
                 badge.classList.remove('online');
                 statusText.innerText = 'Offline';
                 playersEl.innerText = '- / -';
-                motdText.innerText = 'Verbindung zum Statusdienst fehlgeschlagen';
+                motdText.innerText = 'Failed to connect to status telemetry service';
             }
         }
 
-        /* DIREKTER APK-DOWNLOAD + DOWNLOAD-COUNTER */
         async function fetchVengeancePlayerRelease() {
             try {
                 const res = await fetch('https://api.github.com/repos/VengeanceUtilities/VengeancePlayer/releases/latest');
@@ -1811,8 +1865,8 @@
             } catch (e) {}
         }
 
-        /* ERWEITERTES CLI TERMINAL */
-        const cliCommandsList = ['help', 'neofetch', 'sysinfo', 'ping', 'gh', 'download', 'apk', 'mc', 'status', 'projects', 'specs', 'skills', 'matrix', 'zen', 'glass', 'theme', 'play', 'pause', 'next', 'prev', 'clear', 'cls'];
+        /* EXTENDED CLI TERMINAL */
+        const cliCommandsList = ['help', 'neofetch', 'sysinfo', 'ping', 'gh', 'download', 'apk', 'mc', 'status', 'projects', 'specs', 'skills', 'matrix', 'zen', 'glass', 'theme', 'play', 'pause', 'next', 'prev', 'uptime', 'clear', 'cls'];
         let cliHistory = [];
         let cliHistoryIdx = -1;
 
@@ -1854,36 +1908,41 @@
 
             switch(cmd) {
                 case 'help':
-                    res.innerHTML = `Verfügbare Befehle:<br>
-                    • <span style="color:var(--accent);">neofetch</span> - Hardware ASCII-Telemetrie<br>
-                    • <span style="color:var(--accent);">ping</span> - Live-Latenztest zum Host & MC-Port<br>
-                    • <span style="color:var(--accent);">gh / github</span> - GitHub-Stats & VengeancePlayer Status<br>
-                    • <span style="color:var(--accent);">download / apk</span> - Direkt-Download für VengeancePlayer<br>
-                    • <span style="color:var(--accent);">sysinfo</span> - FPS, Hardware-Threads, DPR & Telemetrie<br>
-                    • <span style="color:var(--accent);">mc / status</span> - Minecraft Server Live-Status<br>
+                    res.innerHTML = `Available commands:<br>
+                    • <span style="color:var(--accent);">neofetch</span> - Hardware ASCII telemetrics<br>
+                    • <span style="color:var(--accent);">ping</span> - Live latency probe to server node<br>
+                    • <span style="color:var(--accent);">gh / github</span> - GitHub profile & VengeancePlayer status<br>
+                    • <span style="color:var(--accent);">download / apk</span> - Instant APK binary download<br>
+                    • <span style="color:var(--accent);">sysinfo</span> - Frame rate, thread count & DPR scaling<br>
+                    • <span style="color:var(--accent);">uptime</span> - Session duration & host clock status<br>
+                    • <span style="color:var(--accent);">mc / status</span> - Live Minecraft server telemetry<br>
                     • <span style="color:var(--accent);">glass &lt;0-20&gt;</span> | <span style="color:var(--accent);">theme &lt;#hex&gt;</span><br>
                     • <span style="color:var(--accent);">matrix / zen</span> | <span style="color:var(--accent);">clear / cls</span>`;
                     break;
                 case 'ping':
                     const p = latestMcData?.round_trip_latency || Math.floor(Math.random() * 8 + 22);
-                    res.innerHTML = `PING ${mcDisplayDomain} (${mcPollTarget}):<br>64 bytes: icmp_seq=1 ttl=58 time=${p} ms<br>Status: <span style="color:#4ade80;">OK / Low Latency</span>`;
+                    res.innerHTML = `PING ${mcDisplayDomain} (${mcPollTarget}):<br>64 bytes: icmp_seq=1 ttl=58 time=${p} ms<br>Status: <span style="color:#4ade80;">ONLINE / Low Latency</span>`;
+                    break;
+                case 'uptime':
+                    const s = Math.floor((Date.now() - sessionStartTime) / 1000);
+                    res.innerHTML = `Session Uptime: <span style="color:#fff;">${Math.floor(s / 60)}m${s % 60}s</span> | Status: Synchronized`;
                     break;
                 case 'gh':
                 case 'github':
-                    res.innerHTML = `GitHub: <a href="https://github.com/VengeanceUtilities" target="_blank" style="color:var(--accent);">github.com/VengeanceUtilities</a><br>Aktuelles Release: VengeancePlayer Mobile APK`;
+                    res.innerHTML = `GitHub: <a href="https://github.com/VengeanceUtilities" target="_blank" style="color:var(--accent);">github.com/VengeanceUtilities</a><br>Active: VengeancePlayer Mobile APK`;
                     break;
                 case 'download':
                 case 'apk':
                     window.open(latestApkUrl, '_blank');
-                    res.innerHTML = `Starte Download von: <a href="${latestApkUrl}" target="_blank" style="color:var(--accent);">${latestApkUrl}</a>`;
+                    res.innerHTML = `Dispatched download: <a href="${latestApkUrl}" target="_blank" style="color:var(--accent);">${latestApkUrl}</a>`;
                     break;
                 case 'sysinfo':
                     const cores = navigator.hardwareConcurrency || '16';
                     const mem = navigator.deviceMemory ? `${navigator.deviceMemory}+ GB` : '32 GB';
-                    res.innerHTML = `[CLIENT HARDWARE & RENDER TELEMETRY]<br>
-                    • <span style="color:#fff;">Render Engine:</span> ${currentFps} FPS (Crystal Overdrive Compositor)<br>
-                    • <span style="color:#fff;">Viewport / Res:</span> ${window.innerWidth}x${window.innerHeight} (DPR: ${window.devicePixelRatio}x)<br>
-                    • <span style="color:#fff;">Logical CPU Threads:</span> ${cores} Cores detected | RAM Class: ${mem}`;
+                    res.innerHTML = `[HARDWARE & RENDER TELEMETRY]<br>
+                    • <span style="color:#fff;">Render Engine:</span> ${currentFps} FPS (Compositor Active)<br>
+                    • <span style="color:#fff;">Viewport:</span> ${window.innerWidth}x${window.innerHeight} (DPR:${window.devicePixelRatio}x)<br>
+                    • <span style="color:#fff;">Logical CPU Threads:</span> ${cores} Cores \vert{} RAM Class:${mem}`;
                     break;
                 case 'neofetch':
                     res.innerHTML = `<pre style="color:var(--accent); font-size:0.75rem; line-height:1.25; margin:4px 0;">
@@ -1904,50 +1963,50 @@
                         localStorage.setItem('v_blur', val);
                         blurSlider.value = val;
                         blurValLabel.innerText = val + 'px';
-                        res.innerHTML = `Crystal Glass Blur gesetzt auf <span style="color:#fff;">${val}px</span>.`;
-                    } else { res.innerHTML = `Nutzung: <span style="color:#fff;">glass 5</span>`; }
+                        res.innerHTML = `Crystal glass blur adjusted to <span style="color:#fff;">${val}px</span>.`;
+                    } else { res.innerHTML = `Usage: <span style="color:#fff;">glass 5</span>`; }
                     break;
                 case 'theme':
                     if (arg && arg.startsWith('#')) {
                         applyAccentColor(arg);
-                        res.innerHTML = `Accent Color geändert auf <span style="color:${arg};">${arg}</span>.`;
-                    } else { res.innerHTML = `Nutzung: <span style="color:#fff;">theme #ec4899</span>`; }
+                        res.innerHTML = `Accent color changed to <span style="color:${arg};">${arg}</span>.`;
+                    } else { res.innerHTML = `Usage: <span style="color:#fff;">theme #ec4899</span>`; }
                     break;
                 case 'matrix':
                     matrixMode = !matrixMode;
-                    res.innerHTML = `Matrix Rain Mode: <span style="color:#22c55e;">${matrixMode ? 'ENABLED' : 'DISABLED'}</span>`;
+                    res.innerHTML = `Matrix rain canvas: <span style="color:#22c55e;">${matrixMode ? 'ENABLED' : 'DISABLED'}</span>`;
                     break;
                 case 'zen':
-                    toggleZenMode(); closeCliModal(); res.innerText = 'Zen Mode toggled.';
+                    toggleZenMode(); closeCliModal(); res.innerText = 'Zen mode toggled.';
                     break;
                 case 'mc':
                 case 'status':
                     if (latestMcData && latestMcData.online) {
-                        res.innerHTML = `Status: <span style="color:#22c55e;">ONLINE</span> | Spieler: ${latestMcData.players.online}/${latestMcData.players.max} | Host: ${mcDisplayDomain}`;
-                    } else { res.innerHTML = `Status: <span style="color:#ef4444;">OFFLINE</span> | Host: ${mcDisplayDomain}`; }
+                        res.innerHTML = `Status: <span style="color:#22c55e;">ONLINE</span> | Players: ${latestMcData.players.online}/${latestMcData.players.max} \vert{} Domain:${mcDisplayDomain}`;
+                    } else { res.innerHTML = `Status: <span style="color:#ef4444;">OFFLINE</span> | Domain: ${mcDisplayDomain}`; }
                     break;
                 case 'projects':
-                    res.innerHTML = `1. <a href="https://github.com/VengeanceUtilities/VengeancePlayer" target="_blank" style="color:var(--accent);">VengeancePlayer APK (GitHub)</a><br>2. Vengeance Optimizer (C++/WPF — Coming soon...)<br>3. Vengeance Game Launcher (C++/CLI — Coming soon...)`;
+                    res.innerHTML = `1. <a href="https://github.com/VengeanceUtilities/VengeancePlayer" target="_blank" style="color:var(--accent);">VengeancePlayer APK (GitHub)</a><br>2. Vengeance Optimizer (C++/WPF — Coming soon)<br>3. Vengeance Launcher (C++/CLI — Coming soon)`;
                     break;
                 case 'specs':
-                    res.innerHTML = `AMD Ryzen 7 5800X @ 4.85 GHz | Radeon RX 6750 XT | 32GB RAM | ASUS ROG Strix B550-A`;
+                    res.innerHTML = `AMD Ryzen 7 5800X @ 4.85 GHz | RX 6750 XT | 32GB RAM | ROG Strix B550-A`;
                     break;
                 case 'skills':
                     res.innerHTML = `C++, C#, WPF, Kotlin/Android, HTML/CSS/JS, Supabase, Git`;
                     break;
                 case 'play':
                 case 'pause':
-                    togglePlayPause(); res.innerText = 'Player toggled.'; break;
+                    togglePlayPause(); res.innerText = 'Playback toggled.'; break;
                 case 'next':
-                    changeSong(1); res.innerText = 'Next song loaded.'; break;
+                    changeSong(1); res.innerText = 'Next track loaded.'; break;
                 case 'prev':
-                    changeSong(-1); res.innerText = 'Previous song loaded.'; break;
+                    changeSong(-1); res.innerText = 'Previous track loaded.'; break;
                 case 'clear':
                 case 'cls':
                     cliOutput.innerHTML = ''; return;
                 case '': return;
                 default:
-                    res.innerHTML = `Befehl nicht gefunden: '${cmd}'. Tippe 'help' für Hilfe.`; break;
+                    res.innerHTML = `Command not recognized: '${cmd}'. Type 'help' for instructions.`; break;
             }
             cliOutput.appendChild(res);
             cliOutput.scrollTop = cliOutput.scrollHeight;
@@ -2065,7 +2124,7 @@
                 else if (e.code === 'KeyR' && loopBtn) { e.preventDefault(); loopBtn.click(); }
                 else if (e.code === 'KeyM' && muteIcon) { e.preventDefault(); muteIcon.click(); }
                 else if (e.code === 'KeyH') { e.preventDefault(); toggleZenMode(); }
-                else if (e.key === '~' || e.key === '^') { e.preventDefault(); openCli(); }
+                else if (e.key === '~' || e.key === '`') { e.preventDefault(); openCli(); }
                 else if (e.code === 'ArrowUp' && volumeSlider) {
                     e.preventDefault();
                     let v = Math.min(100, parseInt(volumeSlider.value) + 5);
@@ -2115,13 +2174,12 @@
                 const userEffect = customization?.username_effect || 'wave';
                 if (profile) {
                     setAnimatedUsername(profile.username || 'UpperEchelon', userEffect);
-                    document.getElementById('bio').innerText = profile.bio || '';
+                    document.getElementById('bio').innerText = profile.bio || 'Software Developer & System Architect';
                     if (profile.avatar_url) document.getElementById('avatar').src = profile.avatar_url;
                 } else {
                     setAnimatedUsername('UpperEchelon', userEffect);
                 }
 
-                /* RELOAD-SCHUTZ: VIEW NUR EINMAL PRO SESSION HOCHZÄHLEN */
                 const { data: stats } = await sbClient.from('stats').select('*').eq('id', 1).maybeSingle();
                 if (stats) {
                     document.getElementById('stat-1').innerText = stats.years_coding || '3+';
@@ -2170,7 +2228,6 @@
                 }
                 initLanyardWebSocket();
 
-                /* DEEP-LINK CHECK: ?track=ID */
                 const urlParams = new URLSearchParams(window.location.search);
                 const deepLinkTrackId = urlParams.get('track');
 
