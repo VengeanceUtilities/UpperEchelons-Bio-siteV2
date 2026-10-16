@@ -2235,8 +2235,6 @@
                 if (dbPlaylist && dbPlaylist.length > 0) {
                     playlist = dbPlaylist.map(song => ({ title: song.song_title, artist: song.artist, id: song.youtube_id, cover: song.cover_url }));
                 } else {
-                    playlist = [{ title: "Twisted world - The Viper", artist: "Tommy Knocker", id: "0wQ8nS2xX78", cover: "" }];
-                }
 
                 if (deepLinkTrackId) {
                     const matchedIdx = playlist.findIndex(s => s.id === deepLinkTrackId);
