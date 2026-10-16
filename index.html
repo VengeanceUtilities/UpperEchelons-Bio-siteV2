@@ -2231,25 +2231,30 @@
                 const urlParams = new URLSearchParams(window.location.search);
                 const deepLinkTrackId = urlParams.get('track');
 
-                const { data: dbPlaylist } = await sbClient.from('youtube_playlist').select('*').order('position', { ascending: true });
-                if (dbPlaylist && dbPlaylist.length > 0) {
-                    playlist = dbPlaylist.map(song => ({ title: song.song_title, artist: song.artist, id: song.youtube_id, cover: song.cover_url }));
-                } else {
+               const { data: dbPlaylist } = await sbClient.from('youtube_playlist').select('*').order('position', { ascending: true });
+if (dbPlaylist && dbPlaylist.length > 0) {
+    playlist = dbPlaylist.map(song => ({ 
+        title: song.song_title, 
+        artist: song.artist, 
+        id: song.youtube_id, 
+        cover: song.cover_url 
+    }));
+}
 
-                if (deepLinkTrackId) {
-                    const matchedIdx = playlist.findIndex(s => s.id === deepLinkTrackId);
-                    if (matchedIdx !== -1) {
-                        currentSongIndex = matchedIdx;
-                    } else {
-                        playlist.unshift({
-                            title: "Shared YouTube Track",
-                            artist: "Vengeance Utilities",
-                            id: deepLinkTrackId,
-                            cover: `https://img.youtube.com/vi/${deepLinkTrackId}/hqdefault.jpg`
-                        });
-                        currentSongIndex = 0;
-                    }
-                }
+if (deepLinkTrackId) {
+    const matchedIdx = playlist.findIndex(s => s.id === deepLinkTrackId);
+    if (matchedIdx !== -1) {
+        currentSongIndex = matchedIdx;
+    } else {
+        playlist.unshift({
+            title: "Shared YouTube Track",
+            artist: "Vengeance Utilities",
+            id: deepLinkTrackId,
+            cover: `https://img.youtube.com/vi/${deepLinkTrackId}/hqdefault.jpg`
+        });
+        currentSongIndex = 0;
+    }
+}
 
                 renderQueue();
 
