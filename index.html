@@ -27,7 +27,7 @@
         :root {
             --accent: #a855f7;
             --accent-rgb: 168, 85, 247;
-            --edge-glow-alpha: 0.24;
+            --edge-glow-alpha: 0.22;
             --glass-bg: rgba(18, 18, 24, 0.34);
             --glass-border: rgba(255, 255, 255, 0.16);
             --glass-border-top: rgba(255, 255, 255, 0.32);
@@ -96,7 +96,7 @@
                 linear-gradient(180deg, rgba(0,0,0,0.34) 0%, transparent 25%, transparent 72%, rgba(0,0,0,0.68) 100%);
         }
 
-        /* REFINED & SUBTLE SCREEN-EDGE AMBIENT GLOW */
+        /* SUBTLE SCREEN-EDGE AMBIENT GLOW */
         #screen-edge-glow {
             position: fixed;
             inset: 0;
@@ -108,7 +108,7 @@
             transition: box-shadow 0.8s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease;
         }
 
-        /* FROSTED REFRACTIVE GLASS UTILITY */
+        /* FROSTED REFRACTIVE GLASS */
         .frosted-glass {
             background: linear-gradient(145deg, rgba(255, 255, 255, 0.11) 0%, var(--glass-bg) 100%);
             backdrop-filter: blur(var(--glass-blur)) saturate(185%);
@@ -179,7 +179,7 @@
             flex-shrink: 0;
         }
 
-        /* PERSISTENT ZEN RESTORE BUTTON (VISIBLE EVEN WHEN UI IS HIDDEN) */
+        /* PERSISTENT ZEN RESTORE BUTTON */
         #zen-restore-pill {
             position: fixed;
             top: 22px;
@@ -195,7 +195,7 @@
             transform: translateY(0);
         }
 
-        /* iOS LOCKSCREEN STYLE CLOCK */
+        /* iOS LOCKSCREEN CLOCK */
         .lockscreen-clock {
             text-align: center;
             pointer-events: none;
@@ -218,7 +218,7 @@
             font-variant-numeric: tabular-nums;
         }
 
-        /* CENTER WORKSPACE */
+        /* CENTER 3-COLUMN HUD */
         .hud-center-grid {
             display: grid;
             grid-template-columns: 295px minmax(260px, 310px) 1fr;
@@ -283,6 +283,7 @@
             border-radius: 9px;
             object-fit: cover;
             flex-shrink: 0;
+            background: #14141c;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
         }
         .queue-meta { flex: 1; min-width: 0; }
@@ -341,6 +342,7 @@
             border-radius: 18px;
             overflow: hidden;
             position: relative;
+            background: #14141c;
             box-shadow: 0 14px 30px rgba(0, 0, 0, 0.55);
         }
         .album-art-frame img {
@@ -404,7 +406,7 @@
             border-color: var(--accent);
         }
 
-        /* RIGHT: KINETIC GLOWING LYRICS (+ MULTIPLE STYLES LIKE TIKTOK) */
+        /* RIGHT: KINETIC GLOWING LYRICS */
         .lyrics-stage {
             display: flex;
             flex-direction: column;
@@ -417,13 +419,8 @@
             -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
             transition: all 0.3s ease;
         }
-        .lyrics-stage.style-centered {
-            text-align: center;
-            padding-left: 0;
-        }
-        .lyrics-stage.style-centered .lyric-line {
-            transform-origin: center center;
-        }
+        .lyrics-stage.style-centered { text-align: center; padding-left: 0; }
+        .lyrics-stage.style-centered .lyric-line { transform-origin: center center; }
         .lyrics-stage.style-minimal .lyric-line:not(.active) {
             opacity: 0;
             height: 0;
@@ -442,10 +439,7 @@
             transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
             cursor: pointer;
         }
-        .lyric-line:hover {
-            color: rgba(255, 255, 255, 0.6);
-            filter: blur(0px);
-        }
+        .lyric-line:hover { color: rgba(255, 255, 255, 0.6); filter: blur(0px); }
         .lyric-line.active {
             color: #ffffff;
             filter: blur(0px);
@@ -454,10 +448,7 @@
                 0 0 18px rgba(255, 255, 255, 0.55),
                 0 0 32px rgba(var(--accent-rgb), 0.65);
         }
-        .lyric-line.past {
-            color: rgba(255, 255, 255, 0.38);
-            filter: blur(0.6px);
-        }
+        .lyric-line.past { color: rgba(255, 255, 255, 0.38); filter: blur(0.6px); }
 
         /* BOTTOM FLOATING CONTROL DOCK */
         .hud-bottom-area {
@@ -492,15 +483,8 @@
             cursor: pointer;
             transition: all 0.18s ease;
         }
-        .dock-btn:hover {
-            color: #fff;
-            background: rgba(255, 255, 255, 0.12);
-            transform: scale(1.08);
-        }
-        .dock-btn.active {
-            color: var(--accent);
-            text-shadow: 0 0 10px rgba(var(--accent-rgb), 0.75);
-        }
+        .dock-btn:hover { color: #fff; background: rgba(255, 255, 255, 0.12); transform: scale(1.08); }
+        .dock-btn.active { color: var(--accent); text-shadow: 0 0 10px rgba(var(--accent-rgb), 0.75); }
         .dock-btn.play-main {
             width: 40px;
             height: 40px;
@@ -515,17 +499,9 @@
             box-shadow: 0 0 18px rgba(var(--accent-rgb), 0.65);
         }
 
-        .dock-divider {
-            width: 1px;
-            height: 20px;
-            background: rgba(255, 255, 255, 0.16);
-        }
+        .dock-divider { width: 1px; height: 20px; background: rgba(255, 255, 255, 0.16); }
 
-        .dock-volume {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+        .dock-volume { display: flex; align-items: center; gap: 8px; }
         .dock-vol-slider {
             -webkit-appearance: none;
             width: 72px;
@@ -544,7 +520,7 @@
             box-shadow: 0 0 8px var(--accent);
         }
 
-        /* SOURCE SWITCHER + SEARCH INPUT INSIDE DOCK */
+        /* SOURCE SWITCHER + REAL LIVE SEARCH INPUT */
         .dock-search-wrap {
             display: flex;
             align-items: center;
@@ -581,7 +557,7 @@
             outline: none;
             color: #fff;
             font-size: 0.82rem;
-            width: 175px;
+            width: 195px;
             user-select: text;
         }
         .dock-search-input::placeholder { color: rgba(255, 255, 255, 0.48); }
@@ -625,13 +601,13 @@
             font-weight: 800;
         }
 
-        /* FLOATING SEARCH RESULTS OVERLAY (TOP RESULTS + CIRCULAR ARTISTS LIKE TIKTOK) */
+        /* FLOATING LIVE SEARCH OVERLAY */
         .search-results-popover {
             position: absolute;
             bottom: calc(100% + 14px);
             left: 50%;
             transform: translateX(-50%);
-            width: min(650px, 92vw);
+            width: min(660px, 92vw);
             border-radius: 26px;
             padding: 20px;
             display: none;
@@ -656,6 +632,9 @@
             font-weight: 700;
             color: rgba(255, 255, 255, 0.7);
             margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         .search-top-grid {
             display: grid;
@@ -672,6 +651,7 @@
             display: flex;
             flex-direction: column;
             gap: 7px;
+            position: relative;
         }
         .search-track-card:hover {
             background: rgba(var(--accent-rgb), 0.24);
@@ -683,6 +663,7 @@
             aspect-ratio: 1 / 1;
             border-radius: 11px;
             object-fit: cover;
+            background: #14141c;
         }
         .search-track-name {
             font-size: 0.78rem;
@@ -694,6 +675,9 @@
         .search-track-sub {
             font-size: 0.68rem;
             color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .search-artists-row {
@@ -777,11 +761,7 @@
         }
         .drawer-close:hover { background: var(--accent); }
 
-        .app-showcase-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 12px;
-        }
+        .app-showcase-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
         .app-item {
             background: rgba(255, 255, 255, 0.06);
             border: 1px solid rgba(255, 255, 255, 0.14);
@@ -792,16 +772,8 @@
             gap: 10px;
             transition: all 0.2s;
         }
-        .app-item:hover {
-            border-color: var(--accent);
-            background: rgba(255, 255, 255, 0.1);
-        }
-        .app-item-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
-        }
+        .app-item:hover { border-color: var(--accent); background: rgba(255, 255, 255, 0.1); }
+        .app-item-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
         .app-badge {
             font-size: 0.72rem;
             font-weight: 700;
@@ -811,17 +783,8 @@
             border: 1px solid var(--accent);
             color: #fff;
         }
-        .app-desc {
-            font-size: 0.84rem;
-            color: var(--text-muted);
-            line-height: 1.45;
-        }
-        .app-actions {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
+        .app-desc { font-size: 0.84rem; color: var(--text-muted); line-height: 1.45; }
+        .app-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
         .btn-accent {
             background: var(--accent);
             color: #fff;
@@ -840,11 +803,7 @@
         }
         .btn-accent:hover { transform: scale(1.04); }
 
-        .mc-stat-strip {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-        }
+        .mc-stat-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
         .mc-stat-box {
             background: rgba(0, 0, 0, 0.32);
             border: 1px solid rgba(255, 255, 255, 0.12);
@@ -854,7 +813,7 @@
         .mc-stat-lbl { font-size: 0.7rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; }
         .mc-stat-val { font-size: 0.95rem; font-weight: 800; margin-top: 3px; }
 
-        /* ZEN / HUD HIDE MODE (KEEP RESTORE BUTTON ACCESSIBLE) */
+        /* ZEN MODE */
         body.zen-mode .hud-center-grid,
         body.zen-mode .top-left-pills,
         body.zen-mode .top-right-pills {
@@ -863,7 +822,7 @@
             transform: scale(0.98);
         }
 
-        /* RESPONSIVE MOBILE / TABLET */
+        /* RESPONSIVE */
         @media (max-width: 1024px) {
             body { overflow-y: auto; height: auto; min-height: 100vh; }
             .hud-stage { height: auto; min-height: 100vh; gap: 24px; padding: 16px; }
@@ -899,7 +858,6 @@
 
         <!-- TOP BAR -->
         <div class="hud-top-row">
-            <!-- LEFT: UPPERECHELON PROFILE & LIVE STATUS -->
             <div class="top-left-pills">
                 <button class="hud-pill frosted-glass" id="open-profile-btn" title="Profile & Socials">
                     <img id="top-avatar" src="https://github.com/VengeanceUtilities.png" alt="Avatar" style="width:22px; height:22px; border-radius:50%; object-fit:cover;">
@@ -912,10 +870,10 @@
                 </div>
             </div>
 
-            <!-- CENTER: iOS LOCKSCREEN CLOCK -->
+            <!-- iOS LOCKSCREEN CLOCK -->
             <div class="lockscreen-clock">
                 <div class="clock-date" id="hud-date">Tuesday, November 17</div>
-                <div class="clock-time" id="hud-clock">20:34</div>
+                <div class="clock-time" id="hud-clock">22:07</div>
             </div>
 
             <!-- RIGHT: VENGEANCE APPS & SERVER PILLS -->
@@ -930,7 +888,7 @@
                     <span>Fabric Server</span>
                     <span id="top-mc-badge" style="color:#4ade80; font-size:0.74rem;">●</span>
                 </button>
-                <button class="hud-pill frosted-glass" id="glow-cycle-btn" title="Adjust Edge Glow Intensity">
+                <button class="hud-pill frosted-glass" id="glow-cycle-btn" title="Adjust Edge Glow">
                     <i class="fas fa-sun" style="color:var(--accent);"></i>
                 </button>
                 <button class="hud-pill frosted-glass" id="zen-toggle-btn" title="Hide UI (H)">
@@ -955,7 +913,7 @@
             <div class="cover-card-wrapper">
                 <div class="album-glass-card frosted-glass" id="album-glass-card">
                     <div class="album-art-frame">
-                        <img id="active-cover" src="https://img.youtube.com/vi/mzB1VGEGcSU/maxresdefault.jpg" alt="Album Art">
+                        <img id="active-cover" src="https://img.youtube.com/vi/mzB1VGEGcSU/hqdefault.jpg" alt="Album Art">
                     </div>
                     <div class="album-card-info">
                         <div class="album-card-title" id="active-title">Lucid Dreams</div>
@@ -979,13 +937,13 @@
 
         </div>
 
-        <!-- BOTTOM FLOATING CONTROL DOCK + SEARCH & PLATFORM POPOVERS -->
+        <!-- BOTTOM FLOATING CONTROL DOCK + LIVE SEARCH & PLATFORM POPOVERS -->
         <div class="hud-bottom-area">
 
-            <!-- FLOATING SEARCH POPOVER (TOP RESULTS + CIRCULAR ARTISTS) -->
+            <!-- LIVE UNIVERSAL SEARCH POPOVER -->
             <div class="search-results-popover frosted-glass" id="search-popover">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <span class="search-section-label" style="margin:0;">Top Results</span>
+                    <span class="search-section-label" id="search-header-label" style="margin:0;">Top Results — YouTube Music</span>
                     <button class="drawer-close" style="width:24px; height:24px; font-size:0.8rem;" onclick="closePopovers()">&times;</button>
                 </div>
                 <div class="search-top-grid" id="search-results-grid"></div>
@@ -1031,13 +989,13 @@
 
                 <div class="dock-divider"></div>
 
-                <!-- SOURCE ICON + LIVE SEARCH INPUT -->
+                <!-- SOURCE ICON + REAL LIVE SEARCH INPUT -->
                 <div class="dock-search-wrap">
                     <button class="source-trigger" id="source-btn" title="Switch Music Source">
                         <i class="fab fa-youtube" id="source-btn-icon" style="color:#ff4d4d;"></i>
                         <i class="fas fa-chevron-up" style="font-size:0.62rem; opacity:0.75;"></i>
                     </button>
-                    <input type="text" class="dock-search-input" id="hud-search-input" placeholder="Juice WRLD — Search..." autocomplete="off">
+                    <input type="text" class="dock-search-input" id="hud-search-input" placeholder="Search any song or artist..." autocomplete="off">
                 </div>
             </div>
         </div>
@@ -1129,7 +1087,7 @@
         </div>
     </div>
 
-    <!-- MODAL 3: PROFILE, RIG SPECS & SOCIALS -->
+    <!-- MODAL 3: PROFILE, RIG SPECS & SOCIALS (DASHBOARD LINK REMOVED FOR SECURITY) -->
     <div class="drawer-overlay" id="profile-modal">
         <div class="drawer-card frosted-glass" style="max-width:540px;">
             <div class="drawer-head">
@@ -1158,12 +1116,6 @@
                 </div>
             </div>
             <div id="modal-links-list" style="display:flex; flex-wrap:wrap; gap:10px;"></div>
-            <div style="border-top:1px solid rgba(255,255,255,0.1); padding-top:12px; display:flex; justify-content:space-between; align-items:center;">
-                <span style="font-size:0.75rem; color:var(--text-muted);">Manage playlist, links & theme:</span>
-                <a href="dashboard.html" class="hud-pill frosted-glass" style="padding:6px 14px; font-size:0.78rem;">
-                    <i class="fas fa-sliders"></i> Admin Dashboard
-                </a>
-            </div>
         </div>
     </div>
 
@@ -1172,6 +1124,18 @@
         const SUPABASE_URL = 'https://pdyrfnbjegsyjmcmbqck.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_XfgU_toGSxKo2eM810q59w_qJt_HAO0';
         const sbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        /* SMART COVER HELPER: PREVENTS GREY 120x90 YOUTUBE PLACEHOLDERS */
+        function getSafeCover(ytId, customCover) {
+            if (customCover && !customCover.includes('maxresdefault')) return customCover;
+            return `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
+        }
+        window.handleCoverFallback = function (imgEl, ytId) {
+            if (imgEl.naturalWidth <= 120 && ytId) {
+                imgEl.onerror = null;
+                imgEl.src = `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
+            }
+        };
 
         /* DEFAULT JUICE WRLD VIDEO SHOWCASE PLAYLIST */
         const DEFAULT_JUICE_PLAYLIST = [
@@ -1182,7 +1146,7 @@
                 source: 'YouTube Music',
                 accent: '#3b82f6',
                 rgb: '59, 130, 246',
-                cover: 'https://img.youtube.com/vi/mzB1VGEGcSU/maxresdefault.jpg',
+                cover: 'https://img.youtube.com/vi/mzB1VGEGcSU/hqdefault.jpg',
                 lyrics: [
                     { t: 0, text: 'I still see your shadows in my room' },
                     { t: 16, text: "Can't take back the love that I gave you" },
@@ -1205,7 +1169,7 @@
                 source: 'YouTube Music',
                 accent: '#ec4899',
                 rgb: '236, 72, 153',
-                cover: 'https://img.youtube.com/vi/h3EJICKwITw/maxresdefault.jpg',
+                cover: 'https://img.youtube.com/vi/h3EJICKwITw/hqdefault.jpg',
                 lyrics: [
                     { t: 0, text: 'They rotting my brain, love' },
                     { t: 14, text: 'These hoes are the same' },
@@ -1225,7 +1189,7 @@
                 source: 'Spotify',
                 accent: '#ef4444',
                 rgb: '239, 68, 68',
-                cover: 'https://img.youtube.com/vi/iI34LYmJ1Fs/maxresdefault.jpg',
+                cover: 'https://img.youtube.com/vi/iI34LYmJ1Fs/hqdefault.jpg',
                 lyrics: [
                     { t: 0, text: 'Man, what? (Haha)' },
                     { t: 15, text: 'This shit funny, one second' },
@@ -1245,7 +1209,7 @@
                 source: 'SoundCloud',
                 accent: '#a855f7',
                 rgb: '168, 85, 247',
-                cover: 'https://img.youtube.com/vi/C5i-UnuUKUI/maxresdefault.jpg',
+                cover: 'https://img.youtube.com/vi/C5i-UnuUKUI/hqdefault.jpg',
                 lyrics: [
                     { t: 0, text: 'Mm-mm, mm-mm, mm-mm, mm-mm, uh' },
                     { t: 14, text: 'I can’t breathe, I’m waiting for the exhale' },
@@ -1263,7 +1227,7 @@
                 source: 'YouTube Music',
                 accent: '#22c55e',
                 rgb: '34, 197, 94',
-                cover: 'https://img.youtube.com/vi/ZengOKCUBi0/maxresdefault.jpg',
+                cover: 'https://img.youtube.com/vi/ZengOKCUBi0/hqdefault.jpg',
                 lyrics: [
                     { t: 0, text: 'All white Gucci suit, I’m feeling righteous' },
                     { t: 18, text: 'I know that the truth is hard to digest' },
@@ -1277,9 +1241,9 @@
 
         const FEATURED_ARTISTS = [
             { name: 'Juice WRLD', query: 'Juice WRLD', avatar: 'https://img.youtube.com/vi/mzB1VGEGcSU/hqdefault.jpg' },
-            { name: '999 Club', query: 'Wishing Well', avatar: 'https://img.youtube.com/vi/C5i-UnuUKUI/hqdefault.jpg' },
-            { name: 'Legends Never Die', query: 'Righteous', avatar: 'https://img.youtube.com/vi/ZengOKCUBi0/hqdefault.jpg' },
-            { name: 'Death Race For Love', query: 'Robbery', avatar: 'https://img.youtube.com/vi/iI34LYmJ1Fs/hqdefault.jpg' }
+            { name: 'Lil Uzi Vert', query: 'Lil Uzi Vert', avatar: 'https://img.youtube.com/vi/WrsFXgQk5UI/hqdefault.jpg' },
+            { name: 'XXXTENTACION', query: 'XXXTENTACION', avatar: 'https://img.youtube.com/vi/pgN-vvVVxMA/hqdefault.jpg' },
+            { name: 'The Kid LAROI', query: 'The Kid LAROI', avatar: 'https://img.youtube.com/vi/kTJczUoc26U/hqdefault.jpg' }
         ];
 
         let playlist = [...DEFAULT_JUICE_PLAYLIST];
@@ -1293,8 +1257,9 @@
         let mcPollTarget = 'cairo-pumping.tun.ply.gg:45750';
         let mcDisplayIp = 'vengeanceutilities.de';
         let lyricsStyleIdx = 0;
-        const glowLevels = [0.24, 0.10, 0.0, 0.38];
+        const glowLevels = [0.22, 0.09, 0.0, 0.34];
         let glowLevelIdx = 0;
+        let liveSearchTimer = null;
 
         /* 1. LIVE iOS LOCKSCREEN CLOCK */
         function updateLockscreenClock() {
@@ -1307,7 +1272,7 @@
         setInterval(updateLockscreenClock, 1000);
         updateLockscreenClock();
 
-        /* 2. SUBTLE DYNAMIC SCREEN EDGE GLOW & PALETTE */
+        /* 2. SUBTLE DYNAMIC SCREEN EDGE GLOW */
         function applySongTheme(song) {
             const accent = song.accent || '#a855f7';
             const rgb = song.rgb || '168, 85, 247';
@@ -1329,11 +1294,9 @@
             const ry = (((e.clientX - r.left) - r.width / 2) / (r.width / 2)) * 4;
             albumCard.style.transform = `perspective(900px) rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg) translateY(-3px)`;
         });
-        albumCard.addEventListener('mouseleave', () => {
-            albumCard.style.transform = '';
-        });
+        albumCard.addEventListener('mouseleave', () => { albumCard.style.transform = ''; });
 
-        /* 4. RENDER QUEUE & SEARCH GRID */
+        /* 4. RENDER QUEUE */
         function renderQueue() {
             const list = document.getElementById('queue-list');
             document.getElementById('queue-count').innerText = `${playlist.length} tracks`;
@@ -1343,8 +1306,9 @@
                 const row = document.createElement('div');
                 row.className = `queue-row ${idx === currentIdx ? 'active' : ''}`;
                 const srcIcon = song.source === 'Spotify' ? 'fab fa-spotify' : (song.source === 'SoundCloud' ? 'fab fa-soundcloud' : 'fab fa-youtube');
+                const coverUrl = getSafeCover(song.id, song.cover);
                 row.innerHTML = `
-                    <img class="queue-thumb" src="${song.cover}" alt="Cover">
+                    <img class="queue-thumb" src="${coverUrl}" onload="handleCoverFallback(this, '${song.id}')" alt="Cover">
                     <div class="queue-meta">
                         <div class="queue-song">${song.title}</div>
                         <div class="queue-artist">${song.artist}</div>
@@ -1358,28 +1322,124 @@
             });
         }
 
-        function renderSearchGrid(query = '') {
+        /* 5. REAL MULTI-PLATFORM LIVE SEARCH (YOUTUBE / SPOTIFY / SOUNDCLOUD VIA PIPED + ITUNES) */
+        const PIPED_INSTANCES = [
+            'https://pipedapi.kavin.rocks',
+            'https://pipedapi.tokhmi.xyz',
+            'https://api.piped.projectsegfau.lt'
+        ];
+
+        async function searchLiveTracks(query) {
+            const q = query.trim();
+            const headerLbl = document.getElementById('search-header-label');
+            const grid = document.getElementById('search-results-grid');
+
+            if (!q) {
+                headerLbl.innerText = `Top Results — ${activePlatform}`;
+                renderLocalSearchCards(playlist.slice(0, 4));
+                return;
+            }
+
+            headerLbl.innerHTML = `<i class="fas fa-spinner fa-spin" style="color:var(--accent);"></i> Searching ${activePlatform} for "${q}"...`;
+
+            // 1) Local matches first
+            const localMatches = playlist.filter(s =>
+                s.title.toLowerCase().includes(q.toLowerCase()) || s.artist.toLowerCase().includes(q.toLowerCase())
+            );
+
+            // 2) Live YouTube / Music Video Search via Piped API
+            let remoteResults = [];
+            for (const apiBase of PIPED_INSTANCES) {
+                try {
+                    const filter = activePlatform === 'YouTube Music' ? 'music_songs' : 'videos';
+                    const res = await fetch(`${apiBase}/search?q=${encodeURIComponent(q)}&filter=${filter}`);
+                    if (!res.ok) continue;
+                    const data = await res.json();
+                    const items = (data.items || []).filter(i => i.url && i.url.includes('v=')).slice(0, 6);
+                    if (items.length > 0) {
+                        remoteResults = items.map(item => {
+                            const vid = item.url.split('v=')[1]?.split('&')[0];
+                            return {
+                                id: vid,
+                                title: item.title,
+                                artist: (item.uploaderName || 'Unknown').replace(' - Topic', ''),
+                                source: activePlatform,
+                                accent: '#a855f7',
+                                rgb: '168, 85, 247',
+                                cover: `https://img.youtube.com/vi/${vid}/hqdefault.jpg`,
+                                lyrics: []
+                            };
+                        });
+                        break;
+                    }
+                } catch (e) {}
+            }
+
+            // 3) Fallback via iTunes Search API (always reliable for Spotify / Apple Music metadata + covers)
+            if (remoteResults.length === 0) {
+                try {
+                    const itRes = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(q)}&entity=song&limit=4`);
+                    const itJson = await itRes.json();
+                    if (itJson.results) {
+                        remoteResults = itJson.results.map(r => ({
+                            id: null,
+                            searchQuery: `${r.artistName} - ${r.trackName} official video`,
+                            title: r.trackName,
+                            artist: r.artistName,
+                            source: activePlatform,
+                            accent: '#1db954',
+                            rgb: '29, 185, 84',
+                            cover: r.artworkUrl100.replace('100x100bb', '600x600bb'),
+                            lyrics: []
+                        }));
+                    }
+                } catch (e) {}
+            }
+
+            const combined = [...localMatches, ...remoteResults].slice(0, 4);
+            headerLbl.innerText = `Top Results — ${activePlatform}`;
+            renderLocalSearchCards(combined.length > 0 ? combined : playlist.slice(0, 4));
+        }
+
+        function renderLocalSearchCards(items) {
             const grid = document.getElementById('search-results-grid');
             const artistsRow = document.getElementById('search-artists-row');
-            const q = query.trim().toLowerCase();
             grid.innerHTML = '';
 
-            const matches = playlist.filter(s =>
-                !q || s.title.toLowerCase().includes(q) || s.artist.toLowerCase().includes(q)
-            ).slice(0, 4);
-
-            matches.forEach(song => {
-                const realIdx = playlist.findIndex(p => p.id === song.id);
+            items.forEach(song => {
                 const card = document.createElement('div');
                 card.className = 'search-track-card';
+                const coverUrl = song.id ? getSafeCover(song.id, song.cover) : song.cover;
                 card.innerHTML = `
-                    <img src="${song.cover}" alt="${song.title}">
+                    <img src="${coverUrl}" onload="handleCoverFallback(this, '${song.id || ''}')" alt="${song.title}">
                     <div class="search-track-name">${song.title}</div>
                     <div class="search-track-sub">${song.artist}</div>
                 `;
-                card.addEventListener('click', () => {
-                    playSongAt(realIdx);
+                card.addEventListener('click', async () => {
                     closePopovers();
+                    if (song.id) {
+                        let existingIdx = playlist.findIndex(p => p.id === song.id);
+                        if (existingIdx === -1) {
+                            playlist.unshift(song);
+                            existingIdx = 0;
+                        }
+                        playSongAt(existingIdx);
+                    } else if (song.searchQuery) {
+                        // Resolve YouTube video ID on click for iTunes metadata result
+                        for (const apiBase of PIPED_INSTANCES) {
+                            try {
+                                const r = await fetch(`${apiBase}/search?q=${encodeURIComponent(song.searchQuery)}&filter=videos`);
+                                const d = await r.json();
+                                const hit = (d.items || []).find(i => i.url && i.url.includes('v='));
+                                if (hit) {
+                                    song.id = hit.url.split('v=')[1].split('&')[0];
+                                    playlist.unshift(song);
+                                    playSongAt(0);
+                                    break;
+                                }
+                            } catch (e) {}
+                        }
+                    }
                 });
                 grid.appendChild(card);
             });
@@ -1392,28 +1452,22 @@
                     b.innerHTML = `<img src="${art.avatar}" alt="${art.name}"><span>${art.name}</span>`;
                     b.addEventListener('click', () => {
                         searchInput.value = art.query;
-                        renderSearchGrid(art.query);
+                        searchLiveTracks(art.query);
                     });
                     artistsRow.appendChild(b);
                 });
             }
         }
 
-        /* 5. KINETIC LYRICS RENDER & STYLE SWITCHER */
+        /* 6. KINETIC LYRICS RENDER & STYLE SWITCHER */
         document.getElementById('lyrics-style-btn').addEventListener('click', () => {
             const stage = document.getElementById('lyrics-stage');
             const label = document.getElementById('lyrics-style-label');
             lyricsStyleIdx = (lyricsStyleIdx + 1) % 3;
             stage.classList.remove('style-centered', 'style-minimal');
-            if (lyricsStyleIdx === 0) {
-                label.innerText = 'Other lyrics';
-            } else if (lyricsStyleIdx === 1) {
-                stage.classList.add('style-centered');
-                label.innerText = 'Centered glow';
-            } else {
-                stage.classList.add('style-minimal');
-                label.innerText = 'Focus line';
-            }
+            if (lyricsStyleIdx === 0) label.innerText = 'Other lyrics';
+            else if (lyricsStyleIdx === 1) { stage.classList.add('style-centered'); label.innerText = 'Centered glow'; }
+            else { stage.classList.add('style-minimal'); label.innerText = 'Focus line'; }
         });
 
         function renderLyrics(song) {
@@ -1460,7 +1514,7 @@
             });
         }
 
-        /* 6. YOUTUBE FULLSCREEN VIDEO ENGINE */
+        /* 7. YOUTUBE FULLSCREEN VIDEO ENGINE */
         window.onYouTubeIframeAPIReady = function () {
             ytReady = true;
             initYouTubePlayer();
@@ -1489,17 +1543,11 @@
                     },
                     onStateChange: (e) => {
                         const icon = document.querySelector('#play-pause-btn i');
-                        if (e.data === YT.PlayerState.PLAYING) {
-                            icon.className = 'fas fa-pause';
-                        } else if (e.data === YT.PlayerState.PAUSED) {
-                            icon.className = 'fas fa-play';
-                        } else if (e.data === YT.PlayerState.ENDED) {
-                            if (isLooping) {
-                                ytPlayer.seekTo(0);
-                                ytPlayer.playVideo();
-                            } else {
-                                stepSong(1);
-                            }
+                        if (e.data === YT.PlayerState.PLAYING) icon.className = 'fas fa-pause';
+                        else if (e.data === YT.PlayerState.PAUSED) icon.className = 'fas fa-play';
+                        else if (e.data === YT.PlayerState.ENDED) {
+                            if (isLooping) { ytPlayer.seekTo(0); ytPlayer.playVideo(); }
+                            else stepSong(1);
                         }
                     }
                 }
@@ -1519,7 +1567,10 @@
             const song = playlist[currentIdx];
             if (!song) return;
 
-            document.getElementById('active-cover').src = song.cover;
+            const coverEl = document.getElementById('active-cover');
+            coverEl.src = getSafeCover(song.id, song.cover);
+            coverEl.onload = () => handleCoverFallback(coverEl, song.id);
+
             document.getElementById('active-title').innerText = song.title;
             document.getElementById('active-artist').innerText = song.artist;
             document.getElementById('card-progress-fill').style.width = '0%';
@@ -1528,7 +1579,7 @@
             renderQueue();
             renderLyrics(song);
 
-            if (ytPlayer && typeof ytPlayer.loadVideoById === 'function') {
+            if (ytPlayer && typeof ytPlayer.loadVideoById === 'function' && song.id) {
                 ytPlayer.loadVideoById(song.id);
                 ytPlayer.playVideo();
             }
@@ -1545,7 +1596,7 @@
             }
         }
 
-        /* 7. CONTROLS, SEARCH & PLATFORM POPOVERS */
+        /* 8. CONTROLS, SEARCH & PLATFORM POPOVERS */
         document.getElementById('play-pause-btn').addEventListener('click', () => {
             if (!ytPlayer) return;
             const state = ytPlayer.getPlayerState();
@@ -1573,13 +1624,8 @@
         });
         document.getElementById('mute-btn').addEventListener('click', function () {
             if (!ytPlayer) return;
-            if (ytPlayer.isMuted()) {
-                ytPlayer.unMute();
-                this.querySelector('i').className = 'fas fa-volume-high';
-            } else {
-                ytPlayer.mute();
-                this.querySelector('i').className = 'fas fa-volume-xmark';
-            }
+            if (ytPlayer.isMuted()) { ytPlayer.unMute(); this.querySelector('i').className = 'fas fa-volume-high'; }
+            else { ytPlayer.mute(); this.querySelector('i').className = 'fas fa-volume-xmark'; }
         });
 
         document.getElementById('card-progress-bar').addEventListener('click', function (e) {
@@ -1600,12 +1646,13 @@
 
         searchInput.addEventListener('focus', () => {
             platformPopover.classList.remove('open');
-            renderSearchGrid(searchInput.value);
+            searchLiveTracks(searchInput.value);
             searchPopover.classList.add('open');
         });
         searchInput.addEventListener('input', (e) => {
-            renderSearchGrid(e.target.value);
+            clearTimeout(liveSearchTimer);
             searchPopover.classList.add('open');
+            liveSearchTimer = setTimeout(() => searchLiveTracks(e.target.value), 320);
         });
 
         document.getElementById('source-btn').addEventListener('click', (e) => {
@@ -1623,6 +1670,10 @@
                 iconEl.className = opt.dataset.icon;
                 iconEl.style.color = opt.dataset.color;
                 platformPopover.classList.remove('open');
+                if (searchInput.value.trim()) {
+                    searchPopover.classList.add('open');
+                    searchLiveTracks(searchInput.value);
+                }
             });
         });
 
@@ -1676,7 +1727,19 @@
             }
         }, 350);
 
-        /* 8. SUPABASE LIVE SYNC */
+        /* AUTO-FIX SOCIAL ICON BY URL (FIXES "DISCORD YOUTUBE" MISMATCH) */
+        function resolveSocialIcon(url, fallbackIcon) {
+            const u = (url || '').toLowerCase();
+            if (u.includes('youtube.com') || u.includes('youtu.be')) return 'fab fa-youtube';
+            if (u.includes('discord.gg') || u.includes('discord.com')) return 'fab fa-discord';
+            if (u.includes('github.com')) return 'fab fa-github';
+            if (u.includes('instagram.com')) return 'fab fa-instagram';
+            if (u.includes('spotify.com')) return 'fab fa-spotify';
+            if (u.includes('tiktok.com')) return 'fab fa-tiktok';
+            return fallbackIcon || 'fas fa-link';
+        }
+
+        /* 9. SUPABASE LIVE SYNC */
         async function syncDashboardData() {
             try {
                 fetch('https://api.github.com/repos/VengeanceUtilities/VengeancePlayer/releases/latest')
@@ -1727,7 +1790,8 @@
                         a.href = l.url;
                         a.target = '_blank';
                         a.className = 'hud-pill frosted-glass';
-                        a.innerHTML = `<i class="${l.icon}"></i> <span>${l.name}</span>`;
+                        const fixedIcon = resolveSocialIcon(l.url, l.icon);
+                        a.innerHTML = `<i class="${fixedIcon}"></i> <span>${l.name}</span>`;
                         wrap.appendChild(a);
                     });
                 }
@@ -1741,7 +1805,7 @@
                         source: 'YouTube Music',
                         accent: '#a855f7',
                         rgb: '168, 85, 247',
-                        cover: t.cover_url || `https://img.youtube.com/vi/${t.youtube_id}/maxresdefault.jpg`,
+                        cover: getSafeCover(t.youtube_id, t.cover_url),
                         lyrics: []
                     }));
                     playlist = [...DEFAULT_JUICE_PLAYLIST, ...mapped];
