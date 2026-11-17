@@ -21,7 +21,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://www.youtube.com/iframe_api"></script>
 
     <style>
         :root {
@@ -88,11 +87,18 @@
             opacity: 1;
         }
 
-        body.cover-backdrop-mode #youtube-player {
+        body.cover-backdrop-mode #youtube-player-wrap {
             opacity: 0 !important;
         }
 
-        #youtube-player {
+        #youtube-player-wrap {
+            position: absolute;
+            inset: 0;
+            transition: opacity 0.65s ease;
+        }
+
+        #youtube-player,
+        #youtube-player iframe {
             position: absolute;
             top: 50%;
             left: 50%;
@@ -103,7 +109,7 @@
             transform: translate(-50%, -50%) scale(1.15);
             filter: var(--video-filter);
             pointer-events: none;
-            transition: filter 0.6s ease, opacity 0.65s ease;
+            border: 0;
         }
 
         .bg-vignette {
@@ -444,9 +450,9 @@
         .lyrics-stage {
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start;
             gap: 14px;
-            padding-left: 16px;
+            padding: 80px 0 80px 16px;
             max-height: 56vh;
             overflow-y: auto;
             scrollbar-width: none;
@@ -556,7 +562,7 @@
             box-shadow: 0 0 8px var(--accent);
         }
 
-        /* SOURCE SWITCHER + REAL LIVE SEARCH INPUT (ANCHORED PROPERLY!) */
+        /* SOURCE SWITCHER + REAL LIVE SEARCH INPUT */
         .dock-search-wrap {
             position: relative;
             display: flex;
@@ -897,7 +903,9 @@
     <!-- FULLSCREEN MUSIC VIDEO & AMBIENT COVER WALLPAPER -->
     <div class="video-bg-wrap" id="video-bg-wrap">
         <img id="ambient-cover-bg" src="https://img.youtube.com/vi/mzB1VGEGcSU/hqdefault.jpg" alt="">
-        <div id="youtube-player"></div>
+        <div id="youtube-player-wrap">
+            <div id="youtube-player"></div>
+        </div>
     </div>
     <div class="bg-vignette"></div>
     <div id="screen-edge-glow"></div>
@@ -928,7 +936,7 @@
             <!-- iOS LOCKSCREEN CLOCK -->
             <div class="lockscreen-clock">
                 <div class="clock-date" id="hud-date">Tuesday, November 17</div>
-                <div class="clock-time" id="hud-clock">22:24</div>
+                <div class="clock-time" id="hud-clock">22:40</div>
             </div>
 
             <!-- RIGHT: VENGEANCE APPS & SERVER PILLS -->
@@ -1186,7 +1194,7 @@
         const SUPABASE_KEY = 'sb_publishable_XfgU_toGSxKo2eM810q59w_qJt_HAO0';
         const sbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        /* SMART COVER HELPER: PREVENTS GREY 120x90 YOUTUBE PLACEHOLDERS */
+        /* SMART COVER HELPER */
         function getSafeCover(ytId, customCover) {
             if (customCover && !customCover.includes('maxresdefault')) return customCover;
             return ytId ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` : 'https://github.com/VengeanceUtilities.png';
@@ -1315,7 +1323,8 @@
         let playlist = [...DEFAULT_JUICE_PLAYLIST];
         let currentIdx = 0;
         let ytPlayer = null;
-        let ytReady = false;
+        let ytPlayerReady = false;
+        let pendingSongToPlay = null;
         let isShuffling = false;
         let isLooping = false;
         let preferVideoMode = true;
@@ -1410,12 +1419,12 @@
                         <i class="${srcIcon}"></i>
                     </div>
                 `;
-                row.addEventListener('click', () => playSongAt(idx));
+                row.addEventListener('click', () => playSongAt(idx, true));
                 list.appendChild(row);
             });
         }
 
-        /* 5. REAL MULTI-PLATFORM LIVE SEARCH WITH RELIABLE INSTANCES */
+        /* 5. REAL MULTI-PLATFORM LIVE SEARCH */
         const PIPED_INSTANCES = [
             'https://pipedapi.adminforge.de',
             'https://pipedapi.r4fo.com',
@@ -1480,7 +1489,6 @@
 
             let remoteResults = [];
 
-            // Primary: iTunes API (Fast, CORS-safe, always gives crisp album art & clean metadata)
             try {
                 const itRes = await fetchWithTimeout(`https://itunes.apple.com/search?term=${encodeURIComponent(q)}&entity=song&limit=6`, 3500);
                 if (itRes.ok) {
@@ -1502,7 +1510,6 @@
                 }
             } catch (e) {}
 
-            // Secondary / Direct Video Search via Piped Mirrors
             if (remoteResults.length === 0 || activePlatform === 'YouTube Music') {
                 for (const apiBase of PIPED_INSTANCES) {
                     try {
@@ -1568,7 +1575,7 @@
                             playlist.unshift(song);
                             existingIdx = 0;
                         }
-                        playSongAt(existingIdx);
+                        playSongAt(existingIdx, true);
                     } else if (song.searchQuery) {
                         headerLbl.innerHTML = `<i class="fas fa-spinner fa-spin" style="color:var(--accent);"></i> Loading "${song.title}"...`;
                         const resolved = await resolveYouTubeVideoId(song.searchQuery);
@@ -1577,7 +1584,7 @@
                             song.id = resolved.id;
                             song.hasVideo = resolved.hasVideo;
                             playlist.unshift(song);
-                            playSongAt(0);
+                            playSongAt(0, true);
                         }
                     }
                 });
@@ -1668,7 +1675,8 @@
                 div.dataset.time = line.t;
                 div.innerText = line.text;
                 div.addEventListener('click', () => {
-                    if (ytPlayer && typeof ytPlayer.seekTo === 'function') {
+                    if (ytPlayer && ytPlayerReady && typeof ytPlayer.seekTo === 'function') {
+                        ensureUnmuted();
                         ytPlayer.seekTo(line.t, true);
                         ytPlayer.playVideo();
                     }
@@ -1697,15 +1705,25 @@
             });
         }
 
-        /* 7. YOUTUBE FULLSCREEN VIDEO ENGINE */
-        window.onYouTubeIframeAPIReady = function () {
-            ytReady = true;
-            initYouTubePlayer();
-        };
+        /* 7. ROBUST YOUTUBE FULLSCREEN VIDEO ENGINE (RACE-CONDITION PROOF) */
+        function ensureUnmuted() {
+            if (!ytPlayer || !ytPlayerReady) return;
+            try {
+                if (typeof ytPlayer.isMuted === 'function' && ytPlayer.isMuted()) {
+                    ytPlayer.unMute();
+                }
+                const vol = parseInt(document.getElementById('vol-slider').value, 10) || 65;
+                if (typeof ytPlayer.setVolume === 'function') {
+                    ytPlayer.setVolume(vol);
+                }
+                document.querySelector('#mute-btn i').className = vol === 0 ? 'fas fa-volume-xmark' : 'fas fa-volume-high';
+            } catch (e) {}
+        }
 
-        function initYouTubePlayer() {
-            if (!ytReady || ytPlayer || playlist.length === 0) return;
-            const startSong = playlist[currentIdx];
+        function createYouTubePlayerInstance() {
+            if (ytPlayer || !window.YT || !window.YT.Player) return;
+            const startSong = playlist[currentIdx] || DEFAULT_JUICE_PLAYLIST[0];
+
             ytPlayer = new YT.Player('youtube-player', {
                 videoId: startSong.id,
                 playerVars: {
@@ -1717,43 +1735,85 @@
                     iv_load_policy: 3,
                     modestbranding: 1,
                     rel: 0,
-                    playsinline: 1
+                    playsinline: 1,
+                    origin: window.location.origin
                 },
                 events: {
                     onReady: (e) => {
-                        e.target.setVolume(document.getElementById('vol-slider').value);
+                        ytPlayerReady = true;
+                        const vol = parseInt(document.getElementById('vol-slider').value, 10) || 65;
+                        e.target.setVolume(vol);
+                        if (pendingSongToPlay) {
+                            e.target.loadVideoById(pendingSongToPlay);
+                            pendingSongToPlay = null;
+                        }
                         e.target.playVideo();
                     },
                     onStateChange: (e) => {
                         const icon = document.querySelector('#play-pause-btn i');
-                        if (e.data === YT.PlayerState.PLAYING) icon.className = 'fas fa-pause';
-                        else if (e.data === YT.PlayerState.PAUSED) icon.className = 'fas fa-play';
-                        else if (e.data === YT.PlayerState.ENDED) {
-                            if (isLooping) { ytPlayer.seekTo(0); ytPlayer.playVideo(); }
-                            else stepSong(1);
+                        if (e.data === YT.PlayerState.PLAYING) {
+                            icon.className = 'fas fa-pause';
+                        } else if (e.data === YT.PlayerState.PAUSED) {
+                            icon.className = 'fas fa-play';
+                        } else if (e.data === YT.PlayerState.ENDED) {
+                            if (isLooping) {
+                                ytPlayer.seekTo(0, true);
+                                ytPlayer.playVideo();
+                            } else {
+                                stepSong(1);
+                            }
                         }
                     },
-                    onError: () => {
-                        // Fallback cleanly to cover backdrop if video embedding is blocked
+                    onError: async () => {
                         const song = playlist[currentIdx];
-                        if (song) {
-                            song.hasVideo = false;
-                            updateVideoBackdropState(song);
+                        if (!song) return;
+                        song.hasVideo = false;
+                        updateVideoBackdropState(song);
+                        // Try finding an embeddable audio/topic version automatically
+                        if (!song._retriedEmbed) {
+                            song._retriedEmbed = true;
+                            const alt = await resolveYouTubeVideoId(`${song.artist} ${song.title} audio`);
+                            if (alt && alt.id && alt.id !== song.id) {
+                                song.id = alt.id;
+                                if (ytPlayer && ytPlayerReady) {
+                                    ytPlayer.loadVideoById(alt.id);
+                                    ytPlayer.playVideo();
+                                }
+                            }
                         }
                     }
                 }
             });
         }
 
-        window.addEventListener('click', () => {
-            if (ytPlayer && typeof ytPlayer.isMuted === 'function' && ytPlayer.isMuted()) {
-                ytPlayer.unMute();
-                ytPlayer.setVolume(document.getElementById('vol-slider').value);
-                document.querySelector('#mute-btn i').className = 'fas fa-volume-high';
-            }
-        }, { once: true });
+        window.onYouTubeIframeAPIReady = function () {
+            createYouTubePlayerInstance();
+        };
 
-        function playSongAt(idx) {
+        // Load YouTube IFrame API dynamically AFTER handler is bound + fallback interval
+        (function loadYouTubeApiSafely() {
+            if (window.YT && window.YT.Player) {
+                createYouTubePlayerInstance();
+                return;
+            }
+            const tag = document.createElement('script');
+            tag.src = 'https://www.youtube.com/iframe_api';
+            document.head.appendChild(tag);
+
+            const bootChecker = setInterval(() => {
+                if (window.YT && window.YT.Player) {
+                    clearInterval(bootChecker);
+                    createYouTubePlayerInstance();
+                }
+            }, 250);
+        })();
+
+        // Unmute on first user interaction anywhere
+        ['pointerdown', 'keydown'].forEach(evt => {
+            window.addEventListener(evt, () => ensureUnmuted(), { once: true });
+        });
+
+        function playSongAt(idx, userTriggered = false) {
             currentIdx = idx;
             const song = playlist[currentIdx];
             if (!song) return;
@@ -1767,15 +1827,22 @@
             document.getElementById('active-title').innerText = song.title;
             document.getElementById('active-artist').innerText = song.artist;
             document.getElementById('card-progress-fill').style.width = '0%';
+            document.getElementById('time-current').innerText = '0:00';
+            document.getElementById('time-total').innerText = '0:00';
 
             applySongTheme(song);
             updateVideoBackdropState(song);
             renderQueue();
             renderLyrics(song);
 
-            if (ytPlayer && typeof ytPlayer.loadVideoById === 'function' && song.id) {
-                ytPlayer.loadVideoById(song.id);
-                ytPlayer.playVideo();
+            if (song.id) {
+                if (ytPlayer && ytPlayerReady && typeof ytPlayer.loadVideoById === 'function') {
+                    if (userTriggered) ensureUnmuted();
+                    ytPlayer.loadVideoById(song.id);
+                    ytPlayer.playVideo();
+                } else {
+                    pendingSongToPlay = song.id;
+                }
             }
         }
 
@@ -1783,19 +1850,26 @@
             if (isShuffling && playlist.length > 1) {
                 let next = currentIdx;
                 while (next === currentIdx) next = Math.floor(Math.random() * playlist.length);
-                playSongAt(next);
+                playSongAt(next, true);
             } else {
                 let next = (currentIdx + dir + playlist.length) % playlist.length;
-                playSongAt(next);
+                playSongAt(next, true);
             }
         }
 
         /* 8. CONTROLS, SEARCH & PLATFORM POPOVERS */
         document.getElementById('play-pause-btn').addEventListener('click', () => {
-            if (!ytPlayer) return;
+            if (!ytPlayer || !ytPlayerReady) {
+                createYouTubePlayerInstance();
+                return;
+            }
+            ensureUnmuted();
             const state = ytPlayer.getPlayerState();
-            if (state === YT.PlayerState.PLAYING) ytPlayer.pauseVideo();
-            else ytPlayer.playVideo();
+            if (state === YT.PlayerState.PLAYING) {
+                ytPlayer.pauseVideo();
+            } else {
+                ytPlayer.playVideo();
+            }
         });
         document.getElementById('prev-btn').addEventListener('click', () => stepSong(-1));
         document.getElementById('next-btn').addEventListener('click', () => stepSong(1));
@@ -1810,23 +1884,31 @@
         });
 
         document.getElementById('vol-slider').addEventListener('input', function () {
-            if (ytPlayer && typeof ytPlayer.setVolume === 'function') {
+            if (ytPlayer && ytPlayerReady && typeof ytPlayer.setVolume === 'function') {
                 ytPlayer.unMute();
-                ytPlayer.setVolume(this.value);
+                ytPlayer.setVolume(parseInt(this.value, 10));
                 document.querySelector('#mute-btn i').className = this.value == 0 ? 'fas fa-volume-xmark' : 'fas fa-volume-high';
             }
         });
         document.getElementById('mute-btn').addEventListener('click', function () {
-            if (!ytPlayer) return;
-            if (ytPlayer.isMuted()) { ytPlayer.unMute(); this.querySelector('i').className = 'fas fa-volume-high'; }
-            else { ytPlayer.mute(); this.querySelector('i').className = 'fas fa-volume-xmark'; }
+            if (!ytPlayer || !ytPlayerReady) return;
+            if (ytPlayer.isMuted()) {
+                ytPlayer.unMute();
+                this.querySelector('i').className = 'fas fa-volume-high';
+            } else {
+                ytPlayer.mute();
+                this.querySelector('i').className = 'fas fa-volume-xmark';
+            }
         });
 
         document.getElementById('card-progress-bar').addEventListener('click', function (e) {
-            if (!ytPlayer || typeof ytPlayer.getDuration !== 'function') return;
+            if (!ytPlayer || !ytPlayerReady || typeof ytPlayer.getDuration !== 'function') return;
+            const tot = ytPlayer.getDuration();
+            if (!tot) return;
             const rect = this.getBoundingClientRect();
             const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-            ytPlayer.seekTo(ytPlayer.getDuration() * pct, true);
+            ensureUnmuted();
+            ytPlayer.seekTo(tot * pct, true);
         });
 
         const searchInput = document.getElementById('hud-search-input');
@@ -1910,7 +1992,7 @@
 
         /* PROGRESS & LYRICS TICKER */
         setInterval(() => {
-            if (!ytPlayer || typeof ytPlayer.getCurrentTime !== 'function') return;
+            if (!ytPlayer || !ytPlayerReady || typeof ytPlayer.getCurrentTime !== 'function') return;
             const cur = ytPlayer.getCurrentTime() || 0;
             const tot = ytPlayer.getDuration() || 0;
             if (tot > 0) {
@@ -1932,6 +2014,13 @@
             if (u.includes('spotify.com')) return 'fab fa-spotify';
             if (u.includes('tiktok.com')) return 'fab fa-tiktok';
             return fallbackIcon || 'fas fa-link';
+        }
+
+        function extractYouTubeId(raw) {
+            if (!raw) return null;
+            if (/^[a-zA-Z0-9_-]{11}$/.test(raw.trim())) return raw.trim();
+            const m = raw.match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([a-zA-Z0-9_-]{11})/);
+            return m ? m[1] : null;
         }
 
         /* 9. SUPABASE LIVE SYNC */
@@ -1991,21 +2080,35 @@
                     });
                 }
 
-                const { data: dbTracks } = await sbClient.from('youtube_playlist').select('*').order('position', { ascending: true });
+                // Flexible playlist query (works with or without 'position' column)
+                let { data: dbTracks, error: plErr } = await sbClient.from('youtube_playlist').select('*').order('position', { ascending: true });
+                if (plErr) {
+                    const fallbackRes = await sbClient.from('youtube_playlist').select('*');
+                    dbTracks = fallbackRes.data;
+                }
+
                 if (dbTracks && dbTracks.length > 0) {
-                    const mapped = dbTracks.map(t => ({
-                        id: t.youtube_id,
-                        title: t.song_title,
-                        artist: t.artist,
-                        source: 'YouTube Music',
-                        hasVideo: true,
-                        accent: '#a855f7',
-                        rgb: '168, 85, 247',
-                        cover: getSafeCover(t.youtube_id, t.cover_url),
-                        lyrics: []
-                    }));
-                    playlist = [...DEFAULT_JUICE_PLAYLIST, ...mapped];
-                    renderQueue();
+                    const mapped = dbTracks.map(t => {
+                        const vid = extractYouTubeId(t.youtube_id || t.video_id || t.url || t.id);
+                        return {
+                            id: vid,
+                            title: t.song_title || t.title || 'Unknown Track',
+                            artist: t.artist || t.channel || 'UpperEchelon Playlist',
+                            source: t.source || 'YouTube Music',
+                            hasVideo: true,
+                            accent: t.accent || '#a855f7',
+                            rgb: t.rgb || '168, 85, 247',
+                            cover: getSafeCover(vid, t.cover_url || t.thumbnail),
+                            lyrics: []
+                        };
+                    }).filter(t => t.id);
+
+                    if (mapped.length > 0) {
+                        const existingIds = new Set(DEFAULT_JUICE_PLAYLIST.map(s => s.id));
+                        const uniqueDb = mapped.filter(m => !existingIds.has(m.id));
+                        playlist = [...DEFAULT_JUICE_PLAYLIST, ...uniqueDb];
+                        renderQueue();
+                    }
                 }
 
                 const { data: mc } = await sbClient.from('minecraft_config').select('*').limit(1).maybeSingle();
@@ -2075,7 +2178,7 @@
             } catch (e) {}
         }
 
-        playSongAt(0);
+        playSongAt(0, false);
         syncDashboardData();
     </script>
 </body>
