@@ -45,6 +45,44 @@
             min-height: 100vh; 
             overflow-x: hidden;
         }
+
+        /* LOGIN GATE OVERLAY */
+        #admin-auth-gate {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            background: radial-gradient(circle at 50% 25%, rgba(236, 72, 153, 0.15) 0%, #060609 70%);
+            backdrop-filter: blur(18px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .login-card {
+            width: min(400px, 95vw);
+            background: rgba(16, 16, 22, 0.88);
+            border: 1px solid var(--accent);
+            border-radius: 22px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.85), 0 0 30px var(--accent-glow);
+        }
+        .login-card input {
+            width: 100%;
+            background: rgba(10, 10, 14, 0.85);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px 14px;
+            color: #fff;
+            font-size: 0.92rem;
+            outline: none;
+        }
+        .login-card input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 12px var(--accent-glow);
+        }
         
         /* SIDEBAR */
         .sidebar { 
@@ -106,6 +144,7 @@
             text-decoration: none; transition: all 0.2s;
         }
         .btn-sidebar-action:hover { border-color: var(--accent); background: var(--accent-glow); }
+        .btn-sidebar-action.logout:hover { border-color: var(--danger); background: rgba(239, 68, 68, 0.22); color: #fca5a5; }
 
         /* MAIN WORKSPACE */
         .main-workspace { flex-grow: 1; padding: 32px 40px; overflow-y: auto; max-width: 1400px; margin: 0 auto; }
@@ -273,11 +312,30 @@
 </head>
 <body>
 
+    <!-- ADMIN AUTH GATE -->
+    <div id="admin-auth-gate">
+        <form id="admin-login-form" class="login-card">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <i class="fas fa-shield-halved" style="color:var(--accent); font-size:1.35rem;"></i>
+                <h2 style="font-size:1.25rem; font-weight:800;">Vengeance Admin Gate</h2>
+            </div>
+            <p style="font-size:0.82rem; color:var(--text-gray); line-height:1.4;">
+                Geschützter Bereich. Bitte melde dich mit deinem Supabase-Admin-Account an.
+            </p>
+            <input type="email" id="admin-email" placeholder="Admin E-Mail" required autocomplete="email">
+            <input type="password" id="admin-pass" placeholder="Passwort" required autocomplete="current-password">
+            <div id="admin-login-err" style="color:#f87171; font-size:0.78rem; display:none;"></div>
+            <button type="submit" class="btn-save" style="justify-content:center; width:100%; margin-top:4px;">
+                <i class="fas fa-right-to-bracket"></i> Einloggen
+            </button>
+        </form>
+    </div>
+
     <div class="sidebar">
         <div class="logo">
             <i class="fas fa-terminal" style="color: var(--accent);"></i> 
             <span>Vengeance OS</span>
-            <span class="logo-badge">v2.5</span>
+            <span class="logo-badge">v2.6</span>
         </div>
 
         <ul class="nav-list">
@@ -312,6 +370,9 @@
             </a>
             <button class="btn-sidebar-action" id="btn-export-db" title="Komplettes Supabase-Backup als JSON herunterladen">
                 <i class="fas fa-download"></i> DB Backup (.json)
+            </button>
+            <button class="btn-sidebar-action logout" id="btn-admin-logout">
+                <i class="fas fa-right-from-bracket"></i> Ausloggen
             </button>
         </div>
     </div>
@@ -410,7 +471,7 @@
                     <div class="form-group">
                         <label>Global Custom Font</label>
                         <select id="input-font">
-                            <option value="'Outfit', sans-serif">Outfit (Bold & Techy - Empfohlen)</option>
+                            <option value="'Outfit', 'Inter', sans-serif">Outfit (Bold & Techy - Empfohlen)</option>
                             <option value="'Inter', sans-serif">Inter (Clean & Modern)</option>
                             <option value="'Segoe UI', sans-serif">Standard (Segoe UI)</option>
                             <option value="'Roboto Mono', monospace">Roboto Mono (Hacker Vibe)</option>
@@ -616,7 +677,7 @@
                         </div>
                         <div class="form-group">
                             <label>Modpack / Notizen</label>
-                            <textarea id="mc-input-desc" rows="3" placeholder="Z. B. NeoForge 1.21.1 mit Custom Modpack"></textarea>
+                            <textarea id="mc-input-desc" rows="3" placeholder="Z. B. Fabric Modded Environment"></textarea>
                         </div>
                         <button type="submit" class="btn-save"><i class="fas fa-save"></i> Einstellungen sichern</button>
                     </form>
@@ -627,7 +688,7 @@
                         <div class="card-title-left"><i class="fas fa-network-wired"></i> Live Tunnel-Diagnose</div>
                     </div>
                     <div id="mc-test-result" style="font-size:0.88rem; color:var(--text-gray); line-height:1.6;">
-                        Klicke auf <strong>„Tunnel testen“</strong>, um live über <code>api.mcstatus.io</code> zu prüfen, ob dein lokaler NeoForge-Server über Playit.gg erreichbar ist.
+                        Klicke auf <strong>„Tunnel testen“</strong>, um live über <code>api.mcstatus.io</code> zu prüfen, ob dein lokaler Fabric-Server über Playit.gg erreichbar ist.
                     </div>
                 </div>
             </div>
@@ -682,12 +743,6 @@
                 toast.style.transition = 'all 0.25s ease';
                 setTimeout(() => toast.remove(), 250);
             }, 3000);
-        }
-
-        if(sbClient) {
-            const dbStatus = document.getElementById('db-status');
-            dbStatus.style.color = '#4ade80';
-            dbStatus.innerHTML = '<i class="fas fa-database"></i> Connected to Supabase';
         }
 
         /* TAB NAVIGATION */
@@ -788,7 +843,6 @@
                     let songTitle = data.title;
                     let artistName = (data.author_name || '').replace(' - Topic', '').trim();
 
-                    // Falls im Titel "Artist - Songname" steht, sauber splitten
                     if (songTitle.includes(' - ')) {
                         const parts = songTitle.split(' - ');
                         artistName = parts[0].trim();
@@ -815,6 +869,10 @@
         /* MAIN DATA LOADER */
         async function loadDashboardData() {
             try {
+                const dbStatus = document.getElementById('db-status');
+                dbStatus.style.color = '#4ade80';
+                dbStatus.innerHTML = '<i class="fas fa-shield-check"></i> Authenticated Admin';
+
                 const { data: profile } = await sbClient.from('profile').select('*').limit(1).maybeSingle();
                 if (profile) {
                     currentProfileId = profile.id;
@@ -827,7 +885,7 @@
                 const { data: customization } = await sbClient.from('site_customization').select('*').limit(1).maybeSingle();
                 if (customization) {
                     currentCustomizationId = customization.id;
-                    document.getElementById('input-font').value = customization.font_family || "'Outfit', sans-serif";
+                    document.getElementById('input-font').value = customization.font_family || "'Outfit', 'Inter', sans-serif";
                     const acc = customization.accent_color || "#ec4899";
                     document.getElementById('input-accent-color').value = acc;
                     document.getElementById('hex-code-label').innerText = acc;
@@ -888,7 +946,7 @@
             }
         }
 
-        /* LINKS MANAGER (MIT INLINE EDIT) */
+        /* LINKS MANAGER */
         async function loadLinksList() {
             const container = document.getElementById('dashboard-links-list');
             container.innerHTML = 'Loading...';
@@ -957,36 +1015,47 @@
         document.getElementById('link-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const editId = document.getElementById('link-edit-id').value;
+            const urlVal = document.getElementById('link-url').value.trim();
+            let iconVal = document.getElementById('link-icon').value.trim();
+
+            if (urlVal.toLowerCase().includes('youtube.com') || urlVal.toLowerCase().includes('youtu.be')) {
+                iconVal = 'fab fa-youtube';
+            } else if (urlVal.toLowerCase().includes('discord.gg') || urlVal.toLowerCase().includes('discord.com')) {
+                iconVal = 'fab fa-discord';
+            }
+
             const payload = {
                 name: document.getElementById('link-name').value.trim(),
-                url: document.getElementById('link-url').value.trim(),
-                icon: document.getElementById('link-icon').value.trim()
+                url: urlVal,
+                icon: iconVal
             };
 
-            if (editId) {
-                await sbClient.from('links').update(payload).eq('id', editId);
-                showToast('Link aktualisiert! 🔗');
-            } else {
-                await sbClient.from('links').insert([payload]);
-                showToast('Neuer Link hinzugefügt! 🔗');
+            const { error } = editId
+                ? await sbClient.from('links').update(payload).eq('id', editId)
+                : await sbClient.from('links').insert([payload]);
+
+            if (error) {
+                showToast('Fehler: ' + error.message, 'error');
+                return;
             }
+            showToast(editId ? 'Link aktualisiert! 🔗' : 'Neuer Link hinzugefügt! 🔗');
             resetLinkForm();
             loadLinksList();
         });
 
         window.deleteLink = async (id) => {
             if(confirm('Link wirklich löschen?')) { 
-                await sbClient.from('links').delete().eq('id', id); 
-                showToast('Link gelöscht');
+                const { error } = await sbClient.from('links').delete().eq('id', id); 
+                if (error) showToast('Fehler: ' + error.message, 'error');
+                else showToast('Link gelöscht');
                 loadLinksList(); 
             }
         };
 
-        /* PLAYLIST MANAGER (MIT SUCHE, EDIT, MINI-TESTER & DRAG-FIX) */
+        /* PLAYLIST MANAGER */
         let isSavingOrder = false;
         const playlistContainer = document.getElementById('dashboard-playlist-list');
 
-        // Einmaliger Dragover-Listener (verhindert doppelte Event-Listener beim Nachladen!)
         playlistContainer.addEventListener('dragover', e => {
             e.preventDefault();
             const draggingEl = playlistContainer.querySelector('.dragging');
@@ -1040,7 +1109,7 @@
                     await saveNewOrder();
                 });
 
-                const thumbUrl = track.cover_url || `https://img.youtube.com/vi/${track.youtube_id}/hqdefault.jpg`;
+                const thumbUrl = `https://img.youtube.com/vi/${track.youtube_id}/hqdefault.jpg`;
                 
                 div.innerHTML = `
                     <div class="list-info">
@@ -1136,7 +1205,7 @@
                 dbStatus.innerHTML = '<i class="fas fa-check"></i> Reihenfolge synchronisiert!';
                 showToast('Playlist-Reihenfolge gespeichert! 🎵');
                 setTimeout(() => {
-                    dbStatus.innerHTML = '<i class="fas fa-database"></i> Connected to Supabase';
+                    dbStatus.innerHTML = '<i class="fas fa-shield-check"></i> Authenticated Admin';
                 }, 2000);
             } catch (err) {
                 dbStatus.style.color = '#ef4444';
@@ -1178,7 +1247,6 @@
                 crt_scanlines: document.getElementById('input-crt-scanlines').checked,
                 bg_mode_solid: document.getElementById('input-bg-mode').checked
             };
-            // Synchronisiere auch den lokalen Browser-Cache für sofortiges Feedback
             localStorage.setItem('v_accent', payload.accent_color);
             localStorage.setItem('v_font', payload.font_family);
 
@@ -1214,18 +1282,7 @@
                 return;
             }
 
-            const maxResUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
-            const hqResUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
-
-            const checkImageExists = (url) => new Promise((resolve) => {
-                const img = new Image();
-                img.onload = () => resolve(img.naturalWidth !== 120);
-                img.onerror = () => resolve(false);
-                img.src = url;
-            });
-
-            const hasMaxRes = await checkImageExists(maxResUrl);
-            const finalCoverUrl = hasMaxRes ? maxResUrl : hqResUrl;
+            const finalCoverUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
 
             if (editId) {
                 const { error } = await sbClient.from('youtube_playlist').update({
@@ -1326,7 +1383,7 @@
                     out.innerHTML = `<span style="color:#4ade80;"><i class="fas fa-check"></i> Verbunden mit <strong>${data.name}</strong> (${data.presence_count || 0} Member online)</span>`;
                     showToast(`Discord Server "${data.name}" gefunden!`);
                 } else {
-                    out.innerHTML = `<span style="color:#f87171;">Widget nicht aktiv oder Server-ID falsch (In Discord unter Servereinstellungen -> Widget -> Server-Widget aktivieren).</span>`;
+                    out.innerHTML = `<span style="color:#f87171;">Widget nicht aktiv oder Server-ID falsch.</span>`;
                 }
             } catch (e) {
                 out.innerHTML = `<span style="color:#f87171;">Abfrage fehlgeschlagen.</span>`;
@@ -1371,7 +1428,41 @@
             }
         });
 
-        loadDashboardData();
+        /* AUTHENTICATION GATE LOGIC */
+        async function checkAdminAuth() {
+            const gate = document.getElementById('admin-auth-gate');
+            const { data: { session } } = await sbClient.auth.getSession();
+            if (session) {
+                gate.style.display = 'none';
+                loadDashboardData();
+            }
+
+            document.getElementById('admin-login-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('admin-email').value.trim();
+                const password = document.getElementById('admin-pass').value;
+                const errBox = document.getElementById('admin-login-err');
+                errBox.style.display = 'none';
+
+                const { error } = await sbClient.auth.signInWithPassword({ email, password });
+                if (error) {
+                    errBox.innerText = 'Login fehlgeschlagen: ' + error.message;
+                    errBox.style.display = 'block';
+                } else {
+                    gate.style.display = 'none';
+                    showToast('Erfolgreich eingeloggt! 🛡️');
+                    loadDashboardData();
+                }
+            });
+
+            document.getElementById('btn-admin-logout').addEventListener('click', async () => {
+                await sbClient.auth.signOut();
+                gate.style.display = 'flex';
+                showToast('Ausgeloggt');
+            });
+        }
+
+        checkAdminAuth();
     </script>
 </body>
 </html>
