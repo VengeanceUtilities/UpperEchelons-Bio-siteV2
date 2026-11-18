@@ -66,7 +66,7 @@
             z-index: 0;
             overflow: hidden;
             pointer-events: none;
-            background: radial-gradient(circle at 50% 35%, rgba(var(--accent-rgb), 0.28) 0%, #050508 78%);
+            background: radial-gradient(circle at 50% 35%, rgba(var(--accent-rgb), 0.30) 0%, #050508 78%);
             transition: background 0.9s ease;
         }
 
@@ -76,10 +76,10 @@
             width: 116%;
             height: 116%;
             object-fit: cover;
-            filter: blur(55px) saturate(1.65) brightness(0.48);
+            filter: blur(55px) saturate(1.65) brightness(0.50);
             opacity: 0;
             transform: scale(1.06);
-            transition: opacity 0.75s ease;
+            transition: opacity 0.65s ease;
         }
 
         body.cover-backdrop-mode #ambient-cover-bg {
@@ -93,7 +93,7 @@
         #youtube-player-wrap {
             position: absolute;
             inset: 0;
-            transition: opacity 0.65s ease;
+            transition: opacity 0.55s ease;
         }
 
         #youtube-bg-frame {
@@ -133,7 +133,7 @@
             transition: box-shadow 0.85s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease;
         }
 
-        /* FROSTED REFRACTIVE GLASS */
+        /* FROSTED REFRACTIVE GLASS + 3D SPECULAR SHEEN */
         .frosted-glass {
             background: linear-gradient(145deg, rgba(255, 255, 255, 0.12) 0%, var(--glass-bg) 100%);
             backdrop-filter: blur(var(--glass-blur)) saturate(190%);
@@ -141,8 +141,22 @@
             border: 1px solid var(--glass-border);
             border-top-color: var(--glass-border-top);
             box-shadow:
-                0 18px 45px rgba(0, 0, 0, 0.44),
-                inset 0 1px 1px rgba(255, 255, 255, 0.24);
+                0 20px 50px rgba(0, 0, 0, 0.48),
+                inset 0 1px 1px rgba(255, 255, 255, 0.26);
+        }
+
+        /* FLOATING ZERO-GRAVITY KEYFRAMES (TIKTOK DESKTOP SKIN) */
+        @keyframes floatLeftPanel {
+            0%, 100% { transform: perspective(1100px) rotateY(7deg) rotateX(1deg) translateY(0px); }
+            50% { transform: perspective(1100px) rotateY(5.5deg) rotateX(-1deg) translateY(-7px); }
+        }
+        @keyframes floatCenterCard {
+            0%, 100% { transform: perspective(1000px) rotateY(-2deg) rotateX(1.5deg) translateY(0px); }
+            50% { transform: perspective(1000px) rotateY(2deg) rotateX(-1.5deg) translateY(-8px); }
+        }
+        @keyframes floatBottomDock {
+            0%, 100% { transform: perspective(1100px) rotateX(3deg) translateY(0px); }
+            50% { transform: perspective(1100px) rotateX(1.5deg) translateY(-4px); }
         }
 
         /* HUD STAGE */
@@ -207,7 +221,7 @@
         /* AUDIO UNLOCK TOAST BANNER */
         #audio-unlock-pill {
             position: fixed;
-            bottom: 88px;
+            bottom: 92px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 55;
@@ -264,7 +278,7 @@
         /* CENTER 3-COLUMN HUD */
         .hud-center-grid {
             display: grid;
-            grid-template-columns: 295px minmax(265px, 315px) 1fr;
+            grid-template-columns: 295px minmax(265px, 315px) minmax(0, 1fr);
             align-items: center;
             gap: 34px;
             width: 100%;
@@ -272,10 +286,11 @@
             margin: 0 auto;
             flex: 1;
             min-height: 0;
+            perspective: 1400px;
             transition: opacity 0.32s ease, transform 0.32s ease;
         }
 
-        /* LEFT: CONTINUE PLAYING QUEUE */
+        /* LEFT: FLOATING & TILTED CONTINUE PLAYING QUEUE */
         .queue-panel {
             border-radius: 22px;
             padding: 15px;
@@ -283,6 +298,14 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
+            transform-style: preserve-3d;
+            will-change: transform;
+            animation: floatLeftPanel 7.5s ease-in-out infinite;
+            transition: transform 0.22s ease-out, box-shadow 0.35s ease;
+        }
+        .queue-panel:hover {
+            animation-play-state: paused;
+            box-shadow: 0 26px 60px rgba(0, 0, 0, 0.6), 0 0 26px rgba(var(--accent-rgb), 0.25);
         }
         .queue-header {
             display: flex;
@@ -358,7 +381,7 @@
             flex-shrink: 0;
         }
 
-        /* CENTER: ALBUM COVER GLASS CARD */
+        /* CENTER: FLOATING & TILTED ALBUM COVER GLASS CARD */
         .cover-card-wrapper {
             display: flex;
             flex-direction: column;
@@ -375,10 +398,12 @@
             gap: 13px;
             transform-style: preserve-3d;
             will-change: transform;
-            transition: transform 0.2s ease-out, box-shadow 0.4s ease;
+            animation: floatCenterCard 6.5s ease-in-out infinite;
+            transition: transform 0.18s ease-out, box-shadow 0.35s ease;
         }
         .album-glass-card:hover {
-            box-shadow: 0 24px 55px rgba(0, 0, 0, 0.58), 0 0 28px rgba(var(--accent-rgb), 0.3);
+            animation-play-state: paused;
+            box-shadow: 0 28px 65px rgba(0, 0, 0, 0.65), 0 0 32px rgba(var(--accent-rgb), 0.36);
         }
         .album-art-frame {
             width: 100%;
@@ -388,6 +413,7 @@
             position: relative;
             background: #14141c;
             box-shadow: 0 14px 30px rgba(0, 0, 0, 0.55);
+            transform: translateZ(16px);
         }
         .album-art-frame img {
             width: 100%;
@@ -395,7 +421,7 @@
             object-fit: cover;
             transition: transform 0.5s ease;
         }
-        .album-glass-card:hover .album-art-frame img { transform: scale(1.03); }
+        .album-glass-card:hover .album-art-frame img { transform: scale(1.04); }
 
         .starting-on-badge {
             position: absolute;
@@ -429,6 +455,7 @@
             flex-direction: column;
             gap: 3px;
             padding: 0 4px;
+            transform: translateZ(10px);
         }
         .album-card-title {
             font-size: 1.15rem;
@@ -576,6 +603,7 @@
             align-items: center;
             gap: 10px;
             position: relative;
+            perspective: 1200px;
         }
 
         .control-dock {
@@ -587,6 +615,14 @@
             position: relative;
             z-index: 30;
             max-width: 96vw;
+            transform-style: preserve-3d;
+            will-change: transform;
+            animation: floatBottomDock 7s ease-in-out infinite;
+            transition: transform 0.2s ease-out, box-shadow 0.35s ease;
+        }
+        .control-dock:hover {
+            animation-play-state: paused;
+            box-shadow: 0 24px 58px rgba(0, 0, 0, 0.62), 0 0 26px rgba(var(--accent-rgb), 0.28);
         }
 
         /* LEFT IN DOCK: SOURCE SWITCHER + UNIVERSAL SEARCH */
@@ -790,7 +826,7 @@
             transition: width 0.25s linear;
         }
 
-        /* FLOATING LIVE SEARCH OVERLAY — CENTERED ABOVE DOCK */
+        /* FLOATING LIVE SEARCH OVERLAY — CENTERED ABOVE DOCK (FIXED EQUAL COLUMNS) */
         .search-results-popover {
             position: absolute;
             bottom: calc(100% + 14px);
@@ -827,10 +863,13 @@
         }
         .search-top-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(4, minmax(0, 1fr));
             gap: 12px;
+            width: 100%;
         }
         .search-track-card {
+            min-width: 0;
+            width: 100%;
             background: rgba(255, 255, 255, 0.06);
             border: 1px solid rgba(255, 255, 255, 0.12);
             border-radius: 16px;
@@ -841,6 +880,7 @@
             flex-direction: column;
             gap: 7px;
             position: relative;
+            overflow: hidden;
         }
         .search-track-card:hover {
             background: rgba(var(--accent-rgb), 0.26);
@@ -853,6 +893,7 @@
             border-radius: 11px;
             object-fit: cover;
             background: #14141c;
+            display: block;
         }
         .search-track-name {
             font-size: 0.78rem;
@@ -860,6 +901,7 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            width: 100%;
         }
         .search-track-sub {
             font-size: 0.68rem;
@@ -867,6 +909,7 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            width: 100%;
         }
         .search-video-pill {
             position: absolute;
@@ -883,6 +926,7 @@
             display: inline-flex;
             align-items: center;
             gap: 4px;
+            z-index: 2;
         }
 
         .search-artists-row {
@@ -1053,12 +1097,13 @@
             .hud-top-row { grid-template-columns: 1fr; justify-items: center; }
             .top-left-pills, .top-right-pills { justify-content: center; }
             .hud-center-grid { grid-template-columns: 1fr; gap: 20px; }
+            .queue-panel, .album-glass-card, .control-dock { animation: none; transform: none !important; }
             .queue-panel { max-height: 240px; order: 3; }
             .cover-card-wrapper { max-width: 310px; margin: 0 auto; order: 1; }
             .lyrics-stage { order: 2; text-align: center; padding-left: 12px; max-height: 220px; }
             .lyric-line { transform-origin: center center; }
             .control-dock { flex-wrap: wrap; justify-content: center; border-radius: 26px; }
-            .search-top-grid { grid-template-columns: repeat(2, 1fr); }
+            .search-top-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         }
     </style>
 </head>
@@ -1074,7 +1119,7 @@
     <div class="bg-vignette"></div>
     <div id="screen-edge-glow"></div>
 
-    <!-- CLICK TO UNMUTE PILL (AUTO-HIDES ON FIRST INTERACTION) -->
+    <!-- CLICK TO UNMUTE PILL -->
     <button class="hud-pill frosted-glass" id="audio-unlock-pill">
         <i class="fas fa-volume-high"></i>
         <span>Click anywhere to enable sound</span>
@@ -1106,7 +1151,7 @@
             <!-- iOS LOCKSCREEN CLOCK -->
             <div class="lockscreen-clock">
                 <div class="clock-date" id="hud-date">Wednesday, November 18</div>
-                <div class="clock-time" id="hud-clock">17:15</div>
+                <div class="clock-time" id="hud-clock">18:15</div>
             </div>
 
             <!-- RIGHT: VENGEANCE APPS, SERVER & DIRECT DASHBOARD LINK -->
@@ -1136,8 +1181,8 @@
         <!-- CENTER 3-COLUMN HUD -->
         <div class="hud-center-grid">
 
-            <!-- LEFT: CONTINUE PLAYING QUEUE -->
-            <div class="queue-panel frosted-glass">
+            <!-- LEFT: FLOATING CONTINUE PLAYING QUEUE -->
+            <div class="queue-panel frosted-glass" id="queue-panel">
                 <div class="queue-header">
                     <span>Continue Playing</span>
                     <span id="queue-count" style="opacity:0.85;">Loading...</span>
@@ -1145,7 +1190,7 @@
                 <div class="queue-list" id="queue-list"></div>
             </div>
 
-            <!-- CENTER: ALBUM ART GLASS CARD -->
+            <!-- CENTER: FLOATING ALBUM ART GLASS CARD -->
             <div class="cover-card-wrapper">
                 <div class="album-glass-card frosted-glass" id="album-glass-card">
                     <div class="album-art-frame">
@@ -1219,7 +1264,7 @@
             </div>
 
             <!-- MAIN BOTTOM CONTROL PILL -->
-            <div class="control-dock frosted-glass">
+            <div class="control-dock frosted-glass" id="control-dock">
 
                 <!-- 1. SOURCE ICON + 7-PLATFORM POPOVER + REAL LIVE SEARCH -->
                 <div class="dock-search-wrap">
@@ -1417,9 +1462,7 @@
                     'Accept': 'application/json'
                 }
             });
-            if (!res.ok) {
-                throw new Error(`HTTP ${res.status}`);
-            }
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
             return await res.json();
         }
 
@@ -1438,7 +1481,7 @@
             } catch (e) {}
         }
 
-        /* SAFE COVER HELPER + SVG FALLBACK (NO BROKEN ? IMAGES OR HANGING REQUESTS) */
+        /* SAFE COVER HELPER + SVG FALLBACK */
         const FALLBACK_SVG = "data:image/svg+xml," + encodeURIComponent(
             "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='#1e1b4b'/><stop offset='100%' stop-color='#09090b'/></linearGradient></defs><rect width='200' height='200' fill='url(#g)'/><circle cx='100' cy='100' r='44' fill='none' stroke='#a855f7' stroke-width='6'/><circle cx='100' cy='100' r='12' fill='#a855f7'/></svg>"
         );
@@ -1511,16 +1554,7 @@
                 accent: '#ec4899',
                 rgb: '236, 72, 153',
                 cover: 'https://i.ytimg.com/vi/h3EJICKwITw/mqdefault.jpg',
-                lyrics: [
-                    { t: 0, text: "They're rotting my brain, love" },
-                    { t: 13, text: 'These hoes are the same' },
-                    { t: 20, text: 'I admit it, another ho got me finished' },
-                    { t: 24, text: 'Broke my heart, oh, no, you didn’t' },
-                    { t: 28, text: 'Fuck sippin’, I’ma down a whole bottle' },
-                    { t: 32, text: 'Hard liquor, hard truth, can’t swallow' },
-                    { t: 36, text: 'Need a bartender, put me out my sorrow' },
-                    { t: 40, text: 'Wake up the next day in the Monte Carlo' }
-                ]
+                lyrics: []
             },
             {
                 id: 'iI34LYmJ1Fs',
@@ -1532,16 +1566,7 @@
                 accent: '#ef4444',
                 rgb: '239, 68, 68',
                 cover: 'https://i.ytimg.com/vi/iI34LYmJ1Fs/mqdefault.jpg',
-                lyrics: [
-                    { t: 0, text: 'Man, what? (Haha)' },
-                    { t: 14, text: 'This stuff is really, really, really hard' },
-                    { t: 24, text: 'She told me put my heart in the bag' },
-                    { t: 28, text: 'And nobody gets hurt' },
-                    { t: 32, text: 'Now I’m running from her love, I’m not fast' },
-                    { t: 36, text: 'So I’m making it worse' },
-                    { t: 40, text: 'Now I’m digging up a grave, from my past' },
-                    { t: 44, text: 'I’m a whole different person' }
-                ]
+                lyrics: []
             },
             {
                 id: 'C5i-UnuUKUI',
@@ -1553,16 +1578,7 @@
                 accent: '#a855f7',
                 rgb: '168, 85, 247',
                 cover: 'https://i.ytimg.com/vi/C5i-UnuUKUI/mqdefault.jpg',
-                lyrics: [
-                    { t: 0, text: 'Mm-mm, mm-mm, mm-mm, mm-mm, uh' },
-                    { t: 13, text: "I can't breathe, I'm waiting for the exhale" },
-                    { t: 17, text: 'Toss my pain with my wishes in a wishing well' },
-                    { t: 21, text: 'Still no luck, but oh, well' },
-                    { t: 25, text: 'I still try even though I know I’m gon’ fail' },
-                    { t: 29, text: 'Stress on my shoulders like an anvil' },
-                    { t: 33, text: 'Perky got me itching like an anthill' },
-                    { t: 37, text: 'Drugs killing me softly, Lauryn Hill' }
-                ]
+                lyrics: []
             },
             {
                 id: 'ZengOKCUBi0',
@@ -1574,21 +1590,14 @@
                 accent: '#22c55e',
                 rgb: '34, 197, 94',
                 cover: 'https://i.ytimg.com/vi/ZengOKCUBi0/mqdefault.jpg',
-                lyrics: [
-                    { t: 0, text: 'All white Gucci suit, I’m feeling righteous, yeah' },
-                    { t: 14, text: 'I know that the truth is hard to digest, yeah' },
-                    { t: 20, text: 'Five or six pills in my right hand, yeah' },
-                    { t: 26, text: 'Codeine runneth over on my nightstand' },
-                    { t: 32, text: 'Taking medicine to fix all of the damage' },
-                    { t: 38, text: 'My anxiety the size of a planet' }
-                ]
+                lyrics: []
             }
         ];
 
         const FEATURED_ARTISTS = [
             { name: 'Juice WRLD', query: 'Juice WRLD', avatar: 'https://i.ytimg.com/vi/mzB1VGEGcSU/mqdefault.jpg' },
             { name: 'Lil Uzi Vert', query: 'Lil Uzi Vert', avatar: 'https://i.ytimg.com/vi/WrsFXgQk5UI/mqdefault.jpg' },
-            { name: 'XXXTENTACION', query: 'XXXTENTACION', avatar: 'https://i.ytimg.com/vi/iAeYPfrXwk4/mqdefault.jpg' },
+            { name: 'XXXTENTACION', query: 'XXXTENTACION', avatar: 'https://i.ytimg.com/vi/f0bbDFRYD_A/mqdefault.jpg' },
             { name: 'The Kid LAROI', query: 'The Kid LAROI', avatar: 'https://i.ytimg.com/vi/kTJczUoc26U/mqdefault.jpg' }
         ];
 
@@ -1641,7 +1650,7 @@
             }, 2600);
         }
 
-        /* 1. DIRECT YOUTUBE EMBED ENGINE (SUPPORTS BOTH VIDEO ID & NATIVE SEARCH STREAM) */
+        /* 1. DIRECT YOUTUBE EMBED ENGINE + AUTO-COVER FALLBACK ON UNAVAILABLE VIDEO */
         const bgFrame = document.getElementById('youtube-bg-frame');
 
         function sendYtCommand(func, args = []) {
@@ -1678,12 +1687,34 @@
             return `https://www.youtube.com/embed?${params.toString()}`;
         }
 
+        async function verifyVideoEmbedAvailability(song) {
+            if (!song) return;
+            if (!song.id) {
+                song.hasVideo = false;
+                if (playlist[currentIdx] === song) updateVideoBackdropState(song);
+                return;
+            }
+            try {
+                const res = await fetchWithTimeout(
+                    `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${song.id}&format=json`,
+                    3200
+                );
+                if (!res.ok) {
+                    song.hasVideo = false;
+                    if (playlist[currentIdx] === song) updateVideoBackdropState(song);
+                }
+            } catch (e) {}
+        }
+
         function loadEmbedForSong(song, startSec = 0, forceReload = false) {
             if (!song) return;
             const key = song.id || song.searchQuery || song.title;
             if (!forceReload && activeLoadedKey === key && startSec === 0) return;
             activeLoadedKey = key;
+
+            verifyVideoEmbedAvailability(song);
             bgFrame.src = buildEmbedUrl(song, startSec, isMuted);
+
             setTimeout(() => {
                 const vol = parseInt(document.getElementById('vol-slider').value, 10) || 65;
                 sendYtCommand('setVolume', [vol]);
@@ -1706,6 +1737,13 @@
             if (!e.origin || !e.origin.includes('youtube')) return;
             try {
                 const msg = JSON.parse(e.data);
+                if (msg.event === 'onError') {
+                    const activeSong = playlist[currentIdx];
+                    if (activeSong) {
+                        activeSong.hasVideo = false;
+                        updateVideoBackdropState(activeSong);
+                    }
+                }
                 if (msg.event === 'infoDelivery' && msg.info) {
                     if (typeof msg.info.currentTime === 'number' && msg.info.currentTime > 0) {
                         trackElapsedSec = msg.info.currentTime;
@@ -1720,6 +1758,9 @@
                     } else if (msg.info.playerState === 2) {
                         isPlaying = false;
                         document.querySelector('#play-pause-btn i').className = 'fas fa-play';
+                    } else if (msg.info.playerState === -1 && playlist[currentIdx] && !playlist[currentIdx].id) {
+                        playlist[currentIdx].hasVideo = false;
+                        updateVideoBackdropState(playlist[currentIdx]);
                     }
                 }
             } catch (err) {}
@@ -1794,18 +1835,28 @@
             updateVideoBackdropState(playlist[currentIdx]);
         });
 
-        /* 4. 3D TILT ON ALBUM GLASS CARD */
-        const albumCard = document.getElementById('album-glass-card');
-        albumCard.addEventListener('mousemove', (e) => {
-            if (window.innerWidth <= 1024) return;
-            const r = albumCard.getBoundingClientRect();
-            const rx = (((e.clientY - r.top) - r.height / 2) / (r.height / 2)) * -4;
-            const ry = (((e.clientX - r.left) - r.width / 2) / (r.width / 2)) * 4;
-            albumCard.style.transform = `perspective(900px) rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg) translateY(-3px)`;
-        });
-        albumCard.addEventListener('mouseleave', () => { albumCard.style.transform = ''; });
+        /* 4. INTERACTIVE 3D TILT ON QUEUE (LEFT), COVER CARD (CENTER) & CONTROL DOCK (BOTTOM) */
+        function attach3DTilt(el, baseRotateY = 0, baseRotateX = 0, intensity = 5) {
+            if (!el) return;
+            el.addEventListener('mousemove', (e) => {
+                if (window.innerWidth <= 1024) return;
+                const r = el.getBoundingClientRect();
+                const normX = ((e.clientX - r.left) - r.width / 2) / (r.width / 2);
+                const normY = ((e.clientY - r.top) - r.height / 2) / (r.height / 2);
+                const rx = baseRotateX + normY * -intensity;
+                const ry = baseRotateY + normX * intensity;
+                el.style.transform = `perspective(1100px) rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg) translateY(-4px)`;
+            });
+            el.addEventListener('mouseleave', () => {
+                el.style.transform = '';
+            });
+        }
 
-        /* 5. RENDER CONTINUE PLAYING QUEUE (WITH OPTIONAL RLS UNLOCK HINT) */
+        attach3DTilt(document.getElementById('queue-panel'), 6, 0.5, 4);
+        attach3DTilt(document.getElementById('album-glass-card'), 0, 0, 6);
+        attach3DTilt(document.getElementById('control-dock'), 0, 2.5, 2.5);
+
+        /* 5. RENDER CONTINUE PLAYING QUEUE */
         function renderQueue(rlsLocked = false) {
             const list = document.getElementById('queue-list');
             const countEl = document.getElementById('queue-count');
@@ -1842,7 +1893,7 @@
             });
         }
 
-        /* 6. ZERO-CORS JSONP UNIVERSAL SEARCH (WORKS IN ZEN BROWSER WITHOUT PROXIES!) */
+        /* 6. ZERO-CORS JSONP UNIVERSAL SEARCH (WITH UNRELEASED / SOUNDCLOUD PRIORITY) */
         function itunesJsonpSearch(query) {
             return new Promise((resolve) => {
                 const cbName = 'vItunesCb_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
@@ -1904,30 +1955,38 @@
                 artist: r.artistName,
                 source: activePlatform,
                 duration: r.trackTimeMillis ? Math.round(r.trackTimeMillis / 1000) : 200,
-                hasVideo: true,
+                hasVideo: false,
                 accent: col.hex,
                 rgb: col.rgb,
                 cover: r.artworkUrl100 ? r.artworkUrl100.replace('100x100bb', '400x400bb') : FALLBACK_SVG,
                 lyrics: []
             }));
 
-            if (localMatches.length === 0 && remoteResults.length === 0) {
-                remoteResults.push({
-                    id: null,
-                    searchQuery: q,
-                    title: q,
-                    artist: `${activePlatform} Stream`,
-                    source: activePlatform,
-                    duration: 210,
-                    hasVideo: true,
-                    accent: col.hex,
-                    rgb: col.rgb,
-                    cover: FALLBACK_SVG,
-                    lyrics: []
-                });
-            }
+            /* Check if iTunes actually matched the song title; if not (e.g. unreleased leaks), put direct stream #1 */
+            const queryWords = q.toLowerCase().split(/\s+/).filter(w => w.length > 2);
+            const hasExactTitleHit = [...localMatches, ...remoteResults].some(item => {
+                const hay = `${item.title} ${item.artist}`.toLowerCase();
+                return queryWords.length > 0 && queryWords.every(w => hay.includes(w));
+            });
 
-            const combined = [...localMatches, ...remoteResults].slice(0, 4);
+            const directStreamCard = {
+                id: null,
+                searchQuery: q,
+                title: q,
+                artist: `${activePlatform} Direct Stream`,
+                source: activePlatform,
+                duration: 210,
+                hasVideo: false,
+                accent: col.hex,
+                rgb: col.rgb,
+                cover: remoteResults[0]?.cover || FALLBACK_SVG,
+                lyrics: []
+            };
+
+            const combined = hasExactTitleHit
+                ? [...localMatches, ...remoteResults].slice(0, 4)
+                : [directStreamCard, ...localMatches, ...remoteResults].slice(0, 4);
+
             headerLbl.innerText = `Top Results — ${activePlatform}`;
             renderLocalSearchCards(combined);
         }
@@ -1943,7 +2002,7 @@
                 const coverUrl = song.id ? getSafeCover(song.id, song.cover) : (song.cover || FALLBACK_SVG);
                 const badgeHtml = song.hasVideo !== false
                     ? `<div class="search-video-pill"><i class="fas fa-film"></i> Video</div>`
-                    : '';
+                    : `<div class="search-video-pill"><i class="fas fa-music"></i> Audio</div>`;
 
                 card.innerHTML = `
                     ${badgeHtml}
@@ -2554,17 +2613,13 @@
                     });
                 }
 
-                /* Load ALL tracks from Supabase via Direct REST */
                 let dbTracks = [];
-                let playlistLocked = false;
                 try {
                     dbTracks = await sbSelect('youtube_playlist', 'select=*&order=position.asc');
                 } catch (e) {
                     try {
                         dbTracks = await sbSelect('youtube_playlist', 'select=*');
-                    } catch (e2) {
-                        playlistLocked = true;
-                    }
+                    } catch (e2) {}
                 }
 
                 if (dbTracks && dbTracks.length > 0) {
