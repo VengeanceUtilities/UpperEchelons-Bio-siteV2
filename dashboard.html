@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vengeance OS - Admin Control Center</title>
+    <title>Vengeance OS — Control Center</title>
     
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>⚙️</text></svg>">
     
@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Outfit:wght@400;600;800&family=Roboto+Mono:wght@400;600;700&family=Fira+Code:wght@400;600;700&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
@@ -22,8 +22,8 @@
             --input-bg: rgba(10, 10, 14, 0.65); 
             --text-light: #f8fafc; 
             --text-gray: #94a3b8; 
-            --accent: #ec4899;
-            --accent-glow: rgba(236, 72, 153, 0.35);
+            --accent: #a855f7;
+            --accent-glow: rgba(168, 85, 247, 0.35);
             --danger: #ef4444;
             --success: #22c55e;
             --warning: #f59e0b;
@@ -44,44 +44,6 @@
             display: flex; 
             min-height: 100vh; 
             overflow-x: hidden;
-        }
-
-        /* LOGIN GATE OVERLAY */
-        #admin-auth-gate {
-            position: fixed;
-            inset: 0;
-            z-index: 99999;
-            background: radial-gradient(circle at 50% 25%, rgba(236, 72, 153, 0.15) 0%, #060609 70%);
-            backdrop-filter: blur(18px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .login-card {
-            width: min(400px, 95vw);
-            background: rgba(16, 16, 22, 0.88);
-            border: 1px solid var(--accent);
-            border-radius: 22px;
-            padding: 30px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.85), 0 0 30px var(--accent-glow);
-        }
-        .login-card input {
-            width: 100%;
-            background: rgba(10, 10, 14, 0.85);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 12px 14px;
-            color: #fff;
-            font-size: 0.92rem;
-            outline: none;
-        }
-        .login-card input:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 12px var(--accent-glow);
         }
         
         /* SIDEBAR */
@@ -144,7 +106,6 @@
             text-decoration: none; transition: all 0.2s;
         }
         .btn-sidebar-action:hover { border-color: var(--accent); background: var(--accent-glow); }
-        .btn-sidebar-action.logout:hover { border-color: var(--danger); background: rgba(239, 68, 68, 0.22); color: #fca5a5; }
 
         /* MAIN WORKSPACE */
         .main-workspace { flex-grow: 1; padding: 32px 40px; overflow-y: auto; max-width: 1400px; margin: 0 auto; }
@@ -175,7 +136,7 @@
         .kpi-val { font-size: 1.3rem; font-weight: 800; margin-top: 2px; }
         .kpi-icon { width: 38px; height: 38px; border-radius: 10px; background: var(--accent-glow); color: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
 
-        /* CRYSTAL ADMIN CARDS & LAYOUT GRIDS */
+        /* CRYSTAL CARDS & LAYOUT GRIDS */
         .tab-grid-layout {
             display: grid; grid-template-columns: 1fr; gap: 24px; align-items: start;
         }
@@ -301,7 +262,7 @@
         }
         @keyframes slideIn { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
 
-        /* MINI YOUTUBE TEST PLAYER MODAL */
+        /* MINI YOUTUBE TEST PLAYER BOX */
         #yt-preview-box {
             display: none; margin-top: 14px; padding: 12px; border-radius: 10px;
             background: rgba(0,0,0,0.4); border: 1px solid var(--border-color);
@@ -312,30 +273,11 @@
 </head>
 <body>
 
-    <!-- ADMIN AUTH GATE -->
-    <div id="admin-auth-gate">
-        <form id="admin-login-form" class="login-card">
-            <div style="display:flex; align-items:center; gap:10px;">
-                <i class="fas fa-shield-halved" style="color:var(--accent); font-size:1.35rem;"></i>
-                <h2 style="font-size:1.25rem; font-weight:800;">Vengeance Admin Gate</h2>
-            </div>
-            <p style="font-size:0.82rem; color:var(--text-gray); line-height:1.4;">
-                Geschützter Bereich. Bitte melde dich mit deinem Supabase-Admin-Account an.
-            </p>
-            <input type="email" id="admin-email" placeholder="Admin E-Mail" required autocomplete="email">
-            <input type="password" id="admin-pass" placeholder="Passwort" required autocomplete="current-password">
-            <div id="admin-login-err" style="color:#f87171; font-size:0.78rem; display:none;"></div>
-            <button type="submit" class="btn-save" style="justify-content:center; width:100%; margin-top:4px;">
-                <i class="fas fa-right-to-bracket"></i> Einloggen
-            </button>
-        </form>
-    </div>
-
     <div class="sidebar">
         <div class="logo">
             <i class="fas fa-terminal" style="color: var(--accent);"></i> 
             <span>Vengeance OS</span>
-            <span class="logo-badge">v2.6</span>
+            <span class="logo-badge">v3.0</span>
         </div>
 
         <ul class="nav-list">
@@ -371,21 +313,18 @@
             <button class="btn-sidebar-action" id="btn-export-db" title="Komplettes Supabase-Backup als JSON herunterladen">
                 <i class="fas fa-download"></i> DB Backup (.json)
             </button>
-            <button class="btn-sidebar-action logout" id="btn-admin-logout">
-                <i class="fas fa-right-from-bracket"></i> Ausloggen
-            </button>
         </div>
     </div>
 
     <div class="main-workspace">
         <div class="header">
             <div>
-                <h2 style="font-weight: 800; letter-spacing: 0.3px;">Dashboard Control Center</h2>
+                <h2 style="font-weight: 800; letter-spacing: 0.3px;">Vengeance Control Center</h2>
                 <div style="font-size: 0.8rem; color: var(--text-gray); margin-top: 2px;">Tipp: Drücke <code style="color:var(--accent);">Strg + S</code> um das aktuelle Formular sofort zu speichern.</div>
             </div>
             <div class="header-right">
                 <button class="btn-secondary" onclick="loadDashboardData()"><i class="fas fa-sync-alt"></i> Reload DB</button>
-                <div id="db-status" class="status-pill" style="color: #e11d48;"><i class="fas fa-database"></i> Connecting...</div>
+                <div id="db-status" class="status-pill" style="color: #4ade80;"><i class="fas fa-database"></i> Connecting...</div>
             </div>
         </div>
 
@@ -445,14 +384,13 @@
                     </form>
                 </div>
 
-                <!-- LIVE PROFILE PREVIEW -->
                 <div class="admin-card">
                     <div class="card-title">
                         <div class="card-title-left"><i class="fas fa-eye"></i> Echtzeit-Vorschau</div>
                     </div>
                     <div class="live-preview-box">
                         <div class="prev-avatar-wrap">
-                            <img id="prev-avatar-img" src="https://via.placeholder.com/150" alt="Avatar" class="prev-avatar">
+                            <img id="prev-avatar-img" src="https://github.com/VengeanceUtilities.png" alt="Avatar" class="prev-avatar">
                         </div>
                         <div id="prev-username-text" class="prev-username">UpperEchelon</div>
                         <p id="prev-bio-text" class="prev-bio">Deine Bio erscheint hier live...</p>
@@ -480,11 +418,11 @@
                     </div>
                     
                     <div class="form-group">
-                        <label><span>Global Accent Color (Hex)</span><span id="hex-code-label">#ec4899</span></label>
-                        <input type="color" id="input-accent-color" value="#ec4899">
+                        <label><span>Global Accent Color (Hex)</span><span id="hex-code-label">#a855f7</span></label>
+                        <input type="color" id="input-accent-color" value="#a855f7">
                         <div class="preset-pills">
+                            <span class="preset-pill" data-color="#a855f7"><span class="color-dot" style="background:#a855f7;"></span> Vengeance Purple</span>
                             <span class="preset-pill" data-color="#ec4899"><span class="color-dot" style="background:#ec4899;"></span> Cyber Pink</span>
-                            <span class="preset-pill" data-color="#7c3aed"><span class="color-dot" style="background:#7c3aed;"></span> Vengeance Purple</span>
                             <span class="preset-pill" data-color="#10b981"><span class="color-dot" style="background:#10b981;"></span> Matrix Emerald</span>
                             <span class="preset-pill" data-color="#f43f5e"><span class="color-dot" style="background:#f43f5e;"></span> Crimson Red</span>
                             <span class="preset-pill" data-color="#06b6d4"><span class="color-dot" style="background:#06b6d4;"></span> Ice Cyan</span>
@@ -510,7 +448,7 @@
                     </div>
 
                     <div class="form-group" style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0;">
-                        <label style="margin-bottom: 0;">Background Mode (Off = YouTube Video, On = Dark Gradient)</label>
+                        <label style="margin-bottom: 0;">Background Mode (Off = YouTube Video, On = Cover Blur)</label>
                         <label class="toggle-switch">
                             <input type="checkbox" id="input-bg-mode">
                             <span class="slider"></span>
@@ -591,7 +529,6 @@
                 </form>
             </div>
         </div>
-
         <!-- TAB 5: YOUTUBE -->
         <div id="tab-youtube" class="tab-content">
             <div class="tab-grid-layout two-col">
@@ -757,7 +694,7 @@
             });
         });
 
-        /* CTRL + S SHORTCUT ZUM SPEICHERN DES AKTIVEN TABS */
+        /* CTRL + S SHORTCUT */
         window.addEventListener('keydown', (e) => {
             if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
                 e.preventDefault();
@@ -770,7 +707,7 @@
         /* LIVE PROFILE PREVIEW */
         function updateProfilePreview() {
             const name = document.getElementById('input-username').value || 'UpperEchelon';
-            const avatar = document.getElementById('input-avatar').value || 'https://via.placeholder.com/150';
+            const avatar = document.getElementById('input-avatar').value || 'https://github.com/VengeanceUtilities.png';
             const bio = document.getElementById('input-bio').value || '';
             document.getElementById('prev-username-text').innerText = name;
             document.getElementById('prev-avatar-img').src = avatar;
@@ -868,12 +805,14 @@
 
         /* MAIN DATA LOADER */
         async function loadDashboardData() {
+            const dbStatus = document.getElementById('db-status');
             try {
-                const dbStatus = document.getElementById('db-status');
-                dbStatus.style.color = '#4ade80';
-                dbStatus.innerHTML = '<i class="fas fa-shield-check"></i> Authenticated Admin';
+                const { data: profile, error: profErr } = await sbClient.from('profile').select('*').limit(1).maybeSingle();
+                if (profErr) throw profErr;
 
-                const { data: profile } = await sbClient.from('profile').select('*').limit(1).maybeSingle();
+                dbStatus.style.color = '#4ade80';
+                dbStatus.innerHTML = '<i class="fas fa-circle-check"></i> Supabase Connected';
+
                 if (profile) {
                     currentProfileId = profile.id;
                     document.getElementById('input-username').value = profile.username || '';
@@ -886,7 +825,7 @@
                 if (customization) {
                     currentCustomizationId = customization.id;
                     document.getElementById('input-font').value = customization.font_family || "'Outfit', 'Inter', sans-serif";
-                    const acc = customization.accent_color || "#ec4899";
+                    const acc = customization.accent_color || "#a855f7";
                     document.getElementById('input-accent-color').value = acc;
                     document.getElementById('hex-code-label').innerText = acc;
                     document.documentElement.style.setProperty('--accent', acc);
@@ -927,7 +866,9 @@
                 await loadPlaylistEntries();
             } catch (err) { 
                 console.error('Fehler beim Laden der Dashboard-Daten:', err);
-                showToast('Fehler beim Laden der DB', 'error');
+                dbStatus.style.color = '#ef4444';
+                dbStatus.innerHTML = '<i class="fas fa-triangle-exclamation"></i> DB Error';
+                showToast('Fehler beim Laden der DB: ' + (err.message || ''), 'error');
             }
         }
 
@@ -1205,7 +1146,7 @@
                 dbStatus.innerHTML = '<i class="fas fa-check"></i> Reihenfolge synchronisiert!';
                 showToast('Playlist-Reihenfolge gespeichert! 🎵');
                 setTimeout(() => {
-                    dbStatus.innerHTML = '<i class="fas fa-shield-check"></i> Authenticated Admin';
+                    dbStatus.innerHTML = '<i class="fas fa-circle-check"></i> Supabase Connected';
                 }, 2000);
             } catch (err) {
                 dbStatus.style.color = '#ef4444';
@@ -1428,41 +1369,7 @@
             }
         });
 
-        /* AUTHENTICATION GATE LOGIC */
-        async function checkAdminAuth() {
-            const gate = document.getElementById('admin-auth-gate');
-            const { data: { session } } = await sbClient.auth.getSession();
-            if (session) {
-                gate.style.display = 'none';
-                loadDashboardData();
-            }
-
-            document.getElementById('admin-login-form').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const email = document.getElementById('admin-email').value.trim();
-                const password = document.getElementById('admin-pass').value;
-                const errBox = document.getElementById('admin-login-err');
-                errBox.style.display = 'none';
-
-                const { error } = await sbClient.auth.signInWithPassword({ email, password });
-                if (error) {
-                    errBox.innerText = 'Login fehlgeschlagen: ' + error.message;
-                    errBox.style.display = 'block';
-                } else {
-                    gate.style.display = 'none';
-                    showToast('Erfolgreich eingeloggt! 🛡️');
-                    loadDashboardData();
-                }
-            });
-
-            document.getElementById('btn-admin-logout').addEventListener('click', async () => {
-                await sbClient.auth.signOut();
-                gate.style.display = 'flex';
-                showToast('Ausgeloggt');
-            });
-        }
-
-        checkAdminAuth();
+        loadDashboardData();
     </script>
 </body>
 </html>
