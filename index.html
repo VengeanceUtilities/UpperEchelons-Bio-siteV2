@@ -1131,6 +1131,7 @@
             <iframe id="youtube-bg-frame" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>
         </div>
     </div>
+    <audio id="deezer-fallback-audio" preload="none"></audio>
     <div class="bg-vignette"></div>
     <div id="screen-edge-glow"></div>
 
@@ -1166,7 +1167,7 @@
             <!-- iOS LOCKSCREEN CLOCK -->
             <div class="lockscreen-clock">
                 <div class="clock-date" id="hud-date">Wednesday, November 18</div>
-                <div class="clock-time" id="hud-clock">21:45</div>
+                <div class="clock-time" id="hud-clock">22:05</div>
             </div>
 
             <!-- RIGHT: VENGEANCE APPS, SERVER & DIRECT DASHBOARD LINK -->
@@ -1643,8 +1644,12 @@
         let trackDurationSec = 239;
         let lastTickMs = Date.now();
         let activeLoadedKey = '';
+        let usingFallbackAudio = false;
 
-        function showStartingPlatformToast(platformName) {
+        const bgFrame = document.getElementById('youtube-bg-frame');
+        const fallbackAudio = document.getElementById('deezer-fallback-audio');
+
+        function showStartingPlatformToast(platformName, customLabel = null) {
             const badge = document.getElementById('starting-on-badge');
             const icon = document.getElementById('starting-on-icon');
             const text = document.getElementById('starting-on-text');
@@ -1652,17 +1657,84 @@
 
             icon.className = meta.icon;
             icon.style.color = meta.color;
-            text.innerText = `Starting on ${platformName}...`;
+            text.innerText = customLabel || `Starting on ${platformName}...`;
 
             badge.classList.add('show');
             clearTimeout(startingToastTimer);
             startingToastTimer = setTimeout(() => {
                 badge.classList.remove('show');
-            }, 2600);
+            }, 2800);
         }
 
-        /* 1. DIRECT YOUTUBE EMBED ENGINE + AUTO-COVER FALLBACK ON UNAVAILABLE VIDEO */
-        const bgFrame = document.getElementById('youtube-bg-frame');
+        async function fetchWithTimeout(url, ms = 3500) {
+            const ctrl = new AbortController();
+            const id = setTimeout(() => ctrl.abort(), ms);
+            try {
+                const res = await fetch(url, { signal: ctrl.signal });
+                clearTimeout(id);
+                return res;
+            } catch (e) {
+                clearTimeout(id);
+                throw e;
+            }
+        }
+
+        /* 1. REAL YOUTUBE VIDEO-ID RESOLVER + OEMBED EMBEDABILITY CHECK */
+        async function isYouTubeIdEmbeddable(videoId) {
+            if (!videoId) return false;
+            try {
+                const res = await fetchWithTimeout(
+                    `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`,
+                    2500
+                );
+                return res.ok;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        async function resolvePlayableYouTubeVideo(query) {
+            const candidates = [];
+            const endpoints = [
+                {
+                    url: `https://pipedapi.kavin.rocks/search?q=${encodeURIComponent(query)}&filter=music_songs`,
+                    parse: (d) => (d?.items || []).map(i => (i.url || '').split('v=')[1]?.slice(0, 11)).filter(Boolean)
+                },
+                {
+                    url: `https://pipedapi.adminforge.de/search?q=${encodeURIComponent(query)}&filter=videos`,
+                    parse: (d) => (d?.items || []).map(i => (i.url || '').split('v=')[1]?.slice(0, 11)).filter(Boolean)
+                },
+                {
+                    url: `https://inv.nadeko.net/api/v1/search?q=${encodeURIComponent(query)}&type=video`,
+                    parse: (d) => Array.isArray(d) ? d.map(i => i.videoId).filter(Boolean) : []
+                },
+                {
+                    url: `https://invidious.nerdvpn.de/api/v1/search?q=${encodeURIComponent(query)}&type=video`,
+                    parse: (d) => Array.isArray(d) ? d.map(i => i.videoId).filter(Boolean) : []
+                }
+            ];
+
+            await Promise.allSettled(endpoints.map(async (ep) => {
+                try {
+                    const res = await fetchWithTimeout(ep.url, 2800);
+                    if (!res.ok) return;
+                    const data = await res.json();
+                    const ids = ep.parse(data);
+                    ids.slice(0, 4).forEach(id => {
+                        if (/^[a-zA-Z0-9_-]{11}$/.test(id) && !candidates.includes(id)) {
+                            candidates.push(id);
+                        }
+                    });
+                } catch (e) {}
+            }));
+
+            for (const vid of candidates.slice(0, 5)) {
+                if (await isYouTubeIdEmbeddable(vid)) {
+                    return vid;
+                }
+            }
+            return candidates[0] || null;
+        }
 
         function sendYtCommand(func, args = []) {
             if (!bgFrame || !bgFrame.contentWindow) return;
@@ -1674,7 +1746,7 @@
             } catch (e) {}
         }
 
-        function buildEmbedUrl(song, startSec = 0, muted = isMuted) {
+        function buildEmbedUrl(videoId, startSec = 0, muted = isMuted) {
             const params = new URLSearchParams({
                 autoplay: '1',
                 mute: muted ? '1' : '0',
@@ -1688,43 +1760,73 @@
                 enablejsapi: '1',
                 start: String(Math.floor(startSec))
             });
-
-            if (song.id) {
-                return `https://www.youtube.com/embed/${song.id}?${params.toString()}`;
-            }
-            const q = song.searchQuery || `${song.artist} ${song.title}`;
-            params.set('listType', 'search');
-            params.set('list', q);
-            return `https://www.youtube.com/embed?${params.toString()}`;
+            return `https://www.youtube.com/embed/${videoId}?${params.toString()}`;
         }
 
-        async function verifyVideoEmbedAvailability(song) {
-            if (!song) return;
-            if (!song.id) {
-                song.hasVideo = false;
-                if (playlist[currentIdx] === song) updateVideoBackdropState(song);
-                return;
-            }
+        function stopFallbackAudio() {
+            usingFallbackAudio = false;
             try {
-                const res = await fetchWithTimeout(
-                    `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${song.id}&format=json`,
-                    3200
-                );
-                if (!res.ok) {
-                    song.hasVideo = false;
-                    if (playlist[currentIdx] === song) updateVideoBackdropState(song);
-                }
+                fallbackAudio.pause();
+                fallbackAudio.removeAttribute('src');
+                fallbackAudio.load();
             } catch (e) {}
         }
 
-        function loadEmbedForSong(song, startSec = 0, forceReload = false) {
+        function startDeezerFallbackStream(song) {
+            if (!song || !song.previewUrl) return false;
+            usingFallbackAudio = true;
+            song.hasVideo = false;
+            updateVideoBackdropState(song);
+            bgFrame.src = 'about:blank';
+
+            const vol = (parseInt(document.getElementById('vol-slider').value, 10) || 65) / 100;
+            fallbackAudio.volume = isMuted ? 0 : vol;
+            fallbackAudio.muted = isMuted;
+            fallbackAudio.loop = isLooping;
+            fallbackAudio.src = song.previewUrl;
+            fallbackAudio.play().then(() => {
+                isPlaying = true;
+                document.querySelector('#play-pause-btn i').className = 'fas fa-pause';
+            }).catch(() => {});
+            return true;
+        }
+
+        async function loadEmbedForSong(song, startSec = 0, forceReload = false) {
             if (!song) return;
-            const key = song.id || song.searchQuery || song.title;
+            stopFallbackAudio();
+
+            /* Resolve real YouTube video ID if song came from search without an ID yet */
+            if (!song.id) {
+                song.hasVideo = false;
+                updateVideoBackdropState(song);
+                const q = song.searchQuery || `${song.artist} - ${song.title} official audio`;
+                const resolvedId = await resolvePlayableYouTubeVideo(q);
+
+                if (playlist[currentIdx] !== song) return;
+
+                if (resolvedId) {
+                    song.id = resolvedId;
+                    song.hasVideo = true;
+                    updateVideoBackdropState(song);
+                    renderQueue();
+                } else {
+                    startDeezerFallbackStream(song);
+                    return;
+                }
+            }
+
+            const key = song.id;
             if (!forceReload && activeLoadedKey === key && startSec === 0) return;
             activeLoadedKey = key;
 
-            verifyVideoEmbedAvailability(song);
-            bgFrame.src = buildEmbedUrl(song, startSec, isMuted);
+            isYouTubeIdEmbeddable(song.id).then(ok => {
+                if (!ok && playlist[currentIdx] === song) {
+                    song.hasVideo = false;
+                    updateVideoBackdropState(song);
+                }
+            });
+
+            bgFrame.src = buildEmbedUrl(song.id, startSec, isMuted);
 
             setTimeout(() => {
                 const vol = parseInt(document.getElementById('vol-slider').value, 10) || 65;
@@ -1735,6 +1837,7 @@
         }
 
         bgFrame.addEventListener('load', () => {
+            if (!bgFrame.src || bgFrame.src === 'about:blank') return;
             try {
                 bgFrame.contentWindow.postMessage(JSON.stringify({ event: 'listening', id: 1 }), '*');
             } catch (e) {}
@@ -1753,9 +1856,12 @@
                     if (activeSong) {
                         activeSong.hasVideo = false;
                         updateVideoBackdropState(activeSong);
+                        if (activeSong.previewUrl && !usingFallbackAudio) {
+                            startDeezerFallbackStream(activeSong);
+                        }
                     }
                 }
-                if (msg.event === 'infoDelivery' && msg.info) {
+                if (msg.event === 'infoDelivery' && msg.info && !usingFallbackAudio) {
                     if (typeof msg.info.currentTime === 'number' && msg.info.currentTime > 0) {
                         trackElapsedSec = msg.info.currentTime;
                         lastTickMs = Date.now();
@@ -1769,9 +1875,6 @@
                     } else if (msg.info.playerState === 2) {
                         isPlaying = false;
                         document.querySelector('#play-pause-btn i').className = 'fas fa-play';
-                    } else if (msg.info.playerState === -1 && playlist[currentIdx] && !playlist[currentIdx].id) {
-                        playlist[currentIdx].hasVideo = false;
-                        updateVideoBackdropState(playlist[currentIdx]);
                     }
                 }
             } catch (err) {}
@@ -1784,11 +1887,18 @@
             const vol = parseInt(document.getElementById('vol-slider').value, 10) || 65;
             document.querySelector('#mute-btn i').className = vol === 0 ? 'fas fa-volume-xmark' : 'fas fa-volume-high';
 
+            if (usingFallbackAudio) {
+                fallbackAudio.muted = false;
+                fallbackAudio.volume = vol / 100;
+                fallbackAudio.play().catch(() => {});
+                return;
+            }
+
             sendYtCommand('unMute', []);
             sendYtCommand('setVolume', [vol]);
             sendYtCommand('playVideo', []);
 
-            if (wasMuted && playlist[currentIdx]) {
+            if (wasMuted && playlist[currentIdx]?.id) {
                 loadEmbedForSong(playlist[currentIdx], trackElapsedSec, true);
             }
         }
@@ -1846,7 +1956,7 @@
             updateVideoBackdropState(playlist[currentIdx]);
         });
 
-        /* 4. INTERACTIVE 3D TILT ON QUEUE (LEFT), COVER CARD (CENTER) & CONTROL DOCK (BOTTOM) */
+        /* 4. INTERACTIVE 3D TILT ON QUEUE, COVER CARD & CONTROL DOCK */
         function attach3DTilt(el, baseRotateY = 0, baseRotateX = 0, intensity = 5) {
             if (!el) return;
             el.addEventListener('mousemove', (e) => {
@@ -1961,6 +2071,7 @@
                         tracks.push({
                             id: null,
                             searchQuery: `${artist} - ${title} official audio`,
+                            previewUrl: item.preview || null,
                             title: title,
                             artist: artist,
                             source: activePlatform,
@@ -1993,6 +2104,7 @@
                         tracks.push({
                             id: null,
                             searchQuery: `${artist} - ${title} official audio`,
+                            previewUrl: r.previewUrl || null,
                             title: title,
                             artist: artist,
                             source: activePlatform,
@@ -2048,6 +2160,7 @@
             const directStreamCard = {
                 id: null,
                 searchQuery: q,
+                previewUrl: remoteResults[0]?.previewUrl || null,
                 title: q,
                 artist: `${activePlatform} Direct Stream`,
                 source: activePlatform,
@@ -2175,10 +2288,15 @@
                     unlockAudio();
                     trackElapsedSec = line.t;
                     lastTickMs = Date.now();
-                    sendYtCommand('seekTo', [line.t, true]);
-                    sendYtCommand('playVideo', []);
-                    if (playlist[currentIdx]) {
-                        loadEmbedForSong(playlist[currentIdx], line.t, true);
+                    if (usingFallbackAudio && fallbackAudio.duration) {
+                        fallbackAudio.currentTime = Math.min(fallbackAudio.duration - 0.5, line.t);
+                        fallbackAudio.play().catch(() => {});
+                    } else {
+                        sendYtCommand('seekTo', [line.t, true]);
+                        sendYtCommand('playVideo', []);
+                        if (playlist[currentIdx]?.id) {
+                            loadEmbedForSong(playlist[currentIdx], line.t, true);
+                        }
                     }
                     syncLyricsToTime(line.t);
                 });
@@ -2224,19 +2342,6 @@
                 });
                 listEl.appendChild(item);
             });
-        }
-
-        async function fetchWithTimeout(url, ms = 5000) {
-            const ctrl = new AbortController();
-            const id = setTimeout(() => ctrl.abort(), ms);
-            try {
-                const res = await fetch(url, { signal: ctrl.signal });
-                clearTimeout(id);
-                return res;
-            } catch (e) {
-                clearTimeout(id);
-                throw e;
-            }
         }
 
         async function fetchSyncedLyricsForSong(song) {
@@ -2405,12 +2510,14 @@
             if (isPlaying) {
                 isPlaying = false;
                 icon.className = 'fas fa-play';
-                sendYtCommand('pauseVideo', []);
+                if (usingFallbackAudio) fallbackAudio.pause();
+                else sendYtCommand('pauseVideo', []);
             } else {
                 isPlaying = true;
                 lastTickMs = Date.now();
                 icon.className = 'fas fa-pause';
-                sendYtCommand('playVideo', []);
+                if (usingFallbackAudio) fallbackAudio.play().catch(() => {});
+                else sendYtCommand('playVideo', []);
             }
         });
         document.getElementById('prev-btn').addEventListener('click', () => stepSong(-1));
@@ -2423,6 +2530,7 @@
         document.getElementById('loop-btn').addEventListener('click', function () {
             isLooping = !isLooping;
             this.classList.toggle('active', isLooping);
+            fallbackAudio.loop = isLooping;
         });
 
         document.getElementById('vol-slider').addEventListener('input', function () {
@@ -2431,9 +2539,16 @@
             isMuted = v === 0;
             document.getElementById('audio-unlock-pill').classList.add('hidden');
             document.querySelector('#mute-btn i').className = v === 0 ? 'fas fa-volume-xmark' : 'fas fa-volume-high';
+
+            if (usingFallbackAudio) {
+                fallbackAudio.muted = isMuted;
+                fallbackAudio.volume = v / 100;
+                return;
+            }
+
             sendYtCommand('unMute', []);
             sendYtCommand('setVolume', [v]);
-            if (wasMuted && v > 0 && playlist[currentIdx]) {
+            if (wasMuted && v > 0 && playlist[currentIdx]?.id) {
                 loadEmbedForSong(playlist[currentIdx], trackElapsedSec, true);
             }
         });
@@ -2443,15 +2558,21 @@
                 isMuted = false;
                 const v = parseInt(document.getElementById('vol-slider').value, 10) || 65;
                 this.querySelector('i').className = 'fas fa-volume-high';
-                sendYtCommand('unMute', []);
-                sendYtCommand('setVolume', [v]);
-                if (playlist[currentIdx]) {
-                    loadEmbedForSong(playlist[currentIdx], trackElapsedSec, true);
+                if (usingFallbackAudio) {
+                    fallbackAudio.muted = false;
+                    fallbackAudio.volume = v / 100;
+                } else {
+                    sendYtCommand('unMute', []);
+                    sendYtCommand('setVolume', [v]);
+                    if (playlist[currentIdx]?.id) {
+                        loadEmbedForSong(playlist[currentIdx], trackElapsedSec, true);
+                    }
                 }
             } else {
                 isMuted = true;
                 this.querySelector('i').className = 'fas fa-volume-xmark';
-                sendYtCommand('mute', []);
+                if (usingFallbackAudio) fallbackAudio.muted = true;
+                else sendYtCommand('mute', []);
             }
         });
 
@@ -2462,9 +2583,13 @@
             const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
             trackElapsedSec = trackDurationSec * pct;
             lastTickMs = Date.now();
-            sendYtCommand('seekTo', [trackElapsedSec, true]);
-            if (playlist[currentIdx]) {
-                loadEmbedForSong(playlist[currentIdx], trackElapsedSec, true);
+            if (usingFallbackAudio && fallbackAudio.duration) {
+                fallbackAudio.currentTime = fallbackAudio.duration * pct;
+            } else {
+                sendYtCommand('seekTo', [trackElapsedSec, true]);
+                if (playlist[currentIdx]?.id) {
+                    loadEmbedForSong(playlist[currentIdx], trackElapsedSec, true);
+                }
             }
             syncLyricsToTime(trackElapsedSec);
         });
@@ -2560,7 +2685,10 @@
             const dt = (now - lastTickMs) / 1000;
             lastTickMs = now;
 
-            if (isPlaying) {
+            if (usingFallbackAudio && !fallbackAudio.paused && fallbackAudio.duration) {
+                trackElapsedSec = fallbackAudio.currentTime;
+                trackDurationSec = fallbackAudio.duration;
+            } else if (isPlaying) {
                 trackElapsedSec += dt;
                 if (trackDurationSec > 0 && trackElapsedSec >= trackDurationSec) {
                     if (isLooping) {
