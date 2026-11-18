@@ -17,7 +17,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@200;300;400;600;700;800;900&family=Fira+Code:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&family=Outfit:wght@200;300;400;600;700;800;900&family=Fira+Code:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -26,15 +26,15 @@
         :root {
             --accent: #a855f7;
             --accent-rgb: 168, 85, 247;
-            --edge-glow-alpha: 0.22;
-            --glass-bg: rgba(18, 18, 24, 0.36);
+            --edge-glow-alpha: 0.32;
+            --glass-bg: rgba(18, 18, 24, 0.38);
             --glass-border: rgba(255, 255, 255, 0.16);
-            --glass-border-top: rgba(255, 255, 255, 0.32);
+            --glass-border-top: rgba(255, 255, 255, 0.34);
             --glass-blur: 28px;
             --text-main: #ffffff;
             --text-muted: rgba(255, 255, 255, 0.65);
             --font-main: 'Outfit', 'Inter', sans-serif;
-            --video-filter: brightness(0.68) saturate(1.25) contrast(1.06);
+            --video-filter: brightness(0.72) saturate(1.22) contrast(1.05);
         }
 
         * {
@@ -61,14 +61,15 @@
             position: relative;
         }
 
-        /* FULLSCREEN VIDEO & AMBIENT COVER WALLPAPER */
+        /* FULLSCREEN MUSIC VIDEO & AMBIENT COVER WALLPAPER */
         .video-bg-wrap {
             position: fixed;
             inset: 0;
             z-index: 0;
             overflow: hidden;
             pointer-events: none;
-            background: radial-gradient(circle at 50% 35%, rgba(var(--accent-rgb), 0.22) 0%, #050508 75%);
+            background: radial-gradient(circle at 50% 35%, rgba(var(--accent-rgb), 0.26) 0%, #050508 78%);
+            transition: background 0.9s ease;
         }
 
         #ambient-cover-bg {
@@ -77,7 +78,7 @@
             width: 116%;
             height: 116%;
             object-fit: cover;
-            filter: blur(55px) saturate(1.6) brightness(0.48);
+            filter: blur(55px) saturate(1.65) brightness(0.48);
             opacity: 0;
             transform: scale(1.06);
             transition: opacity 0.75s ease;
@@ -106,7 +107,7 @@
             height: 56.25vw;
             min-height: 100vh;
             min-width: 177.77vh;
-            transform: translate(-50%, -50%) scale(1.15);
+            transform: translate(-50%, -50%) scale(1.16);
             filter: var(--video-filter);
             pointer-events: none;
             border: 0;
@@ -118,32 +119,33 @@
             z-index: 1;
             pointer-events: none;
             background:
-                radial-gradient(circle at 68% 48%, rgba(0, 0, 0, 0.42) 0%, rgba(0, 0, 0, 0.68) 100%),
-                linear-gradient(180deg, rgba(0,0,0,0.42) 0%, rgba(0,0,0,0.18) 28%, rgba(0,0,0,0.22) 72%, rgba(0,0,0,0.75) 100%);
+                radial-gradient(circle at 68% 48%, rgba(5, 5, 10, 0.34) 0%, rgba(0, 0, 0, 0.72) 100%),
+                linear-gradient(90deg, rgba(0, 0, 0, 0.24) 0%, rgba(0, 0, 0, 0.32) 45%, rgba(5, 5, 10, 0.64) 100%),
+                linear-gradient(180deg, rgba(0,0,0,0.42) 0%, transparent 22%, transparent 74%, rgba(0,0,0,0.78) 100%);
         }
 
-        /* SUBTLE SCREEN-EDGE AMBIENT GLOW */
+        /* DYNAMIC TIKTOK-STYLE SCREEN-EDGE AMBIENT GLOW */
         #screen-edge-glow {
             position: fixed;
             inset: 0;
-            z-index: 2;
+            z-index: 3;
             pointer-events: none;
             box-shadow:
-                inset 0 0 42px 4px rgba(var(--accent-rgb), var(--edge-glow-alpha)),
-                inset 0 0 95px 10px rgba(var(--accent-rgb), calc(var(--edge-glow-alpha) * 0.45));
-            transition: box-shadow 0.8s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease;
+                inset 0 0 36px 4px rgba(var(--accent-rgb), var(--edge-glow-alpha)),
+                inset 0 0 95px 12px rgba(var(--accent-rgb), calc(var(--edge-glow-alpha) * 0.55));
+            transition: box-shadow 0.85s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease;
         }
 
         /* FROSTED REFRACTIVE GLASS */
         .frosted-glass {
-            background: linear-gradient(145deg, rgba(255, 255, 255, 0.11) 0%, var(--glass-bg) 100%);
-            backdrop-filter: blur(var(--glass-blur)) saturate(185%);
-            -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(185%);
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.12) 0%, var(--glass-bg) 100%);
+            backdrop-filter: blur(var(--glass-blur)) saturate(190%);
+            -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(190%);
             border: 1px solid var(--glass-border);
             border-top-color: var(--glass-border-top);
             box-shadow:
-                0 18px 45px rgba(0, 0, 0, 0.42),
-                inset 0 1px 1px rgba(255, 255, 255, 0.22);
+                0 18px 45px rgba(0, 0, 0, 0.44),
+                inset 0 1px 1px rgba(255, 255, 255, 0.24);
         }
 
         /* HUD STAGE */
@@ -155,7 +157,7 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 22px 28px 24px 28px;
+            padding: 20px 28px 22px 28px;
         }
 
         /* TOP BAR */
@@ -180,9 +182,9 @@
             display: inline-flex;
             align-items: center;
             gap: 9px;
-            padding: 9px 15px;
+            padding: 8px 14px;
             border-radius: 999px;
-            font-size: 0.82rem;
+            font-size: 0.8rem;
             font-weight: 600;
             color: #fff;
             text-decoration: none;
@@ -192,8 +194,8 @@
         .hud-pill:hover, .hud-pill.active {
             transform: translateY(-2px);
             border-color: rgba(255, 255, 255, 0.48);
-            background: linear-gradient(145deg, rgba(var(--accent-rgb), 0.32), rgba(20, 20, 28, 0.55));
-            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45), 0 0 18px rgba(var(--accent-rgb), 0.28);
+            background: linear-gradient(145deg, rgba(var(--accent-rgb), 0.34), rgba(20, 20, 28, 0.58));
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45), 0 0 18px rgba(var(--accent-rgb), 0.32);
         }
 
         .presence-dot {
@@ -208,13 +210,13 @@
         /* AUDIO UNLOCK TOAST BANNER */
         #audio-unlock-pill {
             position: fixed;
-            bottom: 92px;
+            bottom: 88px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 55;
-            background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.85), rgba(20, 20, 30, 0.92));
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 24px rgba(var(--accent-rgb), 0.5);
+            background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.88), rgba(20, 20, 30, 0.92));
+            border: 1px solid rgba(255, 255, 255, 0.42);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 24px rgba(var(--accent-rgb), 0.55);
             animation: pulseGlow 2s infinite;
         }
         #audio-unlock-pill.hidden { display: none; }
@@ -226,7 +228,7 @@
         /* PERSISTENT ZEN RESTORE BUTTON */
         #zen-restore-pill {
             position: fixed;
-            top: 22px;
+            top: 20px;
             right: 28px;
             z-index: 60;
             opacity: 0;
@@ -239,35 +241,35 @@
             transform: translateY(0);
         }
 
-        /* iOS LOCKSCREEN CLOCK */
+        /* iOS LOCKSCREEN CLOCK (TIKTOK STYLE) */
         .lockscreen-clock {
             text-align: center;
             pointer-events: none;
             margin-top: -4px;
-            text-shadow: 0 6px 28px rgba(0, 0, 0, 0.45);
+            text-shadow: 0 6px 30px rgba(0, 0, 0, 0.52);
         }
         .clock-date {
-            font-size: 0.92rem;
+            font-size: 0.9rem;
             font-weight: 600;
             letter-spacing: 0.4px;
-            color: rgba(255, 255, 255, 0.82);
+            color: rgba(255, 255, 255, 0.85);
             margin-bottom: -6px;
         }
         .clock-time {
-            font-size: clamp(3.4rem, 5.5vw, 4.9rem);
+            font-size: clamp(3.6rem, 5.8vw, 5.2rem);
             font-weight: 200;
-            letter-spacing: -2px;
+            letter-spacing: -2.5px;
             line-height: 1;
-            color: rgba(255, 255, 255, 0.88);
+            color: rgba(255, 255, 255, 0.92);
             font-variant-numeric: tabular-nums;
         }
 
         /* CENTER 3-COLUMN HUD */
         .hud-center-grid {
             display: grid;
-            grid-template-columns: 295px minmax(260px, 310px) 1fr;
+            grid-template-columns: 295px minmax(265px, 315px) 1fr;
             align-items: center;
-            gap: 32px;
+            gap: 34px;
             width: 100%;
             max-width: 1480px;
             margin: 0 auto;
@@ -279,7 +281,7 @@
         /* LEFT: CONTINUE PLAYING QUEUE */
         .queue-panel {
             border-radius: 22px;
-            padding: 16px;
+            padding: 15px;
             max-height: 54vh;
             display: flex;
             flex-direction: column;
@@ -291,10 +293,10 @@
             justify-content: space-between;
             font-size: 0.78rem;
             font-weight: 700;
-            letter-spacing: 0.4px;
-            color: rgba(255, 255, 255, 0.78);
-            padding: 0 4px 6px 4px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            letter-spacing: 0.3px;
+            color: rgba(255, 255, 255, 0.85);
+            padding: 0 4px 7px 4px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
         }
         .queue-list {
             overflow-y: auto;
@@ -318,8 +320,8 @@
             transform: translateX(3px);
         }
         .queue-row.active {
-            background: linear-gradient(90deg, rgba(var(--accent-rgb), 0.28), rgba(255, 255, 255, 0.08));
-            border-color: rgba(var(--accent-rgb), 0.48);
+            background: linear-gradient(90deg, rgba(var(--accent-rgb), 0.3), rgba(255, 255, 255, 0.08));
+            border-color: rgba(var(--accent-rgb), 0.55);
         }
         .queue-thumb {
             width: 42px;
@@ -355,7 +357,7 @@
             align-items: center;
             justify-content: center;
             font-size: 0.68rem;
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 0.85);
             flex-shrink: 0;
         }
 
@@ -364,21 +366,22 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 12px;
+            gap: 11px;
+            position: relative;
         }
         .album-glass-card {
             width: 100%;
             border-radius: 26px;
-            padding: 16px;
+            padding: 15px;
             display: flex;
             flex-direction: column;
-            gap: 14px;
+            gap: 13px;
             transform-style: preserve-3d;
             will-change: transform;
             transition: transform 0.2s ease-out, box-shadow 0.4s ease;
         }
         .album-glass-card:hover {
-            box-shadow: 0 24px 55px rgba(0, 0, 0, 0.58), 0 0 24px rgba(var(--accent-rgb), 0.24);
+            box-shadow: 0 24px 55px rgba(0, 0, 0, 0.58), 0 0 28px rgba(var(--accent-rgb), 0.3);
         }
         .album-art-frame {
             width: 100%;
@@ -396,6 +399,35 @@
             transition: transform 0.5s ease;
         }
         .album-glass-card:hover .album-art-frame img { transform: scale(1.03); }
+
+        /* "Starting on SoundCloud..." / Platform Toast Pill inside Card */
+        .starting-on-badge {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%) translateY(8px);
+            background: rgba(14, 14, 20, 0.84);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            padding: 5px 12px;
+            border-radius: 999px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #fff;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.25s ease;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+        }
+        .starting-on-badge.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
         .album-card-info {
             display: flex;
             flex-direction: column;
@@ -442,6 +474,7 @@
             gap: 8px;
             flex-wrap: wrap;
             justify-content: center;
+            position: relative;
         }
 
         .other-lyrics-pill {
@@ -449,7 +482,7 @@
             border-radius: 999px;
             font-size: 0.74rem;
             font-weight: 600;
-            color: rgba(255, 255, 255, 0.85);
+            color: rgba(255, 255, 255, 0.9);
             cursor: pointer;
             transition: all 0.2s;
             display: inline-flex;
@@ -459,18 +492,46 @@
         .other-lyrics-pill:hover {
             color: #fff;
             border-color: var(--accent);
+            background: rgba(var(--accent-rgb), 0.24);
         }
         .other-lyrics-pill.hidden {
             display: none;
         }
 
-        /* RIGHT: KINETIC GLOWING LYRICS */
-        .lyrics-stage {
-            display: flex;
+        /* OTHER LYRICS PICKER POPOVER */
+        .lyrics-picker-popover {
+            position: absolute;
+            bottom: calc(100% + 10px);
+            left: 50%;
+            transform: translateX(-50%);
+            width: 280px;
+            border-radius: 18px;
+            padding: 12px;
+            display: none;
             flex-direction: column;
-            justify-content: flex-start;
-            gap: 14px;
-            padding: 80px 0 80px 16px;
+            gap: 8px;
+            z-index: 45;
+            animation: popUpCentered 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .lyrics-picker-popover.open { display: flex; }
+        .lyrics-option-item {
+            padding: 7px 10px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid transparent;
+            cursor: pointer;
+            font-size: 0.76rem;
+            transition: all 0.15s;
+        }
+        .lyrics-option-item:hover, .lyrics-option-item.active {
+            background: rgba(var(--accent-rgb), 0.25);
+            border-color: var(--accent);
+        }
+
+        /* RIGHT: KINETIC GLOWING LYRICS (FIXED — NO OVERLAP) */
+        .lyrics-stage {
+            display: block;
+            padding: 76px 12px 76px 18px;
             max-height: 56vh;
             overflow-y: auto;
             scrollbar-width: none;
@@ -479,40 +540,40 @@
             transition: all 0.3s ease;
         }
         .lyrics-stage::-webkit-scrollbar { display: none; }
-        .lyrics-stage.style-centered { text-align: center; padding-left: 0; }
+        .lyrics-stage.style-centered { text-align: center; padding-left: 12px; }
         .lyrics-stage.style-centered .lyric-line { transform-origin: center center; }
         .lyrics-stage.style-minimal .lyric-line:not(.active) {
-            opacity: 0;
-            height: 0;
-            margin: 0;
-            overflow: hidden;
+            display: none;
         }
         .lyric-line {
-            font-size: clamp(1.35rem, 2.3vw, 2.15rem);
+            display: block;
+            width: 100%;
+            margin-bottom: 16px;
+            font-size: clamp(1.35rem, 2.25vw, 2.1rem);
             font-weight: 800;
             letter-spacing: -0.4px;
-            line-height: 1.24;
+            line-height: 1.28;
+            word-break: break-word;
             color: rgba(255, 255, 255, 0.34);
-            filter: blur(0.8px);
-            transform: scale(0.96);
+            filter: blur(0.6px);
+            transform: scale(0.97);
             transform-origin: left center;
-            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: color 0.32s ease, filter 0.32s ease, transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), text-shadow 0.32s ease;
             cursor: pointer;
-            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.75);
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.78);
         }
-        .lyric-line:hover { color: rgba(255, 255, 255, 0.78); filter: blur(0px); }
+        .lyric-line:hover { color: rgba(255, 255, 255, 0.8); filter: blur(0px); }
         .lyric-line.active {
             color: #ffffff;
             filter: blur(0px);
-            transform: scale(1.03);
+            transform: scale(1.02);
             text-shadow:
-                0 2px 14px rgba(0, 0, 0, 0.9),
-                0 0 18px rgba(255, 255, 255, 0.55),
-                0 0 32px rgba(var(--accent-rgb), 0.65);
+                0 2px 14px rgba(0, 0, 0, 0.92),
+                0 0 18px rgba(255, 255, 255, 0.58),
+                0 0 34px rgba(var(--accent-rgb), 0.72);
         }
-        .lyric-line.past { color: rgba(255, 255, 255, 0.45); filter: blur(0.4px); }
-
-        /* BOTTOM FLOATING CONTROL DOCK */
+        .lyric-line.past { color: rgba(255, 255, 255, 0.46); filter: blur(0.35px); }
+        /* BOTTOM FLOATING CONTROL DOCK (TIKTOK VIDEO LAYOUT) */
         .hud-bottom-area {
             display: flex;
             flex-direction: column;
@@ -524,65 +585,15 @@
         .control-dock {
             display: flex;
             align-items: center;
-            gap: 14px;
-            padding: 10px 18px;
+            gap: 12px;
+            padding: 9px 16px;
             border-radius: 999px;
             position: relative;
             z-index: 30;
+            max-width: 96vw;
         }
 
-        .dock-btn {
-            background: transparent;
-            border: none;
-            color: rgba(255, 255, 255, 0.78);
-            font-size: 0.95rem;
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.18s ease;
-        }
-        .dock-btn:hover { color: #fff; background: rgba(255, 255, 255, 0.12); transform: scale(1.08); }
-        .dock-btn.active { color: var(--accent); text-shadow: 0 0 10px rgba(var(--accent-rgb), 0.75); }
-        .dock-btn.play-main {
-            width: 40px;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.16);
-            color: #fff;
-            font-size: 1rem;
-            border: 1px solid rgba(255, 255, 255, 0.25);
-        }
-        .dock-btn.play-main:hover {
-            background: var(--accent);
-            border-color: #fff;
-            box-shadow: 0 0 18px rgba(var(--accent-rgb), 0.65);
-        }
-
-        .dock-divider { width: 1px; height: 20px; background: rgba(255, 255, 255, 0.16); }
-
-        .dock-volume { display: flex; align-items: center; gap: 8px; }
-        .dock-vol-slider {
-            -webkit-appearance: none;
-            width: 72px;
-            height: 4px;
-            border-radius: 99px;
-            background: rgba(255, 255, 255, 0.22);
-            outline: none;
-            cursor: pointer;
-        }
-        .dock-vol-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #fff;
-            box-shadow: 0 0 8px var(--accent);
-        }
-
-        /* SOURCE SWITCHER + REAL LIVE SEARCH INPUT */
+        /* LEFT IN DOCK: SOURCE SWITCHER + UNIVERSAL SEARCH */
         .dock-search-wrap {
             position: relative;
             display: flex;
@@ -591,13 +602,13 @@
             background: rgba(255, 255, 255, 0.08);
             border: 1px solid rgba(255, 255, 255, 0.14);
             border-radius: 999px;
-            padding: 5px 12px 5px 8px;
+            padding: 4px 12px 4px 7px;
             transition: all 0.2s;
         }
         .dock-search-wrap:focus-within {
             border-color: var(--accent);
             background: rgba(255, 255, 255, 0.14);
-            box-shadow: 0 0 16px rgba(var(--accent-rgb), 0.3);
+            box-shadow: 0 0 18px rgba(var(--accent-rgb), 0.35);
         }
         .source-trigger {
             display: inline-flex;
@@ -608,30 +619,30 @@
             color: #fff;
             padding: 5px 9px;
             border-radius: 999px;
-            font-size: 0.78rem;
+            font-size: 0.8rem;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.18s;
             flex-shrink: 0;
         }
-        .source-trigger:hover { background: var(--accent); }
+        .source-trigger:hover { background: rgba(var(--accent-rgb), 0.45); }
         .dock-search-input {
             background: transparent;
             border: none;
             outline: none;
             color: #fff;
             font-size: 0.82rem;
-            width: 195px;
+            width: 175px;
             user-select: text;
         }
         .dock-search-input::placeholder { color: rgba(255, 255, 255, 0.48); }
 
-        /* PLATFORM DROPDOWN MENU — ANCHORED DIRECTLY ABOVE SOURCE TRIGGER */
+        /* 7-PLATFORM POPOVER MENU (ANCHORED ABOVE SOURCE TRIGGER) */
         .platform-popover {
             position: absolute;
             bottom: calc(100% + 14px);
             left: 0;
-            width: 225px;
+            width: 235px;
             border-radius: 20px;
             padding: 8px;
             display: none;
@@ -650,7 +661,7 @@
             border-radius: 12px;
             font-size: 0.82rem;
             font-weight: 600;
-            color: rgba(255, 255, 255, 0.85);
+            color: rgba(255, 255, 255, 0.86);
             cursor: pointer;
             transition: all 0.15s;
         }
@@ -665,13 +676,131 @@
             font-weight: 800;
         }
 
+        /* CENTER IN DOCK: PLAYBACK & VOLUME CONTROLS */
+        .dock-controls-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .dock-btn {
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.92rem;
+            width: 33px;
+            height: 33px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.18s ease;
+        }
+        .dock-btn:hover { color: #fff; background: rgba(255, 255, 255, 0.12); transform: scale(1.08); }
+        .dock-btn.active { color: var(--accent); text-shadow: 0 0 10px rgba(var(--accent-rgb), 0.75); }
+        .dock-btn.play-main {
+            width: 38px;
+            height: 38px;
+            background: rgba(255, 255, 255, 0.16);
+            color: #fff;
+            font-size: 0.95rem;
+            border: 1px solid rgba(255, 255, 255, 0.26);
+        }
+        .dock-btn.play-main:hover {
+            background: var(--accent);
+            border-color: #fff;
+            box-shadow: 0 0 18px rgba(var(--accent-rgb), 0.65);
+        }
+
+        .dock-divider { width: 1px; height: 22px; background: rgba(255, 255, 255, 0.16); flex-shrink: 0; }
+
+        .dock-volume { display: flex; align-items: center; gap: 6px; }
+        .dock-vol-slider {
+            -webkit-appearance: none;
+            width: 64px;
+            height: 4px;
+            border-radius: 99px;
+            background: rgba(255, 255, 255, 0.22);
+            outline: none;
+            cursor: pointer;
+        }
+        .dock-vol-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            background: #fff;
+            box-shadow: 0 0 8px var(--accent);
+        }
+
+        /* RIGHT IN DOCK: COMPACT NOW-PLAYING MINI-WIDGET (TIKTOK VIDEO STYLE) */
+        .dock-mini-player {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 4px 10px 4px 6px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            min-width: 175px;
+            max-width: 220px;
+            position: relative;
+            overflow: hidden;
+        }
+        .dock-mini-cover {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            object-fit: cover;
+            flex-shrink: 0;
+            background: #14141c;
+        }
+        .dock-mini-meta {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            flex: 1;
+        }
+        .dock-mini-title {
+            font-size: 0.76rem;
+            font-weight: 700;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .dock-mini-artist {
+            font-size: 0.66rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .dock-mini-progress {
+            position: absolute;
+            bottom: 0;
+            left: 10px;
+            right: 10px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.14);
+            border-radius: 99px;
+            overflow: hidden;
+        }
+        .dock-mini-progress-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--accent);
+            transition: width 0.25s linear;
+        }
+
         /* FLOATING LIVE SEARCH OVERLAY — CENTERED ABOVE DOCK */
         .search-results-popover {
             position: absolute;
             bottom: calc(100% + 14px);
             left: 50%;
             transform: translateX(-50%);
-            width: min(660px, 92vw);
+            width: min(670px, 92vw);
             border-radius: 26px;
             padding: 20px;
             display: none;
@@ -694,7 +823,7 @@
         .search-section-label {
             font-size: 0.78rem;
             font-weight: 700;
-            color: rgba(255, 255, 255, 0.7);
+            color: rgba(255, 255, 255, 0.75);
             margin-bottom: 8px;
             display: flex;
             align-items: center;
@@ -718,7 +847,7 @@
             position: relative;
         }
         .search-track-card:hover {
-            background: rgba(var(--accent-rgb), 0.24);
+            background: rgba(var(--accent-rgb), 0.26);
             border-color: var(--accent);
             transform: translateY(-3px);
         }
@@ -747,7 +876,7 @@
             position: absolute;
             top: 15px;
             right: 15px;
-            background: rgba(0, 0, 0, 0.72);
+            background: rgba(0, 0, 0, 0.74);
             backdrop-filter: blur(8px);
             border: 1px solid rgba(255, 255, 255, 0.22);
             padding: 2px 7px;
@@ -782,13 +911,13 @@
             height: 58px;
             border-radius: 50%;
             object-fit: cover;
-            border: 1.5px solid rgba(255, 255, 255, 0.22);
+            border: 1.5px solid rgba(255, 255, 255, 0.24);
             box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
         }
         .artist-bubble span {
             font-size: 0.72rem;
             font-weight: 600;
-            color: rgba(255, 255, 255, 0.85);
+            color: rgba(255, 255, 255, 0.88);
         }
 
         /* VENGEANCE UTILITIES DRAWERS / MODALS */
@@ -796,8 +925,8 @@
             position: fixed;
             inset: 0;
             z-index: 100;
-            background: rgba(0, 0, 0, 0.55);
-            backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, 0.58);
+            backdrop-filter: blur(10px);
             display: none;
             align-items: center;
             justify-content: center;
@@ -893,6 +1022,22 @@
         .mc-stat-lbl { font-size: 0.7rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; }
         .mc-stat-val { font-size: 0.95rem; font-weight: 800; margin-top: 3px; }
 
+        /* CRT SCANLINES OPTIONAL OVERLAY */
+        body.crt-enabled::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 4;
+            pointer-events: none;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.16) 0px,
+                rgba(0, 0, 0, 0.16) 1px,
+                transparent 1px,
+                transparent 3px
+            );
+        }
+
         /* ZEN MODE */
         body.zen-mode .hud-center-grid,
         body.zen-mode .top-left-pills,
@@ -903,6 +1048,9 @@
         }
 
         /* RESPONSIVE */
+        @media (max-width: 1120px) {
+            .dock-mini-player { display: none; }
+        }
         @media (max-width: 1024px) {
             body { overflow-y: auto; height: auto; min-height: 100vh; }
             .hud-stage { height: auto; min-height: 100vh; gap: 24px; padding: 16px; }
@@ -911,7 +1059,7 @@
             .hud-center-grid { grid-template-columns: 1fr; gap: 20px; }
             .queue-panel { max-height: 240px; order: 3; }
             .cover-card-wrapper { max-width: 310px; margin: 0 auto; order: 1; }
-            .lyrics-stage { order: 2; text-align: center; padding-left: 0; max-height: 220px; }
+            .lyrics-stage { order: 2; text-align: center; padding-left: 12px; max-height: 220px; }
             .lyric-line { transform-origin: center center; }
             .control-dock { flex-wrap: wrap; justify-content: center; border-radius: 26px; }
             .search-top-grid { grid-template-columns: repeat(2, 1fr); }
@@ -930,7 +1078,7 @@
     <div class="bg-vignette"></div>
     <div id="screen-edge-glow"></div>
 
-    <!-- CLICK TO UNMUTE PILL (AUTO-HIDES ON FIRST CLICK) -->
+    <!-- CLICK TO UNMUTE PILL (AUTO-HIDES ON FIRST INTERACTION) -->
     <button class="hud-pill frosted-glass" id="audio-unlock-pill">
         <i class="fas fa-volume-high"></i>
         <span>Click anywhere to enable sound</span>
@@ -962,10 +1110,10 @@
             <!-- iOS LOCKSCREEN CLOCK -->
             <div class="lockscreen-clock">
                 <div class="clock-date" id="hud-date">Wednesday, November 18</div>
-                <div class="clock-time" id="hud-clock">03:18</div>
+                <div class="clock-time" id="hud-clock">15:43</div>
             </div>
 
-            <!-- RIGHT: VENGEANCE APPS & SERVER PILLS -->
+            <!-- RIGHT: VENGEANCE APPS, SERVER & DIRECT DASHBOARD LINK -->
             <div class="top-right-pills">
                 <button class="hud-pill frosted-glass" id="open-apps-btn">
                     <i class="fab fa-android" style="color:#4ade80;"></i>
@@ -977,9 +1125,12 @@
                     <span>Fabric Server</span>
                     <span id="top-mc-badge" style="color:#4ade80; font-size:0.74rem;">●</span>
                 </button>
-                <button class="hud-pill frosted-glass" id="glow-cycle-btn" title="Adjust Edge Glow">
+                <button class="hud-pill frosted-glass" id="glow-cycle-btn" title="Adjust Screen Edge Glow">
                     <i class="fas fa-sun" style="color:var(--accent);"></i>
                 </button>
+                <a href="dashboard.html" class="hud-pill frosted-glass" title="Open Control Center">
+                    <i class="fas fa-sliders" style="color:rgba(255,255,255,0.85);"></i>
+                </a>
                 <button class="hud-pill frosted-glass" id="zen-toggle-btn" title="Hide UI (H)">
                     <i class="fas fa-eye-slash"></i>
                 </button>
@@ -1003,6 +1154,10 @@
                 <div class="album-glass-card frosted-glass" id="album-glass-card">
                     <div class="album-art-frame">
                         <img id="active-cover" src="https://img.youtube.com/vi/mzB1VGEGcSU/hqdefault.jpg" alt="Album Art">
+                        <div class="starting-on-badge" id="starting-on-badge">
+                            <i class="fab fa-youtube" id="starting-on-icon"></i>
+                            <span id="starting-on-text">Starting on YouTube Music...</span>
+                        </div>
                     </div>
                     <div class="album-card-info">
                         <div class="album-card-title" id="active-title">Lucid Dreams</div>
@@ -1016,9 +1171,27 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- LYRICS VERSION PICKER POPOVER -->
+                <div class="lyrics-picker-popover frosted-glass" id="lyrics-picker-popover">
+                    <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.76rem; font-weight:700;">
+                        <span><i class="fas fa-align-left" style="color:var(--accent);"></i> Lyrics Version & Style</span>
+                        <button class="drawer-close" style="width:22px; height:22px; font-size:0.75rem;" onclick="closePopovers()">&times;</button>
+                    </div>
+                    <div style="display:flex; gap:6px;">
+                        <button class="other-lyrics-pill frosted-glass" style="flex:1; justify-content:center;" id="cycle-lyrics-layout-btn">
+                            <i class="fas fa-text-height" style="color:var(--accent);"></i>
+                            <span id="lyrics-layout-label">Left Flow</span>
+                        </button>
+                    </div>
+                    <div id="lyrics-versions-list" style="display:flex; flex-direction:column; gap:5px; max-height:170px; overflow-y:auto;">
+                        <div style="font-size:0.74rem; color:var(--text-muted);">Searching LRCLIB versions...</div>
+                    </div>
+                </div>
+
                 <div class="card-sub-pills">
-                    <button class="other-lyrics-pill frosted-glass" id="lyrics-style-btn">
-                        <i class="fas fa-sparkles" style="color:var(--accent);"></i>
+                    <button class="other-lyrics-pill frosted-glass" id="lyrics-style-btn" title="Choose Synced Lyrics Version or Layout">
+                        <i class="fas fa-magnifying-glass" style="color:var(--accent);"></i>
                         <span id="lyrics-style-label">Other lyrics</span>
                     </button>
                     <button class="other-lyrics-pill frosted-glass" id="video-mode-btn" title="Toggle Music Video / Cover Backdrop">
@@ -1033,7 +1206,7 @@
 
         </div>
 
-        <!-- BOTTOM FLOATING CONTROL DOCK + LIVE SEARCH & ANCHORED PLATFORM POPOVER -->
+        <!-- BOTTOM FLOATING CONTROL DOCK + LIVE SEARCH & 7-PLATFORM POPOVER -->
         <div class="hud-bottom-area">
 
             <!-- LIVE UNIVERSAL SEARCH POPOVER -->
@@ -1049,15 +1222,52 @@
                 </div>
             </div>
 
-            <!-- MAIN BOTTOM CONTROL PILL -->
+            <!-- MAIN BOTTOM CONTROL PILL (TIKTOK VIDEO LAYOUT) -->
             <div class="control-dock frosted-glass">
-                <button class="dock-btn" id="shuffle-btn" title="Shuffle (S)"><i class="fas fa-shuffle"></i></button>
-                <button class="dock-btn" id="prev-btn" title="Previous"><i class="fas fa-backward-step"></i></button>
-                <button class="dock-btn play-main" id="play-pause-btn" title="Play / Pause (Space)"><i class="fas fa-pause"></i></button>
-                <button class="dock-btn" id="next-btn" title="Next"><i class="fas fa-forward-step"></i></button>
-                <button class="dock-btn" id="loop-btn" title="Repeat (R)"><i class="fas fa-repeat"></i></button>
+
+                <!-- 1. SOURCE ICON + 7-PLATFORM POPOVER + REAL LIVE SEARCH -->
+                <div class="dock-search-wrap">
+                    <div class="platform-popover frosted-glass" id="platform-popover">
+                        <div class="platform-option" data-platform="Apple Music" data-icon="fab fa-apple" data-color="#fa243c">
+                            <i class="fab fa-apple" style="color:#fa243c; width:18px;"></i> Apple Music
+                        </div>
+                        <div class="platform-option" data-platform="Spotify" data-icon="fab fa-spotify" data-color="#1db954">
+                            <i class="fab fa-spotify" style="color:#1db954; width:18px;"></i> Spotify
+                        </div>
+                        <div class="platform-option" data-platform="Spotify Web Player" data-icon="fab fa-spotify" data-color="#1ed760">
+                            <i class="fab fa-spotify" style="color:#1ed760; width:18px;"></i> Spotify Web Player
+                        </div>
+                        <div class="platform-option active" data-platform="YouTube Music" data-icon="fab fa-youtube" data-color="#ff0033">
+                            <i class="fab fa-youtube" style="color:#ff0033; width:18px;"></i> YouTube Music
+                        </div>
+                        <div class="platform-option" data-platform="SoundCloud" data-icon="fab fa-soundcloud" data-color="#ff5500">
+                            <i class="fab fa-soundcloud" style="color:#ff5500; width:18px;"></i> SoundCloud
+                        </div>
+                        <div class="platform-option" data-platform="Amazon Music" data-icon="fab fa-amazon" data-color="#00a8e1">
+                            <i class="fab fa-amazon" style="color:#00a8e1; width:18px;"></i> Amazon Music
+                        </div>
+                        <div class="platform-option" data-platform="Automatic" data-icon="fas fa-bolt" data-color="#a855f7">
+                            <i class="fas fa-bolt" style="color:#a855f7; width:18px;"></i> Automatic
+                        </div>
+                    </div>
+
+                    <button class="source-trigger" id="source-btn" title="Switch Music Platform">
+                        <i class="fab fa-youtube" id="source-btn-icon" style="color:#ff0033;"></i>
+                        <i class="fas fa-chevron-up" style="font-size:0.6rem; opacity:0.75;"></i>
+                    </button>
+                    <input type="text" class="dock-search-input" id="hud-search-input" placeholder="Search any song or artist..." autocomplete="off">
+                </div>
 
                 <div class="dock-divider"></div>
+
+                <!-- 2. TRANSPORT & VOLUME CONTROLS -->
+                <div class="dock-controls-group">
+                    <button class="dock-btn" id="shuffle-btn" title="Shuffle (S)"><i class="fas fa-shuffle"></i></button>
+                    <button class="dock-btn" id="prev-btn" title="Previous"><i class="fas fa-backward-step"></i></button>
+                    <button class="dock-btn play-main" id="play-pause-btn" title="Play / Pause (Space)"><i class="fas fa-pause"></i></button>
+                    <button class="dock-btn" id="next-btn" title="Next"><i class="fas fa-forward-step"></i></button>
+                    <button class="dock-btn" id="loop-btn" title="Repeat (R)"><i class="fas fa-repeat"></i></button>
+                </div>
 
                 <div class="dock-volume">
                     <button class="dock-btn" id="mute-btn" style="width:28px; height:28px;" title="Mute (M)"><i class="fas fa-volume-high"></i></button>
@@ -1066,31 +1276,16 @@
 
                 <div class="dock-divider"></div>
 
-                <!-- SOURCE ICON + ANCHORED PLATFORM DROPDOWN + REAL LIVE SEARCH INPUT -->
-                <div class="dock-search-wrap">
-                    <div class="platform-popover frosted-glass" id="platform-popover">
-                        <div class="platform-option active" data-platform="YouTube Music" data-icon="fab fa-youtube" data-color="#ff0033">
-                            <i class="fab fa-youtube" style="color:#ff0033; width:18px;"></i> YouTube Music
-                        </div>
-                        <div class="platform-option" data-platform="Spotify" data-icon="fab fa-spotify" data-color="#1db954">
-                            <i class="fab fa-spotify" style="color:#1db954; width:18px;"></i> Spotify
-                        </div>
-                        <div class="platform-option" data-platform="SoundCloud" data-icon="fab fa-soundcloud" data-color="#ff5500">
-                            <i class="fab fa-soundcloud" style="color:#ff5500; width:18px;"></i> SoundCloud
-                        </div>
-                        <div class="platform-option" data-platform="Apple Music" data-icon="fab fa-apple" data-color="#fa243c">
-                            <i class="fab fa-apple" style="color:#fa243c; width:18px;"></i> Apple Music
-                        </div>
-                        <div class="platform-option" data-platform="Vengeance Hybrid" data-icon="fas fa-bolt" data-color="#a855f7">
-                            <i class="fas fa-bolt" style="color:#a855f7; width:18px;"></i> Automatic (Hybrid)
-                        </div>
+                <!-- 3. RIGHT IN DOCK: COMPACT NOW-PLAYING MINI-WIDGET -->
+                <div class="dock-mini-player" id="dock-mini-player">
+                    <img class="dock-mini-cover" id="dock-mini-cover" src="https://img.youtube.com/vi/mzB1VGEGcSU/hqdefault.jpg" alt="">
+                    <div class="dock-mini-meta">
+                        <div class="dock-mini-title" id="dock-mini-title">Lucid Dreams</div>
+                        <div class="dock-mini-artist" id="dock-mini-artist">Juice WRLD</div>
                     </div>
-
-                    <button class="source-trigger" id="source-btn" title="Switch Music Source">
-                        <i class="fab fa-youtube" id="source-btn-icon" style="color:#ff4d4d;"></i>
-                        <i class="fas fa-chevron-up" style="font-size:0.62rem; opacity:0.75;"></i>
-                    </button>
-                    <input type="text" class="dock-search-input" id="hud-search-input" placeholder="Search any song or artist..." autocomplete="off">
+                    <div class="dock-mini-progress">
+                        <div class="dock-mini-progress-fill" id="dock-mini-progress-fill"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1171,27 +1366,6 @@
                 </div>
                 <div class="mc-stat-box">
                     <div class="mc-stat-lbl">Players</div>
-                    <!-- MODAL 2: MINECRAFT FABRIC SERVER -->
-    <div class="drawer-overlay" id="mc-modal">
-        <div class="drawer-card frosted-glass" style="max-width:560px;">
-            <div class="drawer-head">
-                <div class="drawer-title"><i class="fas fa-cube" style="color:#22c55e;"></i> <span id="modal-mc-title">Vengeance Fabric Server</span></div>
-                <button class="drawer-close" onclick="closeModals()">&times;</button>
-            </div>
-            <div class="app-item" style="flex-direction:row; justify-content:space-between; align-items:center;">
-                <div>
-                    <div style="font-size:0.72rem; color:var(--text-muted); font-weight:700;">SERVER ADDRESS</div>
-                    <code id="modal-mc-ip" style="font-size:1.05rem; font-weight:800; color:#fff;">vengeanceutilities.de</code>
-                </div>
-                <button class="btn-accent" id="copy-mc-ip-btn"><i class="far fa-copy"></i> Copy IP</button>
-            </div>
-            <div class="mc-stat-strip">
-                <div class="mc-stat-box">
-                    <div class="mc-stat-lbl">Status</div>
-                    <div class="mc-stat-val" id="modal-mc-status">Checking...</div>
-                </div>
-                <div class="mc-stat-box">
-                    <div class="mc-stat-lbl">Players</div>
                     <div class="mc-stat-val" id="modal-mc-players">- / -</div>
                 </div>
                 <div class="mc-stat-box">
@@ -1234,30 +1408,18 @@
             <div id="modal-links-list" style="display:flex; flex-wrap:wrap; gap:10px;"></div>
         </div>
     </div>
-
     <script>
-        /* ENHANCED VIGNETTE FOR VIDEO-MODE LYRICS READABILITY */
-        (function injectVideoReadabilityScrim() {
-            const bgVignette = document.querySelector('.bg-vignette');
-            if (bgVignette) {
-                bgVignette.style.background = `
-                    radial-gradient(circle at 68% 48%, rgba(5, 5, 10, 0.42) 0%, rgba(0, 0, 0, 0.72) 100%),
-                    linear-gradient(90deg, rgba(0, 0, 0, 0.22) 0%, rgba(0, 0, 0, 0.35) 45%, rgba(5, 5, 10, 0.62) 100%),
-                    linear-gradient(180deg, rgba(0,0,0,0.42) 0%, transparent 22%, transparent 74%, rgba(0,0,0,0.74) 100%)
-                `;
-            }
-        })();
-
         /* SUPABASE CONFIG */
         const SUPABASE_URL = 'https://pdyrfnbjegsyjmcmbqck.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_XfgU_toGSxKo2eM810q59w_qJt_HAO0';
         const sbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        /* SMART COVER HELPER */
+        /* COVER HELPERS & DOMINANT COLOR EXTRACTOR FOR EDGE GLOW */
         function getSafeCover(ytId, customCover) {
             if (customCover && !customCover.includes('maxresdefault')) return customCover;
             return ytId ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` : 'https://github.com/VengeanceUtilities.png';
         }
+
         window.handleCoverFallback = function (imgEl, ytId) {
             if (imgEl.naturalWidth <= 120 && ytId) {
                 imgEl.onerror = null;
@@ -1265,7 +1427,49 @@
             }
         };
 
-        /* FALLBACK PLAYLIST (ONLY USED IF SUPABASE IS EMPTY OR RLS BLOCKED) */
+        function extractDominantColorFromCover(imgUrl, fallbackHex, fallbackRgb) {
+            try {
+                const probe = new Image();
+                probe.crossOrigin = 'Anonymous';
+                probe.onload = () => {
+                    try {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = 24;
+                        canvas.height = 24;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(probe, 0, 0, 24, 24);
+                        const data = ctx.getImageData(0, 0, 24, 24).data;
+
+                        let rSum = 0, gSum = 0, bSum = 0, count = 0;
+                        for (let i = 0; i < data.length; i += 4) {
+                            const r = data[i], g = data[i + 1], b = data[i + 2];
+                            const max = Math.max(r, g, b), min = Math.min(r, g, b);
+                            const sat = max === 0 ? 0 : (max - min) / max;
+                            if (max > 45 && max < 245 && sat > 0.22) {
+                                rSum += r; gSum += g; bSum += b; count++;
+                            }
+                        }
+
+                        if (count > 8) {
+                            const r = Math.min(255, Math.round((rSum / count) * 1.15));
+                            const g = Math.min(255, Math.round((gSum / count) * 1.15));
+                            const b = Math.min(255, Math.round((bSum / count) * 1.15));
+                            const hex = '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+                            document.documentElement.style.setProperty('--accent', hex);
+                            document.documentElement.style.setProperty('--accent-rgb', `${r}, ${g}, ${b}`);
+                        }
+                    } catch (e) {}
+                };
+                probe.src = imgUrl;
+            } catch (e) {
+                if (fallbackHex && fallbackRgb) {
+                    document.documentElement.style.setProperty('--accent', fallbackHex);
+                    document.documentElement.style.setProperty('--accent-rgb', fallbackRgb);
+                }
+            }
+        }
+
+        /* DEFAULT CURATED PLAYLIST (FALLBACK IF DB EMPTY) */
         const FALLBACK_PLAYLIST = [
             {
                 id: 'mzB1VGEGcSU',
@@ -1273,8 +1477,8 @@
                 artist: 'Juice WRLD',
                 source: 'YouTube Music',
                 hasVideo: true,
-                accent: '#3b82f6',
-                rgb: '59, 130, 246',
+                accent: '#f59e0b',
+                rgb: '245, 158, 11',
                 cover: 'https://img.youtube.com/vi/mzB1VGEGcSU/hqdefault.jpg',
                 lyrics: [
                     { t: 0, text: 'I still see your shadows in my room' },
@@ -1344,6 +1548,16 @@
             { name: 'The Kid LAROI', query: 'The Kid LAROI', avatar: 'https://img.youtube.com/vi/kTJczUoc26U/hqdefault.jpg' }
         ];
 
+        const PLATFORM_META = {
+            'Apple Music': { icon: 'fab fa-apple', color: '#fa243c', hex: '#fa243c', rgb: '250, 36, 60' },
+            'Spotify': { icon: 'fab fa-spotify', color: '#1db954', hex: '#1db954', rgb: '29, 185, 84' },
+            'Spotify Web Player': { icon: 'fab fa-spotify', color: '#1ed760', hex: '#1ed760', rgb: '30, 215, 96' },
+            'YouTube Music': { icon: 'fab fa-youtube', color: '#ff0033', hex: '#ff0033', rgb: '255, 0, 51' },
+            'SoundCloud': { icon: 'fab fa-soundcloud', color: '#ff5500', hex: '#ff5500', rgb: '255, 85, 0' },
+            'Amazon Music': { icon: 'fab fa-amazon', color: '#00a8e1', hex: '#00a8e1', rgb: '0, 168, 225' },
+            'Automatic': { icon: 'fas fa-bolt', color: '#a855f7', hex: '#a855f7', rgb: '168, 85, 247' }
+        };
+
         let playlist = [...FALLBACK_PLAYLIST];
         let currentIdx = 0;
         let ytPlayer = null;
@@ -1358,19 +1572,39 @@
         let mcPollTarget = 'cairo-pumping.tun.ply.gg:45750';
         let mcDisplayIp = 'vengeanceutilities.de';
         let lyricsStyleIdx = 0;
-        const glowLevels = [0.22, 0.09, 0.0, 0.34];
+        const glowLevels = [0.32, 0.16, 0.0, 0.45];
         let glowLevelIdx = 0;
         let liveSearchTimer = null;
+        let startingToastTimer = null;
+        let currentLyricsCandidates = [];
 
-        /* 1. OFFICIAL YOUTUBE IFRAME API WITH ORIGIN + FAILSAFE RECOVERY */
+        /* SHOW "STARTING ON <PLATFORM>..." TOAST INSIDE ALBUM CARD */
+        function showStartingPlatformToast(platformName) {
+            const badge = document.getElementById('starting-on-badge');
+            const icon = document.getElementById('starting-on-icon');
+            const text = document.getElementById('starting-on-text');
+            const meta = PLATFORM_META[platformName] || PLATFORM_META['YouTube Music'];
+
+            icon.className = meta.icon;
+            icon.style.color = meta.color;
+            text.innerText = `Starting on ${platformName}...`;
+
+            badge.classList.add('show');
+            clearTimeout(startingToastTimer);
+            startingToastTimer = setTimeout(() => {
+                badge.classList.remove('show');
+            }, 2600);
+        }
+
+        /* 1. YOUTUBE IFRAME ENGINE (FIXED ORIGIN & AUTO-RECOVERY) */
         function playSongOnPlayer(song) {
             if (!song) return;
-            if (!ytPlayer || !ytReady) {
+            if (!ytPlayer || !ytReady || typeof ytPlayer.loadVideoById !== 'function') {
                 pendingSong = song;
                 return;
             }
             const vol = parseInt(document.getElementById('vol-slider').value, 10) || 65;
-            ytPlayer.setVolume(vol);
+            if (typeof ytPlayer.setVolume === 'function') ytPlayer.setVolume(vol);
             if (!isMuted && typeof ytPlayer.unMute === 'function') {
                 ytPlayer.unMute();
             }
@@ -1391,8 +1625,7 @@
                         if (data && data.video_id) {
                             song.id = data.video_id;
                             const safeCov = getSafeCover(song.id, song.cover);
-                            document.getElementById('active-cover').src = safeCov;
-                            document.getElementById('ambient-cover-bg').src = safeCov;
+                            updateAllCoverElements(safeCov, song.id);
                             renderQueue();
                         }
                     } catch (e) {}
@@ -1403,13 +1636,9 @@
         function initSingleYouTubePlayer() {
             if (ytPlayer || !window.YT || !window.YT.Player) return;
             const initialSong = pendingSong || playlist[currentIdx] || FALLBACK_PLAYLIST[0];
-            const safeOrigin = window.location.origin && window.location.origin.startsWith('http')
-                ? window.location.origin
-                : 'https://vengeanceutilities.de';
 
             ytPlayer = new YT.Player('youtube-player', {
                 videoId: initialSong.id || 'mzB1VGEGcSU',
-                host: 'https://www.youtube.com',
                 playerVars: {
                     autoplay: 1,
                     mute: 1,
@@ -1419,9 +1648,7 @@
                     iv_load_policy: 3,
                     modestbranding: 1,
                     rel: 0,
-                    playsinline: 1,
-                    enablejsapi: 1,
-                    origin: safeOrigin
+                    playsinline: 1
                 },
                 events: {
                     onReady: (e) => {
@@ -1457,29 +1684,41 @@
                             }
                         }
                     },
-                    onError: () => {
+                    onError: async () => {
                         const song = playlist[currentIdx];
-                        if (song && song.searchQuery && ytPlayer && typeof ytPlayer.loadPlaylist === 'function') {
-                            ytPlayer.loadPlaylist({ listType: 'search', list: song.searchQuery, index: 0 });
-                        } else if (song) {
-                            song.hasVideo = false;
-                            updateVideoBackdropState(song);
+                        if (!song) return;
+                        if (!song._retriedEmbed) {
+                            song._retriedEmbed = true;
+                            const alt = await resolveYouTubeVideoId(`${song.artist} ${song.title} audio`);
+                            if (alt && alt.id && alt.id !== song.id) {
+                                song.id = alt.id;
+                                playSongOnPlayer(song);
+                                return;
+                            }
+                        }
+                        if (ytPlayer && typeof ytPlayer.loadPlaylist === 'function') {
+                            ytPlayer.loadPlaylist({
+                                listType: 'search',
+                                list: `${song.artist} ${song.title}`,
+                                index: 0
+                            });
                         }
                     }
                 }
             });
 
-            /* Failsafe: If onReady doesn't fire within 2.5s due to browser race, force-enable once iframe responds */
             setTimeout(() => {
-                if (!ytReady && ytPlayer && typeof ytPlayer.getPlayerState === 'function') {
+                if (!ytReady && ytPlayer && typeof ytPlayer.playVideo === 'function') {
                     ytReady = true;
                     if (pendingSong) {
                         const toPlay = pendingSong;
                         pendingSong = null;
                         playSongOnPlayer(toPlay);
+                    } else {
+                        ytPlayer.playVideo();
                     }
                 }
-            }, 2500);
+            }, 2200);
         }
 
         window.onYouTubeIframeAPIReady = initSingleYouTubePlayer;
@@ -1528,12 +1767,15 @@
         setInterval(updateLockscreenClock, 1000);
         updateLockscreenClock();
 
-        /* 3. SUBTLE DYNAMIC SCREEN EDGE GLOW */
-        function applySongTheme(song) {
+        /* 3. DYNAMIC SCREEN EDGE GLOW */
+        function applySongTheme(song, safeCoverUrl) {
             const accent = song.accent || '#a855f7';
             const rgb = song.rgb || '168, 85, 247';
             document.documentElement.style.setProperty('--accent', accent);
             document.documentElement.style.setProperty('--accent-rgb', rgb);
+            if (safeCoverUrl) {
+                extractDominantColorFromCover(safeCoverUrl, accent, rgb);
+            }
         }
 
         document.getElementById('glow-cycle-btn').addEventListener('click', () => {
@@ -1541,7 +1783,7 @@
             document.documentElement.style.setProperty('--edge-glow-alpha', glowLevels[glowLevelIdx]);
         });
 
-        /* VIDEO BACKDROP TOGGLE */
+        /* VIDEO / COVER BACKDROP TOGGLE */
         function updateVideoBackdropState(song) {
             const videoBtn = document.getElementById('video-mode-btn');
             const videoLabel = document.getElementById('video-mode-label');
@@ -1567,7 +1809,7 @@
             updateVideoBackdropState(playlist[currentIdx]);
         });
 
-        /* 4. SUBTLE 3D TILT ON ALBUM GLASS CARD */
+        /* 4. 3D TILT ON ALBUM GLASS CARD */
         const albumCard = document.getElementById('album-glass-card');
         albumCard.addEventListener('mousemove', (e) => {
             if (window.innerWidth <= 1024) return;
@@ -1578,33 +1820,16 @@
         });
         albumCard.addEventListener('mouseleave', () => { albumCard.style.transform = ''; });
 
-        /* 5. RENDER QUEUE + RLS DIAGNOSTIC BANNER IF NEEDED */
-        function renderQueue(statusOverride = null, showRlsBanner = false) {
+        /* 5. RENDER CONTINUE PLAYING QUEUE */
+        function renderQueue() {
             const list = document.getElementById('queue-list');
-            document.getElementById('queue-count').innerText = statusOverride || `${playlist.length} tracks`;
+            document.getElementById('queue-count').innerText = `${playlist.length} tracks`;
             list.innerHTML = '';
-
-            if (showRlsBanner) {
-                const sqlCmd = `CREATE POLICY "Allow public read" ON youtube_playlist FOR SELECT TO anon USING (true);`;
-                const banner = document.createElement('div');
-                banner.style.cssText = 'background:rgba(239,68,68,0.18); border:1px solid rgba(239,68,68,0.55); border-radius:12px; padding:9px 11px; font-size:0.72rem; line-height:1.35; color:#fecaca; cursor:pointer; margin-bottom:4px;';
-                banner.title = 'Click to copy SQL fix for Supabase';
-                banner.innerHTML = `
-                    <strong style="color:#fff;"><i class="fas fa-lock"></i> Supabase RLS blocks public playlist</strong><br>
-                    Click here to copy the 1-line SQL policy & paste into Supabase SQL Editor:
-                    <code style="display:block; margin-top:5px; padding:5px 7px; background:rgba(0,0,0,0.45); border-radius:7px; color:#86efac; font-size:0.66rem; user-select:all;">${sqlCmd}</code>
-                `;
-                banner.addEventListener('click', () => {
-                    navigator.clipboard.writeText(sqlCmd);
-                    banner.querySelector('strong').innerHTML = '<i class="fas fa-check"></i> SQL Policy Copied!';
-                });
-                list.appendChild(banner);
-            }
 
             playlist.forEach((song, idx) => {
                 const row = document.createElement('div');
                 row.className = `queue-row ${idx === currentIdx ? 'active' : ''}`;
-                const srcIcon = song.source === 'Spotify' ? 'fab fa-spotify' : (song.source === 'SoundCloud' ? 'fab fa-soundcloud' : 'fab fa-youtube');
+                const pMeta = PLATFORM_META[song.source] || PLATFORM_META['YouTube Music'];
                 const coverUrl = getSafeCover(song.id, song.cover);
                 row.innerHTML = `
                     <img class="queue-thumb" src="${coverUrl}" onload="handleCoverFallback(this, '${song.id || ''}')" alt="Cover">
@@ -1613,7 +1838,7 @@
                         <div class="queue-artist">${song.artist}</div>
                     </div>
                     <div class="queue-source-badge" title="${song.source || 'YouTube Music'}">
-                        <i class="${srcIcon}"></i>
+                        <i class="${pMeta.icon}"></i>
                     </div>
                 `;
                 row.addEventListener('click', () => playSongAt(idx, true));
@@ -1621,7 +1846,7 @@
             });
         }
 
-        /* 6. 100% RELIABLE UNIVERSAL SEARCH (ITUNES + INVIDIOUS/NOEMBED + IFRAME SEARCH FALLBACK) */
+        /* 6. UNIVERSAL LIVE SEARCH ACROSS ALL 7 PLATFORMS */
         const INVIDIOUS_INSTANCES = [
             'https://inv.nadeko.net',
             'https://invidious.nerdvpn.de',
@@ -1644,7 +1869,7 @@
         async function resolveYouTubeVideoId(query) {
             for (const host of INVIDIOUS_INSTANCES) {
                 try {
-                    const r = await fetchWithTimeout(`${host}/api/v1/search?q=${encodeURIComponent(query)}&type=video`, 2600);
+                    const r = await fetchWithTimeout(`${host}/api/v1/search?q=${encodeURIComponent(query)}&type=video`, 2500);
                     if (!r.ok) continue;
                     const arr = await r.json();
                     const hit = Array.isArray(arr) ? arr.find(v => v.videoId) : null;
@@ -1673,25 +1898,16 @@
             );
 
             let remoteResults = [];
+            const col = PLATFORM_META[activePlatform] || PLATFORM_META['Automatic'];
 
-            /* Primary: Fast, CORS-friendly iTunes Search API */
             try {
                 const itRes = await fetchWithTimeout(`https://itunes.apple.com/search?term=${encodeURIComponent(q)}&entity=song&limit=6`, 3800);
                 if (itRes.ok) {
                     const itJson = await itRes.json();
                     if (itJson.results && itJson.results.length > 0) {
-                        const platformColors = {
-                            'Spotify': { hex: '#1db954', rgb: '29, 185, 84' },
-                            'SoundCloud': { hex: '#ff5500', rgb: '255, 85, 0' },
-                            'Apple Music': { hex: '#fa243c', rgb: '250, 36, 60' },
-                            'YouTube Music': { hex: '#ff0033', rgb: '255, 0, 51' },
-                            'Vengeance Hybrid': { hex: '#a855f7', rgb: '168, 85, 247' }
-                        };
-                        const col = platformColors[activePlatform] || platformColors['Vengeance Hybrid'];
-
                         remoteResults = itJson.results.map(r => ({
                             id: null,
-                            searchQuery: `${r.artistName} - ${r.trackName} official music video`,
+                            searchQuery: `${r.artistName} - ${r.trackName} official audio`,
                             title: r.trackName,
                             artist: r.artistName,
                             source: activePlatform,
@@ -1705,11 +1921,10 @@
                 }
             } catch (e) {}
 
-            /* Secondary: Direct Invidious YouTube lookup if iTunes returned empty */
             if (remoteResults.length === 0) {
                 for (const host of INVIDIOUS_INSTANCES) {
                     try {
-                        const res = await fetchWithTimeout(`${host}/api/v1/search?q=${encodeURIComponent(q)}&type=video`, 2800);
+                        const res = await fetchWithTimeout(`${host}/api/v1/search?q=${encodeURIComponent(q)}&type=video`, 2600);
                         if (!res.ok) continue;
                         const items = await res.json();
                         if (Array.isArray(items) && items.length > 0) {
@@ -1719,8 +1934,8 @@
                                 artist: (item.author || 'Unknown').replace(' - Topic', ''),
                                 source: activePlatform,
                                 hasVideo: true,
-                                accent: '#a855f7',
-                                rgb: '168, 85, 247',
+                                accent: col.hex,
+                                rgb: col.rgb,
                                 cover: `https://img.youtube.com/vi/${item.videoId}/hqdefault.jpg`,
                                 lyrics: []
                             }));
@@ -1730,17 +1945,16 @@
                 }
             }
 
-            /* Direct Play Fallback Card if APIs are rate-limited */
             if (localMatches.length === 0 && remoteResults.length === 0) {
                 remoteResults.push({
                     id: null,
                     searchQuery: q,
                     title: q,
-                    artist: `${activePlatform} Direct Stream`,
+                    artist: `${activePlatform} Stream`,
                     source: activePlatform,
                     hasVideo: true,
-                    accent: '#a855f7',
-                    rgb: '168, 85, 247',
+                    accent: col.hex,
+                    rgb: col.rgb,
                     cover: 'https://github.com/VengeanceUtilities.png',
                     lyrics: []
                 });
@@ -1772,23 +1986,25 @@
                 `;
                 card.addEventListener('click', async () => {
                     const headerLbl = document.getElementById('search-header-label');
+                    song.source = activePlatform;
                     if (song.id) {
                         closePopovers();
                         let existingIdx = playlist.findIndex(p => p.id === song.id);
                         if (existingIdx === -1) {
                             playlist.unshift(song);
                             existingIdx = 0;
+                        } else {
+                            playlist[existingIdx].source = activePlatform;
                         }
                         playSongAt(existingIdx, true);
                     } else if (song.searchQuery) {
-                        headerLbl.innerHTML = `<i class="fas fa-spinner fa-spin" style="color:var(--accent);"></i> Loading "${song.title}"...`;
+                        headerLbl.innerHTML = `<i class="fas fa-spinner fa-spin" style="color:var(--accent);"></i> Starting "${song.title}" on ${activePlatform}...`;
                         const resolved = await resolveYouTubeVideoId(song.searchQuery);
                         closePopovers();
                         if (resolved && resolved.id) {
                             song.id = resolved.id;
                             song.hasVideo = resolved.hasVideo;
                         }
-                        /* Plays either via resolved videoId OR directly via YouTube IFrame search playlist */
                         playlist.unshift(song);
                         playSongAt(0, true);
                     }
@@ -1811,15 +2027,23 @@
             }
         }
 
-        /* 7. KINETIC LYRICS RENDER, LIVE LRCLIB FETCH & STYLE SWITCHER */
-        document.getElementById('lyrics-style-btn').addEventListener('click', () => {
+        /* 7. KINETIC LYRICS ENGINE + "OTHER LYRICS" VERSION PICKER */
+        const lyricsPickerPopover = document.getElementById('lyrics-picker-popover');
+
+        document.getElementById('lyrics-style-btn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            lyricsPickerPopover.classList.toggle('open');
+        });
+
+        document.getElementById('cycle-lyrics-layout-btn').addEventListener('click', (e) => {
+            e.stopPropagation();
             const stage = document.getElementById('lyrics-stage');
-            const label = document.getElementById('lyrics-style-label');
+            const label = document.getElementById('lyrics-layout-label');
             lyricsStyleIdx = (lyricsStyleIdx + 1) % 3;
             stage.classList.remove('style-centered', 'style-minimal');
-            if (lyricsStyleIdx === 0) label.innerText = 'Other lyrics';
-            else if (lyricsStyleIdx === 1) { stage.classList.add('style-centered'); label.innerText = 'Centered glow'; }
-            else { stage.classList.add('style-minimal'); label.innerText = 'Focus line'; }
+            if (lyricsStyleIdx === 0) label.innerText = 'Left Flow';
+            else if (lyricsStyleIdx === 1) { stage.classList.add('style-centered'); label.innerText = 'Centered Glow'; }
+            else { stage.classList.add('style-minimal'); label.innerText = 'Focus Line'; }
         });
 
         function parseLrcLyrics(lrcText) {
@@ -1839,41 +2063,9 @@
             return lines;
         }
 
-        async function fetchSyncedLyricsForSong(song) {
-            if (song.lyrics && song.lyrics.length > 0) return song.lyrics;
-            try {
-                const cleanTitle = song.title.replace(/\(.*?\)|\[.*?\]/g, '').trim();
-                const res = await fetchWithTimeout(
-                    `https://lrclib.net/api/get?artist_name=${encodeURIComponent(song.artist)}&track_name=${encodeURIComponent(cleanTitle)}`,
-                    3800
-                );
-                if (res.ok) {
-                    const data = await res.json();
-                    const parsed = parseLrcLyrics(data.syncedLyrics);
-                    if (parsed.length > 0) {
-                        song.lyrics = parsed;
-                        return parsed;
-                    }
-                }
-            } catch (e) {}
-            return [];
-        }
-
-        async function renderLyrics(song) {
+        function renderLyricsLinesToStage(lines) {
             const stage = document.getElementById('lyrics-stage');
             stage.innerHTML = '';
-
-            let lines = song.lyrics && song.lyrics.length > 0 ? song.lyrics : await fetchSyncedLyricsForSong(song);
-            if (!lines || lines.length === 0) {
-                lines = [
-                    { t: 0, text: song.title },
-                    { t: 10, text: `${song.artist} — Live Visual Stream` },
-                    { t: 25, text: 'Vengeance Audio Engine • 120Hz Glass HUD' }
-                ];
-            }
-
-            if (playlist[currentIdx]?.title !== song.title) return;
-
             lines.forEach((line, i) => {
                 const div = document.createElement('div');
                 div.className = `lyric-line ${i === 0 ? 'active' : ''}`;
@@ -1890,6 +2082,89 @@
             });
         }
 
+        function renderLyricsCandidatesList(candidates, song) {
+            const listEl = document.getElementById('lyrics-versions-list');
+            if (!listEl) return;
+            listEl.innerHTML = '';
+
+            if (!candidates || candidates.length === 0) {
+                listEl.innerHTML = `<div style="font-size:0.74rem; color:var(--text-muted);">Using built-in / default lyrics for this track.</div>`;
+                return;
+            }
+
+            candidates.forEach((cand, idx) => {
+                const item = document.createElement('div');
+                item.className = `lyrics-option-item ${idx === 0 ? 'active' : ''}`;
+                const dur = cand.duration ? `${Math.floor(cand.duration / 60)}:${String(Math.round(cand.duration % 60)).padStart(2, '0')}` : 'Synced';
+                item.innerHTML = `
+                    <div style="font-weight:700; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${cand.trackName || song.title} (${dur})</div>
+                    <div style="font-size:0.68rem; color:var(--text-muted);">${cand.artistName || song.artist} • ${cand.albumName || 'LRCLIB Sync'}</div>
+                `;
+                item.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    listEl.querySelectorAll('.lyrics-option-item').forEach(el => el.classList.remove('active'));
+                    item.classList.add('active');
+                    const parsed = parseLrcLyrics(cand.syncedLyrics);
+                    if (parsed.length > 0) {
+                        song.lyrics = parsed;
+                        renderLyricsLinesToStage(parsed);
+                    }
+                    lyricsPickerPopover.classList.remove('open');
+                });
+                listEl.appendChild(item);
+            });
+        }
+
+        async function fetchSyncedLyricsForSong(song) {
+            const cleanTitle = song.title.replace(/\(.*?\)|\[.*?\]/g, '').trim();
+            try {
+                const searchRes = await fetchWithTimeout(
+                    `https://lrclib.net/api/search?track_name=${encodeURIComponent(cleanTitle)}&artist_name=${encodeURIComponent(song.artist)}`,
+                    3800
+                );
+                if (searchRes.ok) {
+                    const arr = await searchRes.json();
+                    const syncedCandidates = Array.isArray(arr) ? arr.filter(x => x.syncedLyrics) : [];
+                    currentLyricsCandidates = syncedCandidates;
+                    renderLyricsCandidatesList(syncedCandidates, song);
+
+                    if (song.lyrics && song.lyrics.length > 0) return song.lyrics;
+                    if (syncedCandidates.length > 0) {
+                        const parsed = parseLrcLyrics(syncedCandidates[0].syncedLyrics);
+                        if (parsed.length > 0) {
+                            song.lyrics = parsed;
+                            return parsed;
+                        }
+                    }
+                }
+            } catch (e) {}
+
+            renderLyricsCandidatesList([], song);
+            return song.lyrics || [];
+        }
+
+        async function renderLyrics(song) {
+            if (song.lyrics && song.lyrics.length > 0) {
+                renderLyricsLinesToStage(song.lyrics);
+                fetchSyncedLyricsForSong(song);
+                return;
+            }
+
+            const lines = await fetchSyncedLyricsForSong(song);
+            if (playlist[currentIdx]?.title !== song.title) return;
+
+            if (lines && lines.length > 0) {
+                renderLyricsLinesToStage(lines);
+            } else {
+                renderLyricsLinesToStage([
+                    { t: 0, text: song.title },
+                    { t: 10, text: `${song.artist} — Live Visual Stream` },
+                    { t: 25, text: 'Vengeance Audio Engine • 120Hz Glass HUD' }
+                ]);
+            }
+        }
+
+        let lastActiveLyricIdx = -1;
         function syncLyricsToTime(sec) {
             const lines = [...document.querySelectorAll('.lyric-line')];
             if (lines.length === 0) return;
@@ -1903,34 +2178,51 @@
                 el.classList.remove('active', 'past');
                 if (idx === activeLineIdx) {
                     el.classList.add('active');
-                    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    if (activeLineIdx !== lastActiveLyricIdx) {
+                        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
                 } else if (idx < activeLineIdx) {
                     el.classList.add('past');
                 }
             });
+            lastActiveLyricIdx = activeLineIdx;
         }
 
-        /* 8. SWITCH SONG VIA SINGLE PLAYER INSTANCE */
+        /* 8. SWITCH SONG & SYNC ALL HUD ELEMENTS */
+        function updateAllCoverElements(safeCover, ytId) {
+            const coverEl = document.getElementById('active-cover');
+            coverEl.src = safeCover;
+            coverEl.onload = () => handleCoverFallback(coverEl, ytId || '');
+            document.getElementById('ambient-cover-bg').src = safeCover;
+            const miniCov = document.getElementById('dock-mini-cover');
+            if (miniCov) miniCov.src = safeCover;
+        }
+
         function playSongAt(idx, userTriggered = false) {
             currentIdx = idx;
+            lastActiveLyricIdx = -1;
             const song = playlist[currentIdx];
             if (!song) return;
 
-            if (userTriggered) unlockAudio();
+            if (userTriggered) {
+                unlockAudio();
+                showStartingPlatformToast(song.source || activePlatform);
+            }
 
             const safeCover = getSafeCover(song.id, song.cover);
-            const coverEl = document.getElementById('active-cover');
-            coverEl.src = safeCover;
-            coverEl.onload = () => handleCoverFallback(coverEl, song.id || '');
-            document.getElementById('ambient-cover-bg').src = safeCover;
+            updateAllCoverElements(safeCover, song.id);
 
             document.getElementById('active-title').innerText = song.title;
             document.getElementById('active-artist').innerText = song.artist;
+            document.getElementById('dock-mini-title').innerText = song.title;
+            document.getElementById('dock-mini-artist').innerText = song.artist;
+
             document.getElementById('card-progress-fill').style.width = '0%';
+            document.getElementById('dock-mini-progress-fill').style.width = '0%';
             document.getElementById('time-current').innerText = '0:00';
             document.getElementById('time-total').innerText = '0:00';
 
-            applySongTheme(song);
+            applySongTheme(song, safeCover);
             updateVideoBackdropState(song);
             renderQueue();
             renderLyrics(song);
@@ -2014,10 +2306,12 @@
         function closePopovers() {
             searchPopover.classList.remove('open');
             platformPopover.classList.remove('open');
+            lyricsPickerPopover.classList.remove('open');
         }
 
         searchInput.addEventListener('focus', () => {
             platformPopover.classList.remove('open');
+            lyricsPickerPopover.classList.remove('open');
             searchLiveTracks(searchInput.value);
             searchPopover.classList.add('open');
         });
@@ -2030,6 +2324,7 @@
         document.getElementById('source-btn').addEventListener('click', (e) => {
             e.stopPropagation();
             searchPopover.classList.remove('open');
+            lyricsPickerPopover.classList.remove('open');
             platformPopover.classList.toggle('open');
         });
 
@@ -2043,6 +2338,7 @@
                 iconEl.className = opt.dataset.icon;
                 iconEl.style.color = opt.dataset.color;
                 platformPopover.classList.remove('open');
+                showStartingPlatformToast(activePlatform);
                 if (searchInput.value.trim()) {
                     searchPopover.classList.add('open');
                     searchLiveTracks(searchInput.value);
@@ -2051,7 +2347,9 @@
         });
 
         document.addEventListener('click', (e) => {
-            if (!e.target.closest('.hud-bottom-area')) closePopovers();
+            if (!e.target.closest('.hud-bottom-area') && !e.target.closest('.cover-card-wrapper')) {
+                closePopovers();
+            }
         });
 
         /* MODALS & ZEN MODE */
@@ -2092,15 +2390,17 @@
             const cur = ytPlayer.getCurrentTime() || 0;
             const tot = ytPlayer.getDuration() || 0;
             if (tot > 0) {
-                document.getElementById('card-progress-fill').style.width = `${(cur / tot) * 100}%`;
+                const pct = `${(cur / tot) * 100}%`;
+                document.getElementById('card-progress-fill').style.width = pct;
+                document.getElementById('dock-mini-progress-fill').style.width = pct;
                 const fmt = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
                 document.getElementById('time-current').innerText = fmt(cur);
                 document.getElementById('time-total').innerText = fmt(tot);
                 syncLyricsToTime(cur);
             }
-        }, 300);
+        }, 250);
 
-        /* AUTO-FIX SOCIAL ICON BY URL */
+        /* SOCIAL ICON & YOUTUBE ID HELPERS */
         function resolveSocialIcon(url, fallbackIcon) {
             const u = (url || '').toLowerCase();
             if (u.includes('youtube.com') || u.includes('youtu.be')) return 'fab fa-youtube';
@@ -2127,7 +2427,7 @@
             return `${(num >> 16) & 255}, ${(num >> 8) & 255}, ${num & 255}`;
         }
 
-        /* 10. SUPABASE LIVE SYNC (INCLUDING SITE CUSTOMIZATION & RLS CHECK) */
+        /* 10. DIRECT SUPABASE LIVE SYNC (NO ADMIN GATE) */
         async function syncDashboardData() {
             try {
                 fetch('https://api.github.com/repos/VengeanceUtilities/VengeancePlayer/releases/latest')
@@ -2145,7 +2445,6 @@
                         }
                     }).catch(() => {});
 
-                /* Load Site Customization (Accent Color, Glass Blur, etc.) */
                 let customAccent = '#a855f7';
                 let customRgb = '168, 85, 247';
                 const { data: custom } = await sbClient.from('site_customization').select('*').limit(1).maybeSingle();
@@ -2156,8 +2455,18 @@
                         document.documentElement.style.setProperty('--accent', customAccent);
                         document.documentElement.style.setProperty('--accent-rgb', customRgb);
                     }
+                    if (custom.font_family) {
+                        document.documentElement.style.setProperty('--font-main', custom.font_family);
+                    }
                     if (custom.glass_blur) {
                         document.documentElement.style.setProperty('--glass-blur', `${custom.glass_blur}px`);
+                    }
+                    if (custom.crt_scanlines) {
+                        document.body.classList.add('crt-enabled');
+                    }
+                    if (custom.bg_mode_solid) {
+                        preferVideoMode = false;
+                        document.body.classList.add('cover-backdrop-mode');
                     }
                 }
 
@@ -2200,16 +2509,12 @@
                     });
                 }
 
-                /* Load Saved Dashboard Tracks from Supabase */
-                const { data: dbTracks, error: dbErr } = await sbClient
+                const { data: dbTracks } = await sbClient
                     .from('youtube_playlist')
                     .select('*')
                     .order('position', { ascending: true });
 
-                if (dbErr) {
-                    console.error('Supabase playlist error:', dbErr);
-                    renderQueue(`DB Error: ${dbErr.code || 'RLS'}`, true);
-                } else if (dbTracks && dbTracks.length > 0) {
+                if (dbTracks && dbTracks.length > 0) {
                     const mapped = dbTracks.map(t => {
                         const vid = extractYouTubeId(t.youtube_id);
                         return {
@@ -2229,9 +2534,6 @@
                         playlist = mapped;
                         playSongAt(0, false);
                     }
-                } else {
-                    console.warn('Supabase returned 0 rows for youtube_playlist — likely RLS blocking anon SELECT.');
-                    renderQueue(`${playlist.length} tracks (RLS Blocked)`, true);
                 }
 
                 const { data: mc } = await sbClient.from('minecraft_config').select('*').limit(1).maybeSingle();
