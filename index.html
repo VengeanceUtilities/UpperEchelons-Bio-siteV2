@@ -145,7 +145,7 @@
                 inset 0 1px 1px rgba(255, 255, 255, 0.26);
         }
 
-        /* FLOATING ZERO-GRAVITY KEYFRAMES (TIKTOK DESKTOP SKIN) */
+        /* FLOATING ZERO-GRAVITY KEYFRAMES */
         @keyframes floatLeftPanel {
             0%, 100% { transform: perspective(1100px) rotateY(7deg) rotateX(1deg) translateY(0px); }
             50% { transform: perspective(1100px) rotateY(5.5deg) rotateX(-1deg) translateY(-7px); }
@@ -351,6 +351,8 @@
             flex-shrink: 0;
             background: #14141c;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            font-size: 0;
+            color: transparent;
         }
         .queue-meta { flex: 1; min-width: 0; }
         .queue-song {
@@ -420,6 +422,8 @@
             height: 100%;
             object-fit: cover;
             transition: transform 0.5s ease;
+            font-size: 0;
+            color: transparent;
         }
         .album-glass-card:hover .album-art-frame img { transform: scale(1.04); }
 
@@ -787,6 +791,8 @@
             object-fit: cover;
             flex-shrink: 0;
             background: #14141c;
+            font-size: 0;
+            color: transparent;
         }
         .dock-mini-meta {
             display: flex;
@@ -826,7 +832,7 @@
             transition: width 0.25s linear;
         }
 
-        /* FLOATING LIVE SEARCH OVERLAY — CENTERED ABOVE DOCK (FIXED EQUAL COLUMNS) */
+        /* FLOATING LIVE SEARCH OVERLAY — EQUAL 4-COLUMN GRID */
         .search-results-popover {
             position: absolute;
             bottom: calc(100% + 14px);
@@ -894,6 +900,8 @@
             object-fit: cover;
             background: #14141c;
             display: block;
+            font-size: 0;
+            color: transparent;
         }
         .search-track-name {
             font-size: 0.78rem;
@@ -953,11 +961,18 @@
             object-fit: cover;
             border: 1.5px solid rgba(255, 255, 255, 0.24);
             box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
+            background: #14141c;
+            font-size: 0;
+            color: transparent;
         }
         .artist-bubble span {
             font-size: 0.72rem;
             font-weight: 600;
             color: rgba(255, 255, 255, 0.88);
+            max-width: 78px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         /* VENGEANCE UTILITIES DRAWERS / MODALS */
@@ -1151,7 +1166,7 @@
             <!-- iOS LOCKSCREEN CLOCK -->
             <div class="lockscreen-clock">
                 <div class="clock-date" id="hud-date">Wednesday, November 18</div>
-                <div class="clock-time" id="hud-clock">18:15</div>
+                <div class="clock-time" id="hud-clock">21:45</div>
             </div>
 
             <!-- RIGHT: VENGEANCE APPS, SERVER & DIRECT DASHBOARD LINK -->
@@ -1481,7 +1496,7 @@
             } catch (e) {}
         }
 
-        /* SAFE COVER HELPER + SVG FALLBACK */
+        /* SAFE COVER HELPER + 120PX YOUTUBE PLACEHOLDER BLOCKER */
         const FALLBACK_SVG = "data:image/svg+xml," + encodeURIComponent(
             "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='#1e1b4b'/><stop offset='100%' stop-color='#09090b'/></linearGradient></defs><rect width='200' height='200' fill='url(#g)'/><circle cx='100' cy='100' r='44' fill='none' stroke='#a855f7' stroke-width='6'/><circle cx='100' cy='100' r='12' fill='#a855f7'/></svg>"
         );
@@ -1495,7 +1510,16 @@
 
         window.handleCoverError = function (imgEl) {
             imgEl.onerror = null;
+            imgEl.onload = null;
             imgEl.src = FALLBACK_SVG;
+        };
+
+        window.handleCoverLoad = function (imgEl) {
+            if (imgEl.naturalWidth > 0 && imgEl.naturalWidth <= 120) {
+                imgEl.onerror = null;
+                imgEl.onload = null;
+                imgEl.src = FALLBACK_SVG;
+            }
         };
 
         /* INSTANT ZERO-NETWORK AMBIENT GLOW PALETTE GENERATOR */
@@ -1517,7 +1541,7 @@
             return GLOW_PALETTES[Math.abs(hash) % GLOW_PALETTES.length];
         }
 
-        /* DEFAULT CURATED PLAYLIST WITH BUILT-IN SYNCED LYRICS */
+        /* DEFAULT CURATED PLAYLIST (FALLBACK IF DB EMPTY) */
         const FALLBACK_PLAYLIST = [
             {
                 id: 'mzB1VGEGcSU',
@@ -1529,20 +1553,7 @@
                 accent: '#f59e0b',
                 rgb: '245, 158, 11',
                 cover: 'https://i.ytimg.com/vi/mzB1VGEGcSU/mqdefault.jpg',
-                lyrics: [
-                    { t: 0, text: 'I still see your shadows in my room' },
-                    { t: 16, text: "Can't take back the love that I gave you" },
-                    { t: 20, text: "It's to the point where I love and I hate you" },
-                    { t: 24, text: 'And I cannot change you, so I must replace you' },
-                    { t: 28, text: 'Easier said than done, I thought you were the one' },
-                    { t: 32, text: 'Listening to my heart instead of my head' },
-                    { t: 36, text: 'You found another one, but I am the better one' },
-                    { t: 40, text: "I won't let you forget me" },
-                    { t: 58, text: 'You left me falling and landing inside my grave' },
-                    { t: 63, text: 'I know that you want me dead' },
-                    { t: 67, text: 'I take prescriptions to make me feel a-okay' },
-                    { t: 71, text: 'I know it’s all in my head' }
-                ]
+                lyrics: []
             },
             {
                 id: 'h3EJICKwITw',
@@ -1594,10 +1605,10 @@
             }
         ];
 
-        const FEATURED_ARTISTS = [
+        const DEFAULT_ARTISTS = [
             { name: 'Juice WRLD', query: 'Juice WRLD', avatar: 'https://i.ytimg.com/vi/mzB1VGEGcSU/mqdefault.jpg' },
-            { name: 'Lil Uzi Vert', query: 'Lil Uzi Vert', avatar: 'https://i.ytimg.com/vi/WrsFXgQk5UI/mqdefault.jpg' },
-            { name: 'XXXTENTACION', query: 'XXXTENTACION', avatar: 'https://i.ytimg.com/vi/f0bbDFRYD_A/mqdefault.jpg' },
+            { name: '187 Straßenbande', query: '187 Strassenbande', avatar: 'https://i.ytimg.com/vi/0wQ8nS2xX78/mqdefault.jpg' },
+            { name: 'TJ_beastboy', query: 'TJ_beastboy', avatar: 'https://i.ytimg.com/vi/WrsFXgQk5UI/mqdefault.jpg' },
             { name: 'The Kid LAROI', query: 'The Kid LAROI', avatar: 'https://i.ytimg.com/vi/kTJczUoc26U/mqdefault.jpg' }
         ];
 
@@ -1879,7 +1890,7 @@
                 const pMeta = PLATFORM_META[song.source] || PLATFORM_META['YouTube Music'];
                 const coverUrl = getSafeCover(song.id, song.cover);
                 row.innerHTML = `
-                    <img class="queue-thumb" src="${coverUrl}" onerror="handleCoverError(this)" alt="Cover">
+                    <img class="queue-thumb" src="${coverUrl}" onload="handleCoverLoad(this)" onerror="handleCoverError(this)" alt="">
                     <div class="queue-meta">
                         <div class="queue-song">${song.title}</div>
                         <div class="queue-artist">${song.artist}</div>
@@ -1893,10 +1904,10 @@
             });
         }
 
-        /* 6. ZERO-CORS JSONP UNIVERSAL SEARCH (WITH UNRELEASED / SOUNDCLOUD PRIORITY) */
-        function itunesJsonpSearch(query) {
+        /* 6. DUAL ZERO-CORS JSONP SEARCH (DEEZER GLOBAL/DE + ITUNES DE) */
+        function jsonpRequest(urlBuilder, timeoutMs = 3400) {
             return new Promise((resolve) => {
-                const cbName = 'vItunesCb_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
+                const cbName = 'vSearchCb_' + Date.now() + '_' + Math.floor(Math.random() * 100000);
                 const script = document.createElement('script');
                 let settled = false;
 
@@ -1909,24 +1920,104 @@
 
                 const timer = setTimeout(() => {
                     cleanup();
-                    resolve([]);
-                }, 3200);
+                    resolve(null);
+                }, timeoutMs);
 
                 window[cbName] = (data) => {
                     clearTimeout(timer);
                     cleanup();
-                    resolve((data && Array.isArray(data.results)) ? data.results : []);
+                    resolve(data);
                 };
 
                 script.onerror = () => {
                     clearTimeout(timer);
                     cleanup();
-                    resolve([]);
+                    resolve(null);
                 };
 
-                script.src = `https://itunes.apple.com/search?term=${encodeURIComponent(query)}&entity=song&limit=6&callback=${cbName}`;
+                script.src = urlBuilder(cbName);
                 document.head.appendChild(script);
             });
+        }
+
+        async function searchDeezerAndItunes(query) {
+            const [dzData, itData] = await Promise.all([
+                jsonpRequest(cb => `https://api.deezer.com/search?q=${encodeURIComponent(query)}&limit=6&output=jsonp&callback=${cb}`),
+                jsonpRequest(cb => `https://itunes.apple.com/search?term=${encodeURIComponent(query)}&country=DE&entity=song&limit=6&callback=${cb}`)
+            ]);
+
+            const col = PLATFORM_META[activePlatform] || PLATFORM_META['Automatic'];
+            const tracks = [];
+            const seenKeys = new Set();
+            const artistMap = new Map();
+
+            if (dzData && Array.isArray(dzData.data)) {
+                dzData.data.forEach(item => {
+                    const title = item.title_short || item.title || '';
+                    const artist = item.artist?.name || '';
+                    const key = `${title.toLowerCase()}::${artist.toLowerCase()}`;
+                    if (title && !seenKeys.has(key)) {
+                        seenKeys.add(key);
+                        tracks.push({
+                            id: null,
+                            searchQuery: `${artist} - ${title} official audio`,
+                            title: title,
+                            artist: artist,
+                            source: activePlatform,
+                            duration: item.duration || 200,
+                            hasVideo: false,
+                            accent: col.hex,
+                            rgb: col.rgb,
+                            cover: item.album?.cover_big || item.album?.cover_medium || FALLBACK_SVG,
+                            lyrics: []
+                        });
+                    }
+                    if (artist && !artistMap.has(artist.toLowerCase())) {
+                        artistMap.set(artist.toLowerCase(), {
+                            name: artist,
+                            query: artist,
+                            avatar: item.artist?.picture_medium || item.album?.cover_medium || FALLBACK_SVG
+                        });
+                    }
+                });
+            }
+
+            if (itData && Array.isArray(itData.results)) {
+                itData.results.forEach(r => {
+                    const title = r.trackName || '';
+                    const artist = r.artistName || '';
+                    const key = `${title.toLowerCase()}::${artist.toLowerCase()}`;
+                    const highCover = r.artworkUrl100 ? r.artworkUrl100.replace('100x100bb', '400x400bb') : FALLBACK_SVG;
+                    if (title && !seenKeys.has(key)) {
+                        seenKeys.add(key);
+                        tracks.push({
+                            id: null,
+                            searchQuery: `${artist} - ${title} official audio`,
+                            title: title,
+                            artist: artist,
+                            source: activePlatform,
+                            duration: r.trackTimeMillis ? Math.round(r.trackTimeMillis / 1000) : 200,
+                            hasVideo: false,
+                            accent: col.hex,
+                            rgb: col.rgb,
+                            cover: highCover,
+                            lyrics: []
+                        });
+                    }
+                    if (artist && !artistMap.has(artist.toLowerCase())) {
+                        artistMap.set(artist.toLowerCase(), {
+                            name: artist,
+                            query: artist,
+                            avatar: highCover
+                        });
+                    }
+                });
+            }
+
+            return {
+                tracks,
+                artists: Array.from(artistMap.values()).slice(0, 5)
+            };
         }
 
         async function searchLiveTracks(query) {
@@ -1935,7 +2026,7 @@
 
             if (!q) {
                 headerLbl.innerText = `Top Results — ${activePlatform}`;
-                renderLocalSearchCards(playlist.slice(0, 4));
+                renderLocalSearchCards(playlist.slice(0, 4), DEFAULT_ARTISTS);
                 return;
             }
 
@@ -1946,25 +2037,10 @@
             );
 
             const col = PLATFORM_META[activePlatform] || PLATFORM_META['Automatic'];
-            const itunesHits = await itunesJsonpSearch(q);
+            const { tracks: remoteResults, artists: dynamicArtists } = await searchDeezerAndItunes(q);
 
-            const remoteResults = itunesHits.map(r => ({
-                id: null,
-                searchQuery: `${r.artistName} - ${r.trackName} official audio`,
-                title: r.trackName,
-                artist: r.artistName,
-                source: activePlatform,
-                duration: r.trackTimeMillis ? Math.round(r.trackTimeMillis / 1000) : 200,
-                hasVideo: false,
-                accent: col.hex,
-                rgb: col.rgb,
-                cover: r.artworkUrl100 ? r.artworkUrl100.replace('100x100bb', '400x400bb') : FALLBACK_SVG,
-                lyrics: []
-            }));
-
-            /* Check if iTunes actually matched the song title; if not (e.g. unreleased leaks), put direct stream #1 */
-            const queryWords = q.toLowerCase().split(/\s+/).filter(w => w.length > 2);
-            const hasExactTitleHit = [...localMatches, ...remoteResults].some(item => {
+            const queryWords = q.toLowerCase().split(/\s+/).filter(w => w.length > 1);
+            const hasStrongHit = [...localMatches, ...remoteResults].some(item => {
                 const hay = `${item.title} ${item.artist}`.toLowerCase();
                 return queryWords.length > 0 && queryWords.every(w => hay.includes(w));
             });
@@ -1983,15 +2059,15 @@
                 lyrics: []
             };
 
-            const combined = hasExactTitleHit
+            const combined = hasStrongHit
                 ? [...localMatches, ...remoteResults].slice(0, 4)
                 : [directStreamCard, ...localMatches, ...remoteResults].slice(0, 4);
 
             headerLbl.innerText = `Top Results — ${activePlatform}`;
-            renderLocalSearchCards(combined);
+            renderLocalSearchCards(combined, dynamicArtists.length > 0 ? dynamicArtists : DEFAULT_ARTISTS);
         }
 
-        function renderLocalSearchCards(items) {
+        function renderLocalSearchCards(items, artistsList = DEFAULT_ARTISTS) {
             const grid = document.getElementById('search-results-grid');
             const artistsRow = document.getElementById('search-artists-row');
             grid.innerHTML = '';
@@ -2006,7 +2082,7 @@
 
                 card.innerHTML = `
                     ${badgeHtml}
-                    <img src="${coverUrl}" onerror="handleCoverError(this)" alt="${song.title}">
+                    <img src="${coverUrl}" onload="handleCoverLoad(this)" onerror="handleCoverError(this)" alt="">
                     <div class="search-track-name">${song.title}</div>
                     <div class="search-track-sub">${song.artist}</div>
                 `;
@@ -2030,10 +2106,10 @@
 
             if (artistsRow) {
                 artistsRow.innerHTML = '';
-                FEATURED_ARTISTS.forEach(art => {
+                artistsList.forEach(art => {
                     const b = document.createElement('div');
                     b.className = 'artist-bubble';
-                    b.innerHTML = `<img src="${art.avatar}" onerror="handleCoverError(this)" alt="${art.name}"><span>${art.name}</span>`;
+                    b.innerHTML = `<img src="${art.avatar || FALLBACK_SVG}" onload="handleCoverLoad(this)" onerror="handleCoverError(this)" alt=""><span>${art.name}</span>`;
                     b.addEventListener('click', () => {
                         searchInput.value = art.query;
                         searchLiveTracks(art.query);
@@ -2116,7 +2192,7 @@
             listEl.innerHTML = '';
 
             if (!candidates || candidates.length === 0) {
-                listEl.innerHTML = `<div style="font-size:0.74rem; color:var(--text-muted);">Using built-in synced lyrics for this track.</div>`;
+                listEl.innerHTML = `<div style="font-size:0.74rem; color:var(--text-muted);">No alternative synced lyrics found on LRCLIB.</div>`;
                 return;
             }
 
@@ -2165,9 +2241,10 @@
 
         async function fetchSyncedLyricsForSong(song) {
             const cleanTitle = song.title.replace(/\(.*?\)|\[.*?\]/g, '').trim();
+            const queryStr = song.artist.includes('Direct Stream') ? cleanTitle : `${song.artist} ${cleanTitle}`;
             try {
                 const searchRes = await fetchWithTimeout(
-                    `https://lrclib.net/api/search?q=${encodeURIComponent(song.artist + ' ' + cleanTitle)}`,
+                    `https://lrclib.net/api/search?q=${encodeURIComponent(queryStr)}`,
                     5000
                 );
                 if (searchRes.ok) {
@@ -2251,15 +2328,18 @@
         /* 8. SWITCH SONG & SYNC ALL HUD ELEMENTS */
         function updateAllCoverElements(safeCover) {
             const coverEl = document.getElementById('active-cover');
+            coverEl.onload = () => handleCoverLoad(coverEl);
             coverEl.onerror = () => handleCoverError(coverEl);
             coverEl.src = safeCover;
 
             const ambEl = document.getElementById('ambient-cover-bg');
+            ambEl.onload = () => handleCoverLoad(ambEl);
             ambEl.onerror = () => handleCoverError(ambEl);
             ambEl.src = safeCover;
 
             const miniCov = document.getElementById('dock-mini-cover');
             if (miniCov) {
+                miniCov.onload = () => handleCoverLoad(miniCov);
                 miniCov.onerror = () => handleCoverError(miniCov);
                 miniCov.src = safeCover;
             }
